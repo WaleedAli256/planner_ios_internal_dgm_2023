@@ -192,4 +192,26 @@ class InitialViewController: BaseViewController {
             }
         }
     }
+    
+    func createDefaultsCategories(userId:String) {
+            let db = Firestore.firestore()
+            for cat in 0...5 {
+                db.collection("category").document(userId).setData([
+                    "image": cat,
+                    "userId": userId,
+                    "description": "USA"
+                    "name": "USA"
+                    "taskCount": "USA"
+                    "description": "USA"
+                    "description": "USA"
+                ]) { err in
+                    if let err = err {
+                        print("Error writing document: \(err)")
+                    } else {
+                        print("Document successfully written!")
+                    }
+                }
+            }
+
+        }
 }
