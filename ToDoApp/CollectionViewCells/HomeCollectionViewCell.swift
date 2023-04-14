@@ -14,4 +14,21 @@ class HomeCollectionViewCell: UICollectionViewCell {
     override class func awakeFromNib() {
         super.awakeFromNib()
     }
+    
+    func transformCellToLarge() {
+        UIView.animate(withDuration: 0.1) {
+            self.dayLbl.textColor = .white
+            self.dayLbl.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
+        }
+        
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
+    }
+    
+    func transformCellToStandard() {
+        UIView.animate(withDuration: 0.1) {
+            self.dayLbl.textColor = UIColor(named: "low-color")!
+            self.dayLbl.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        }
+    }
 }

@@ -7,6 +7,8 @@
 
 import UIKit
 import iOSDropDown
+import Firebase
+import FirebaseFirestore
 
 
 class CreateTaskViewController: BaseViewController {
@@ -15,13 +17,18 @@ class CreateTaskViewController: BaseViewController {
     @IBOutlet weak var detailTxtView: UITextView!
     @IBOutlet weak var dateTxtField: UITextField!
     @IBOutlet weak var timeTxtField: UITextField!
-    @IBOutlet weak var setReminderTxtField: DropDown!
+    @IBOutlet weak var preReminderTxtField: DropDown!
+    @IBOutlet weak var RepititionTxtField: DropDown!
     
     var datePicker = UIDatePicker()
     var toolBar = UIToolbar()
     private var selectionMode = ""
     private var selectedTime = ""
     private var date = ""
+    
+    var preReminderTime = ["5min","10min","15min","20min"]
+    
+    var repitiotn = ["Once in a week","Once in a day","Daily","Weekly","Monthly","Yearly"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +38,32 @@ class CreateTaskViewController: BaseViewController {
         
         detailTxtView.textContainer.lineFragmentPadding = 15
         self.detailTxtView.delegate = self
+        
+        // drop down settings
+        preReminderTxtField.arrowColor = .white
+        preReminderTxtField.selectedRowColor = .white
+        preReminderTxtField.itemsTintColor = .red
+        preReminderTxtField.arrowSize = 15
+        preReminderTxtField.text = "Select Store"
+        
+        // drop down settings
+        RepititionTxtField.arrowColor = .white
+        RepititionTxtField.selectedRowColor = .white
+        RepititionTxtField.itemsTintColor = .red
+        RepititionTxtField.arrowSize = 15
+        RepititionTxtField.text = "Select Store"
+        
+        preReminderTxtField.didSelect { selectedText, index, id in
+            print(id)
+            self.preReminderTxtField.text = self.preReminderTime[index].description
+//            self.preReminderTime = self.preReminderTime[index].id
+        }
+        
+        RepititionTxtField.didSelect { selectedText, index, id in
+            print(id)
+            self.RepititionTxtField.text = self.preReminderTime[index].description
+//            self.preReminderTime = self.preReminderTime[index].id
+        }
     }
     
     func createDatePicker() {
@@ -119,13 +152,83 @@ class CreateTaskViewController: BaseViewController {
             return false
         }
         
-        if(setReminderTxtField.text!.count < 1)
+        if(preReminderTxtField.text!.count < 1)
+        {
+            self.showAlert(title: "Error", message:"Please select set pre reminder")
+            return false
+        }
+        
+        if(RepititionTxtField.text!.count < 1)
         {
             self.showAlert(title: "Error", message:"Please select set pre reminder")
             return false
         }
 
         return true
+    }
+    
+    func createAction(_ sender: UIButton) {
+        
+        if(validate())
+        {
+            guard Utilities.Connectivity.isConnectedToInternet else {
+                self.showAlert(title: "Error", message: "Please check your internet connection")
+                    return
+            }
+            Utilities.show_ProgressHud(view: self.view)
+     
+            let dic = ["Title": self.titleTxtField.text ?? "",
+                       "Detail": self.detailTxtView.text ?? "",
+                       "id": "id",
+                       "Category_id": "cat",
+                       "userId":Utilities().getCurrentUser().id ?? "",
+                       "Category_name": "catName",
+                       "date":self.date,
+                       "time":self.selectedTime,
+                       "priority":"",
+                       "pre_reminder":self.preReminderTxtField.text!,
+                       "repitition": self.RepititionTxtField.text!,
+                       ] as [String : Any]
+            
+                let db = Firestore.firestore()
+                var ref: DocumentReference?
+        
+                ref = db.collection("users").document(Utilities().getCurrentUser().id ?? "").collection("tasks").addDocument(data: dic)
+            
+                self.showAlert(title: "Task", message: "Task created successfully")
+                Utilities.hide_ProgressHud(view: self.view)
+//                self.docId = ref!.documentID
+            
+            
+//            if selectedTime != ""{
+//                let mDate = self.date + " " + self.selectedTime
+//                let dateFormatter = DateFormatter()
+//                dateFormatter.dateFormat = "dd/MM/yyyy hh:mm:ss a"
+//                let newDate = dateFormatter.date(from: mDate)
+//
+//                let center = UNUserNotificationCenter.current()
+//                let content = UNMutableNotificationContent()
+//                content.title = self.txtTitle.text ?? ""
+//                content.body = self.txtDescription.text ?? ""
+//                content.sound = UNNotificationSound.default
+//                content.categoryIdentifier = self.docId
+//
+//                let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: newDate!)
+//
+//                let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
+//
+//                let uniqueID = self.docId // Keep a record of this if necessary
+//                let request = UNNotificationRequest(identifier: uniqueID, content: content, trigger: trigger)
+//                center.add(request)
+//
+//
+//
+//            let controller = self.storyboard?.instantiateViewController(withIdentifier: "HomeViewController") as! HomeViewController
+//
+//            self.navigationController?.pushViewController(controller, animated: true)
+//        }
+    
+        }
     }
 }
 
@@ -163,6 +266,7 @@ extension CreateTaskViewController: UITextFieldDelegate
         }
         return true
     }
+    
 }
 
 

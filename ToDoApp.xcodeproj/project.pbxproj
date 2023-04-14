@@ -17,9 +17,7 @@
 		044C30E829D5897100DC627B /* CornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C30E729D5897100DC627B /* CornerView.swift */; };
 		044F24A329E7FA64001B95A2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 044F24A229E7FA64001B95A2 /* GoogleService-Info.plist */; };
 		045C530929E52538009B1F45 /* CreateTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045C530829E52537009B1F45 /* CreateTaskViewController.swift */; };
-		045C530B29E52672009B1F45 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045C530A29E52672009B1F45 /* HomeViewController.swift */; };
 		045C530D29E526CB009B1F45 /* HomeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045C530C29E526CB009B1F45 /* HomeCollectionViewCell.swift */; };
-		045C530F29E526DB009B1F45 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045C530E29E526DB009B1F45 /* HomeTableViewCell.swift */; };
 		045C531429E5279A009B1F45 /* TasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045C531229E5279A009B1F45 /* TasksView.swift */; };
 		045C531529E5279A009B1F45 /* TasksView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 045C531329E5279A009B1F45 /* TasksView.xib */; };
 		045E429229E56FE4005D3204 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045E429129E56FE4005D3204 /* Utilities.swift */; };
@@ -41,6 +39,9 @@
 		04C0A51E29D43D1A005B82DD /* ToDoAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0A51D29D43D1A005B82DD /* ToDoAppUITestsLaunchTests.swift */; };
 		04D7EF1729D6E1A4006A970D /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D7EF1629D6E1A4006A970D /* CalendarViewController.swift */; };
 		04F28B7629E3C5F900B5D5DA /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F28B7529E3C5F900B5D5DA /* SettingViewController.swift */; };
+		E06BF03529E9592D0020C245 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06BF03429E9592C0020C245 /* HomeTableViewCell.swift */; };
+		E06BF03729E959390020C245 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06BF03629E959390020C245 /* HomeViewController.swift */; };
+		E06BF03929E959860020C245 /* CustomSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06BF03829E959860020C245 /* CustomSegmentedControl.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,9 +72,7 @@
 		044C30E729D5897100DC627B /* CornerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CornerView.swift; sourceTree = "<group>"; };
 		044F24A229E7FA64001B95A2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		045C530829E52537009B1F45 /* CreateTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTaskViewController.swift; sourceTree = "<group>"; };
-		045C530A29E52672009B1F45 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		045C530C29E526CB009B1F45 /* HomeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewCell.swift; sourceTree = "<group>"; };
-		045C530E29E526DB009B1F45 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
 		045C531229E5279A009B1F45 /* TasksView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TasksView.swift; sourceTree = "<group>"; };
 		045C531329E5279A009B1F45 /* TasksView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TasksView.xib; sourceTree = "<group>"; };
 		045E429129E56FE4005D3204 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
@@ -99,6 +98,9 @@
 		04C0A51D29D43D1A005B82DD /* ToDoAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		04D7EF1629D6E1A4006A970D /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
 		04F28B7529E3C5F900B5D5DA /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		E06BF03429E9592C0020C245 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
+		E06BF03629E959390020C245 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		E06BF03829E959860020C245 /* CustomSegmentedControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomSegmentedControl.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,8 +148,8 @@
 			isa = PBXGroup;
 			children = (
 				04A57B1829E66A8700AFA86A /* InitialViewController.swift */,
+				E06BF03629E959390020C245 /* HomeViewController.swift */,
 				045E429829E57A85005D3204 /* InitialTabController.swift */,
-				045C530A29E52672009B1F45 /* HomeViewController.swift */,
 				04B98D0829D69E54003BA872 /* CategoryViewController.swift */,
 				045C530829E52537009B1F45 /* CreateTaskViewController.swift */,
 				04D7EF1629D6E1A4006A970D /* CalendarViewController.swift */,
@@ -160,7 +162,7 @@
 		0410CE0029D564ED000EA4CB /* TableViewCells */ = {
 			isa = PBXGroup;
 			children = (
-				045C530E29E526DB009B1F45 /* HomeTableViewCell.swift */,
+				E06BF03429E9592C0020C245 /* HomeTableViewCell.swift */,
 				0423F14029E01F4800AF7C6F /* TestTableCell.swift */,
 			);
 			path = TableViewCells;
@@ -309,6 +311,7 @@
 			isa = PBXGroup;
 			children = (
 				044C30E329D57EC200DC627B /* CustomView.swift */,
+				E06BF03829E959860020C245 /* CustomSegmentedControl.swift */,
 				044C30E529D588D100DC627B /* CustomLabel.swift */,
 				044C30E729D5897100DC627B /* CornerView.swift */,
 			);
@@ -456,15 +459,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E06BF03729E959390020C245 /* HomeViewController.swift in Sources */,
 				044C30E429D57EC200DC627B /* CustomView.swift in Sources */,
-				045C530B29E52672009B1F45 /* HomeViewController.swift in Sources */,
 				047983AB29E423E6003B9C07 /* TaskCell.swift in Sources */,
 				0400828929E803FB00444B26 /* User.swift in Sources */,
 				0423F14129E01F4800AF7C6F /* TestTableCell.swift in Sources */,
 				0423F13F29E01E9100AF7C6F /* TestViewController.swift in Sources */,
 				045E429C29E57ECC005D3204 /* BaseViewController.swift in Sources */,
+				E06BF03529E9592D0020C245 /* HomeTableViewCell.swift in Sources */,
 				045C530929E52538009B1F45 /* CreateTaskViewController.swift in Sources */,
-				045C530F29E526DB009B1F45 /* HomeTableViewCell.swift in Sources */,
 				045E429929E57A85005D3204 /* InitialTabController.swift in Sources */,
 				04F28B7629E3C5F900B5D5DA /* SettingViewController.swift in Sources */,
 				04B98D0929D69E54003BA872 /* CategoryViewController.swift in Sources */,
@@ -477,6 +480,7 @@
 				0421ED8029D5979A00C25C37 /* CustomTabBarController.swift in Sources */,
 				0421ED7E29D5975B00C25C37 /* CustomTabBar.swift in Sources */,
 				04C0A4FB29D43D18005B82DD /* AppDelegate.swift in Sources */,
+				E06BF03929E959860020C245 /* CustomSegmentedControl.swift in Sources */,
 				04C0A4FD29D43D18005B82DD /* SceneDelegate.swift in Sources */,
 				04D7EF1729D6E1A4006A970D /* CalendarViewController.swift in Sources */,
 				045E429229E56FE4005D3204 /* Utilities.swift in Sources */,
