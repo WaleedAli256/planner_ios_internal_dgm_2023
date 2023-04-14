@@ -114,91 +114,85 @@ class InitialViewController: BaseViewController {
     
     @IBAction func skipAction(_ sender: UIButton) {
         
-        var dict = [String:Any]()
-        let db = Firestore.firestore()
-        Auth.auth().signInAnonymously { authResult, error in
-            if let error = error {
-                self.showAlert(title: "Error", message: error.localizedDescription)
-            } else {
-
-                db.collection("users").document(authResult?.user.uid ?? "").setData([
-                    "name": "Los Angeles",
-                    "state": "CA",
-                    "country": "USA"
-                ]) { error in
-                    if let error = error {
-                        print("Error writing document: (err)")
-                    } else {
-                        print("Document successfully written!") 
-                    }
-                }
-               
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
+        self.navigationController?.pushViewController(mainTabBarController, animated: true)
+        
+//        var dict = [String:Any]()
+//        var userUID = ""
+//        let db = Firestore.firestore()
+//        Auth.auth().signInAnonymously { authResult, error in
+//            if let error = error {
+//                self.showAlert(title: "Error", message: error.localizedDescription)
+//            } else {
+//                userUID = (authResult?.user.uid)!
 //                let db = Firestore.firestore()
 //
 //                let ref = db.collection("users").document(authResult?.user.uid ?? "")
-//
+//                
 //                ref.getDocument(completion: {(document,err) in
-//
 //                    if let document = document, document.exists {
-//
 //                        //User already exists in our database
-//
 //                        db.collection("users").document(authResult?.user.uid ?? "").setData([
-//                            "name": "fullName",
+//                            "id": userUID,
+//                            "name": "old Annomous",
 //                            "email": "emailAddress",
-//                            "image_url": "profilePicUrl",
-//                            "id":"id"
+//                            "deviceType" : "iOS",
+//                            "userType" : "Annomous",
+//                            "image_url": "profilePicUrl"
+//                    
 //                        ], merge: true) { err in
 //                            if let err = err {
 //                                print("Error adding document: \(err)")
 //                            } else {
-//                                var dict = [String:Any]()
-//                                dict["id"] = authResult?.user.uid
-//                                dict["name"] = "fullName"
-//                                dict["deviceType"] = "fullName"
-//                                dict["userType"] = "fullName"
+//                                dict["id"] = userUID
+//                                dict["name"] = "Annomous"
+//                                dict["deviceType"] = "iOS"
+//                                dict["userType"] = "Annomous"
 //                                dict["email"] = "emailAddress"
 //                                dict["image_url"] = "profilePicUrl"
 //                                let user = User.init(fromDictionary: dict)
 //                                Utilities().setCurrentUser(currentUser: user)
+//                                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//                                let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
+//                                self.navigationController?.pushViewController(mainTabBarController, animated: true)
 //                            }
 //                        }
 //                    }
 //                    else
 //                    {
 //                        // This  is a new user
-//
 //                        db.collection("users").document(authResult?.user.uid ?? "").setData([
-//                            "name": "fullName",
-//                            "email": "email",
-//                            "image_url": "profilePicUrl",
-//                            "id":authResult?.user.uid ?? ""
+//                            "id": userUID,
+//                            "name": "New Annomous",
+//                            "email": "emailAddress",
+//                            "deviceType" : "iOS",
+//                            "userType" : "Annomous",
+//                            "image_url": "profilePicUrl"
+//                            
 //                        ]) { err in
 //                            if let err = err {
 //                                print("Error adding document: \(err)")
 //                            } else {
 //                                var dict = [String:Any]()
-//                                dict["id"] = authResult?.user.uid
-//                                dict["name"] = "fullName"
-//                                dict["deviceType"] = "fullName"
-//                                dict["userType"] = "fullName"
+//                                dict["id"] = userUID
+//                                dict["name"] = "Annomous"
+//                                dict["deviceType"] = "iOS"
+//                                dict["userType"] = "Annomous"
 //                                dict["email"] = "emailAddress"
 //                                dict["image_url"] = "profilePicUrl"
 //                                let user = User.init(fromDictionary: dict)
 //                                Utilities().setCurrentUser(currentUser: user)
+//                                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//                                let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
+//                                self.navigationController?.pushViewController(mainTabBarController, animated: true)
 //
 //                            }
 //                        }
 //                    }
 //                })
-                
+//                
 //            }
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
-        self.navigationController?.pushViewController(mainTabBarController, animated: true)
-         
-        }
-        
-        
-//    }
+//        }
+    }
 }
