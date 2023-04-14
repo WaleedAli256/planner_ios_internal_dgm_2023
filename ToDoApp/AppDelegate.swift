@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseCore
+import FirebaseAuth
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -14,7 +16,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        Thread.sleep(forTimeInterval: 2)
+        FirebaseApp.configure()
+        self.saveAnonymouslyUser()
         return true
+    }
+    
+    func saveAnonymouslyUser() {
+        
+        Auth.auth().signInAnonymously { authResult, error in
+            
+            print(authResult)
+          
+//            guard let user = authResult?.user else { return }
+//            let isAnonymous = user.isAnonymous  // true
+//            let uid = user.uid
+        }
     }
 
     // MARK: UISceneSession Lifecycle
