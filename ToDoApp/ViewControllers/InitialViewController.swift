@@ -114,85 +114,82 @@ class InitialViewController: BaseViewController {
     
     @IBAction func skipAction(_ sender: UIButton) {
         
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
-        self.navigationController?.pushViewController(mainTabBarController, animated: true)
         
-//        var dict = [String:Any]()
-//        var userUID = ""
-//        let db = Firestore.firestore()
-//        Auth.auth().signInAnonymously { authResult, error in
-//            if let error = error {
-//                self.showAlert(title: "Error", message: error.localizedDescription)
-//            } else {
-//                userUID = (authResult?.user.uid)!
-//                let db = Firestore.firestore()
-//
-//                let ref = db.collection("users").document(authResult?.user.uid ?? "")
-//                
-//                ref.getDocument(completion: {(document,err) in
-//                    if let document = document, document.exists {
-//                        //User already exists in our database
-//                        db.collection("users").document(authResult?.user.uid ?? "").setData([
-//                            "id": userUID,
-//                            "name": "old Annomous",
-//                            "email": "emailAddress",
-//                            "deviceType" : "iOS",
-//                            "userType" : "Annomous",
-//                            "image_url": "profilePicUrl"
-//                    
-//                        ], merge: true) { err in
-//                            if let err = err {
-//                                print("Error adding document: \(err)")
-//                            } else {
-//                                dict["id"] = userUID
-//                                dict["name"] = "Annomous"
-//                                dict["deviceType"] = "iOS"
-//                                dict["userType"] = "Annomous"
-//                                dict["email"] = "emailAddress"
-//                                dict["image_url"] = "profilePicUrl"
-//                                let user = User.init(fromDictionary: dict)
-//                                Utilities().setCurrentUser(currentUser: user)
-//                                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//                                let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
-//                                self.navigationController?.pushViewController(mainTabBarController, animated: true)
-//                            }
-//                        }
-//                    }
-//                    else
-//                    {
-//                        // This  is a new user
-//                        db.collection("users").document(authResult?.user.uid ?? "").setData([
-//                            "id": userUID,
-//                            "name": "New Annomous",
-//                            "email": "emailAddress",
-//                            "deviceType" : "iOS",
-//                            "userType" : "Annomous",
-//                            "image_url": "profilePicUrl"
-//                            
-//                        ]) { err in
-//                            if let err = err {
-//                                print("Error adding document: \(err)")
-//                            } else {
-//                                var dict = [String:Any]()
-//                                dict["id"] = userUID
-//                                dict["name"] = "Annomous"
-//                                dict["deviceType"] = "iOS"
-//                                dict["userType"] = "Annomous"
-//                                dict["email"] = "emailAddress"
-//                                dict["image_url"] = "profilePicUrl"
-//                                let user = User.init(fromDictionary: dict)
-//                                Utilities().setCurrentUser(currentUser: user)
-//                                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//                                let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
-//                                self.navigationController?.pushViewController(mainTabBarController, animated: true)
-//
-//                            }
-//                        }
-//                    }
-//                })
-//                
-//            }
-//        }
+        var dict = [String:Any]()
+        var userUID = ""
+        let db = Firestore.firestore()
+        Auth.auth().signInAnonymously { authResult, error in
+            if let error = error {
+                self.showAlert(title: "Error", message: error.localizedDescription)
+            } else {
+                userUID = (authResult?.user.uid)!
+                let db = Firestore.firestore()
+
+                let ref = db.collection("users").document(authResult?.user.uid ?? "")
+                
+                ref.getDocument(completion: {(document,err) in
+                    if let document = document, document.exists {
+                        //User already exists in our database
+                        db.collection("users").document(authResult?.user.uid ?? "").setData([
+                            "id": userUID,
+                            "name": "old Annomous",
+                            "email": "emailAddress",
+                            "deviceType" : "iOS",
+                            "userType" : "Annomous",
+                            "image_url": "profilePicUrl"
+                    
+                        ], merge: true) { err in
+                            if let err = err {
+                                print("Error adding document: \(err)")
+                            } else {
+                                dict["id"] = userUID
+                                dict["name"] = "Annomous"
+                                dict["deviceType"] = "iOS"
+                                dict["userType"] = "Annomous"
+                                dict["email"] = "emailAddress"
+                                dict["image_url"] = "profilePicUrl"
+                                let user = User.init(fromDictionary: dict)
+                                Utilities().setCurrentUser(currentUser: user)
+                                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                                let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
+                                self.navigationController?.pushViewController(mainTabBarController, animated: true)
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // This  is a new user
+                        db.collection("users").document(authResult?.user.uid ?? "").setData([
+                            "id": userUID,
+                            "name": "New Annomous",
+                            "email": "emailAddress",
+                            "deviceType" : "iOS",
+                            "userType" : "Annomous",
+                            "image_url": "profilePicUrl"
+                            
+                        ]) { err in
+                            if let err = err {
+                                print("Error adding document: \(err)")
+                            } else {
+                                var dict = [String:Any]()
+                                dict["id"] = userUID
+                                dict["name"] = "Annomous"
+                                dict["deviceType"] = "iOS"
+                                dict["userType"] = "Annomous"
+                                dict["email"] = "emailAddress"
+                                dict["image_url"] = "profilePicUrl"
+                                let user = User.init(fromDictionary: dict)
+                                Utilities().setCurrentUser(currentUser: user)
+                                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                                let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
+                                self.navigationController?.pushViewController(mainTabBarController, animated: true)
+
+                            }
+                        }
+                    }
+                })
+                
+            }
+        }
     }
 }
