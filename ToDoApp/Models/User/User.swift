@@ -22,6 +22,8 @@ class User: NSObject,NSCoding {
         
         id = dictionary["id"] as? String
         name = dictionary["name"] as? String
+        deviceType = dictionary["deviceType"] as? String
+        userType = dictionary["userType"] as? Int
         image_url = dictionary["image_url"] as? String
         email = dictionary["email"] as? String
         
@@ -84,6 +86,8 @@ class User: NSObject,NSCoding {
     {
         id = aDecoder.decodeObject(forKey: "id") as? String
         name = aDecoder.decodeObject(forKey: "name") as? String
+        deviceType = aDecoder.decodeObject(forKey: "deviceType") as? String
+        userType = aDecoder.decodeObject(forKey: "userType") as? Int
         email = aDecoder.decodeObject(forKey: "email") as? String
         image_url = aDecoder.decodeObject(forKey: "image_url") as? String
 //        tasks = aDecoder.decodeObject(forKey: "tasks") as? [Task]
@@ -98,6 +102,12 @@ class User: NSObject,NSCoding {
         }
         if name != nil{
             aCoder.encode(name, forKey: "name")
+        }
+        if deviceType != nil{
+            aCoder.encode(name, forKey: "deviceType")
+        }
+        if userType != nil{
+            aCoder.encode(name, forKey: "userType")
         }
         if email != nil{
             aCoder.encode(email, forKey: "email")
