@@ -14,12 +14,12 @@ struct Task: Codable{
     var userId: String?
     var categoryId: String?
     var categoryName: String?
-    var descriptionField: String?
+    var description: String?
     var time: String?
     var date: String?
     var priority: String?
     var preReminder: String?
-    var repitition: String?
+    var repetition: String?
     var colorCode: String?
 
 
@@ -42,12 +42,12 @@ struct Task: Codable{
         userId = dictionary["userId"] as? String
         categoryId = dictionary["categoryId"] as? String
         categoryName = dictionary["categoryName"] as? String
-        descriptionField = dictionary["descriptionField"] as? String
+        description = dictionary["description"] as? String
         time = dictionary["time"] as? String
         date = dictionary["date"] as? String
         priority = dictionary["priority"] as? String
         preReminder = dictionary["preReminder"] as? String
-        repitition = dictionary["repitition"] as? String
+        repetition = dictionary["repetition"] as? String
         colorCode = dictionary["colorCode"] as? String
     }
     
@@ -69,8 +69,8 @@ struct Task: Codable{
         if categoryName != nil{
             dictionary["categoryName"] = categoryName
         }
-        if descriptionField != nil{
-            dictionary["descriptionField"] = descriptionField
+        if description != nil{
+            dictionary["description"] = description
         }
         if time != nil{
             dictionary["time"] = time
@@ -84,8 +84,8 @@ struct Task: Codable{
         if preReminder != nil{
             dictionary["preReminder"] = preReminder
         }
-        if repitition != nil{
-            dictionary["repitition"] = repitition
+        if repetition != nil{
+            dictionary["repetition"] = repetition
         }
         if colorCode != nil{
             dictionary["colorCode"] = colorCode
