@@ -132,7 +132,7 @@ class InitialViewController: BaseViewController {
                         //User already exists in our database
                         db.collection("users").document(authResult?.user.uid ?? "").setData([
                             "id": userUID,
-                            "name": "old Annomous",
+                            "name": "Annomous",
                             "email": "emailAddress",
                             "deviceType" : "iOS",
                             "userType" : "Annomous",
@@ -150,6 +150,7 @@ class InitialViewController: BaseViewController {
                                 dict["image_url"] = "profilePicUrl"
                                 let user = User.init(fromDictionary: dict)
                                 Utilities().setCurrentUser(currentUser: user)
+//                                self.createDefaultsCategories(userId: userUID)
                                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                                 let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
                                 self.navigationController?.pushViewController(mainTabBarController, animated: true)
@@ -161,7 +162,7 @@ class InitialViewController: BaseViewController {
                         // This  is a new user
                         db.collection("users").document(authResult?.user.uid ?? "").setData([
                             "id": userUID,
-                            "name": "New Annomous",
+                            "name": "Annomous",
                             "email": "emailAddress",
                             "deviceType" : "iOS",
                             "userType" : "Annomous",
@@ -180,6 +181,7 @@ class InitialViewController: BaseViewController {
                                 dict["image_url"] = "profilePicUrl"
                                 let user = User.init(fromDictionary: dict)
                                 Utilities().setCurrentUser(currentUser: user)
+//                                self.createDefaultsCategories(userId: userUID)
                                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                                 let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
                                 self.navigationController?.pushViewController(mainTabBarController, animated: true)
@@ -194,24 +196,40 @@ class InitialViewController: BaseViewController {
     }
     
     func createDefaultsCategories(userId:String) {
+        
+        var categories = [TaskCategory]()
+        let first = TaskCategory(image: 1, userId: userId, description: "Keep yourself hydrated all time!", name: "Water Intake", taskCount: "0", id: "", colorCode: "#5486E9")
+        let sec = TaskCategory(image: 2, userId: userId, description: "Wake up on the time So you never late!", name: "Sleeping Schedule", taskCount: "0", id: "", colorCode: "#F1A800")
+        let third = TaskCategory(image: 3, userId: userId, description: "Never miss an Event to wish to your loved ones", name: "Event Reminder", taskCount: "0", id: "", colorCode: "#FFB185")
+        let fourth = TaskCategory(image: 4, userId: userId, description: "Schedule your Exercise to stay healthy", name: "Exercise Schedule", taskCount: "0", id: "", colorCode: "#E784D1")
+        let fifth = TaskCategory(image: 5, userId: userId, description: "Keep yourself hydrated all time!", name: "Food Intake", taskCount: "0", id: "", colorCode: "#C4DF58")
+        let sixth = TaskCategory(image: 6, userId: userId, description: "Wake up on the time So you never late!", name: "Personal Care", taskCount: "0", id: "", colorCode: "#51BBA2")
+        categories.append(first)
+        categories.append(sec)
+        categories.append(third)
+        categories.append(fourth)
+        categories.append(fifth)
+        categories.append(sixth)
+        
+        for cat in categories {
             let db = Firestore.firestore()
-            for cat in 0...5 {
-                db.collection("category").document(userId).setData([
-                    "image": cat,
-                    "userId": userId,
-                    "description": "USA"
-                    "name": "USA"
-                    "taskCount": "USA"
-                    "description": "USA"
-                    "description": "USA"
-                ]) { err in
-                    if let err = err {
-                        print("Error writing document: \(err)")
-                    } else {
-                        print("Document successfully written!")
-                    }
+            let ref = db.collection("category").document()
+            ref.setData([
+                "image": cat.image ?? 0,
+                "userId": userId,
+                "description": cat.description ?? "",
+                "name": cat.name ?? "",
+                "taskCount": cat.taskCount ?? "",
+                "id": ref.documentID,
+                "colorCode": cat.colorCode ?? ""
+            ]) { err in
+                if let err = err {
+                    print("Error writing document: \(err)")
+                } else {
+                    print("Document successfully written!")
                 }
             }
-
         }
+        
+    }
 }

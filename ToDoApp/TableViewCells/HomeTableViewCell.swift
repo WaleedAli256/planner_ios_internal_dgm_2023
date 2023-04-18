@@ -20,16 +20,39 @@ class HomeTableViewCell: UITableViewCell {
     var index = IndexPath()
     var selectedTableIndex = Int()
     var selectedCollectionIndex = Int()
+    
+    var tasks: [CatTasks] = []
+    var myFinalCategories = [String:[Task]]()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         self.colView.delegate = self
         self.colView.dataSource = self
-        self.loadTaskView(tag: 1)
+                
+//        for item in tasks {
+//            if myFinalCategories[item.categoryName!] == nil{
+//                myFinalCategories[item.categoryName!] = [item]
+//            }else{
+//                myFinalCategories[item.categoryName!]!.append(item)
+//            }
+//        }
+        
+//        for dic in myFinalCategories{
+//            let task = (dic.value as? [Task])!
+//            self.tasks.append(CatTasks(catName: dic.key, tasks: task))
+//        }
+        for cat in tasks {
+            for task in cat.tasks {
+                self.loadTaskView(tag: 1, task: task)
+            }
+        }
     }
     
-    private func loadTaskView(tag : Int){
+    private func loadTaskView(tag : Int,task:Task){
         let cView = TasksView()
         cView.tag = tag
+        cView.task = task
+        
         self.tasksStackView.addArrangedSubview(cView)
     }
     
@@ -60,7 +83,7 @@ class HomeTableViewCell: UITableViewCell {
 extension HomeTableViewCell: UICollectionViewDelegate,UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return self.tasks.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -80,6 +103,9 @@ extension HomeTableViewCell: UICollectionViewDelegate,UICollectionViewDataSource
         }else{
             cell.seletedCatView.isHidden = true
         }
+        let silk = self.tasks[indexPath.row]
+        
+        cell.catLbl.text = silk.catName
         
         return cell
     }
@@ -98,4 +124,9 @@ class HomeCategoryCell: UICollectionViewCell {
     override class func awakeFromNib() {
         super.awakeFromNib()
     }
+}
+
+struct CatTasks {
+    var catName:String
+    var tasks:[Task]
 }
