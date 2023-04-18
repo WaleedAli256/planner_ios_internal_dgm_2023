@@ -12,7 +12,12 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TasksView" customModule="ToDoApp" customModuleProvider="target">
             <connections>
+                <outlet property="descLbl" destination="Aov-Ip-kBB" id="NFD-48-6zv"/>
+                <outlet property="preReminderLbl" destination="ONq-MF-t0q" id="tiF-QS-7va"/>
                 <outlet property="priorityLbl" destination="2qL-Sn-hCN" id="44f-hY-haX"/>
+                <outlet property="repeatLbl" destination="9T5-o8-d8e" id="3xy-ZK-ugE"/>
+                <outlet property="timeLbl" destination="CQO-TE-GMp" id="QpC-aD-kcM"/>
+                <outlet property="titleLbl" destination="G8J-t1-0yJ" id="jFK-OP-Nqt"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>

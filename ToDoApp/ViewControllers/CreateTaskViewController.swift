@@ -38,7 +38,7 @@ class CreateTaskViewController: BaseViewController {
     fileprivate let maxLen = 250
     fileprivate let maxLen2 = 50
     fileprivate var preminderMin: Int = 0
-    
+    var caseNumber: Int!
     
     var categories = [TaskCategory]()
     var categoryId = ""
@@ -53,8 +53,10 @@ class CreateTaskViewController: BaseViewController {
         self.catTxtField.inputView = dummyInputView
         self.preReminderTxtField.inputView = dummyInputView
         self.RepititionTxtField.inputView = dummyInputView
+        self.dateTxtField.inputView = dummyInputView
+        self.timeTxtField.inputView = dummyInputView
         self.medView.layer.borderColor = UIColor(named: "medium-text-color")?.cgColor
-        self.medView.layer.borderWidth = 0.5
+        self.medView.layer.borderWidth = 0.8
     
         self.dateTxtField.delegate = self
         self.timeTxtField.delegate = self
@@ -83,6 +85,12 @@ class CreateTaskViewController: BaseViewController {
         RepititionTxtField.itemsTintColor = .red
         RepititionTxtField.arrowSize = 15
 //        RepititionTxtField.text = "Select Repitition"
+        
+        catTxtField.tintColor = .clear
+        preReminderTxtField.tintColor = .clear
+        RepititionTxtField.tintColor = .clear
+        dateTxtField.tintColor = .clear
+        timeTxtField.tintColor = .clear
         
         RepititionTxtField.optionArray = self.repitiotn
         preReminderTxtField.optionArray = self.preReminderTime
@@ -113,14 +121,18 @@ class CreateTaskViewController: BaseViewController {
 //        ["Once in a week","Daily","Once in a month","Only one time"]
         RepititionTxtField.didSelect { selectedText, index, id in
             if index == 0{
-                self.frequency = NotificationFrequency.weekly
+                self.caseNumber = 0
+                self.frequency = NotificationFrequency.once
             }else if index == 1{
+                self.caseNumber = 1
                 self.frequency = NotificationFrequency.daily
             }else if index == 2{
-                self.frequency = NotificationFrequency.monthly
+                self.caseNumber = 2
+                self.frequency = NotificationFrequency.weekly
             }
-            else if index == 2{
-                self.frequency = NotificationFrequency.once
+            else if index == 3{
+                self.caseNumber = 3
+                self.frequency = NotificationFrequency.monthly
             }
             print(id)
             self.RepititionTxtField.text = self.repitiotn[index].description
@@ -181,6 +193,7 @@ class CreateTaskViewController: BaseViewController {
 //            self.dateSelected = true
             self.date = formatter.string(from: self.datePicker.date)
             self.dateTxtField.text = self.date
+         
         }
         if(self.selectionMode == "Time")
         {
@@ -191,6 +204,8 @@ class CreateTaskViewController: BaseViewController {
 //            self.timeSelected = true
             self.selectedTime = formatter.string(from: self.datePicker.date)
             self.timeTxtField.text =  self.selectedTime
+           
+              
         }
 //        self.imgBlur.isHidden = true
     }
@@ -203,10 +218,10 @@ class CreateTaskViewController: BaseViewController {
     @IBAction func highPriortyAction(_ sender: UIButton) {
         
         self.highView.layer.borderColor = UIColor(named: "high-text-color")?.cgColor
-        self.highView.layer.borderWidth = 0.5
+        self.highView.layer.borderWidth = 0.8
         self.medView.layer.borderColor = UIColor(named: "medium-color")?.cgColor
         self.medView.layer.borderWidth = 0.0
-        self.lowView.layer.borderColor = UIColor(named: "low-color")?.cgColor
+        self.lowView.layer.borderColor = UIColor(named: "low-colorP")?.cgColor
         self.lowView.layer.borderWidth = 0.0
         self.priortyValue = "high"
     }
@@ -216,8 +231,8 @@ class CreateTaskViewController: BaseViewController {
         self.highView.layer.borderColor = UIColor(named: "high-color")?.cgColor
         self.highView.layer.borderWidth = 0.0
         self.medView.layer.borderColor = UIColor(named: "medium-text-color")?.cgColor
-        self.medView.layer.borderWidth = 0.5
-        self.lowView.layer.borderColor = UIColor(named: "low-color")?.cgColor
+        self.medView.layer.borderWidth = 0.8
+        self.lowView.layer.borderColor = UIColor(named: "low-colorP")?.cgColor
         self.lowView.layer.borderWidth = 0.0
         self.priortyValue = "medium"
     }
@@ -229,7 +244,7 @@ class CreateTaskViewController: BaseViewController {
         self.medView.layer.borderColor = UIColor(named: "medium-color")?.cgColor
         self.medView.layer.borderWidth = 0.0
         self.lowView.layer.borderColor = UIColor(named: "low-text-color-1")?.cgColor
-        self.lowView.layer.borderWidth = 0.5
+        self.lowView.layer.borderWidth = 1.0
         self.priortyValue = "low"
     }
 
@@ -268,25 +283,13 @@ class CreateTaskViewController: BaseViewController {
             return false
         }
         
-//        if(preReminderTxtField.text!.count < 1)
-//        {
-//            self.showAlert(title: "Error", message:"Please select set pre reminder")
-//            return false
-//        }
-        
-//        if(RepititionTxtField.text!.count < 1)
-//        {
-//            self.showAlert(title: "Error", message:"Please select set pre reminder")
-//            return false
-//        }
-
         return true
     }
     func createNotificationReminder(newDate:Date){
         let center = UNUserNotificationCenter.current()
         let content = UNMutableNotificationContent()
         content.title = self.titleTxtField.text!
-        content.body = self.detailTxtView.text!
+        content.body = "Simple Notification"
         content.sound = UNNotificationSound.default
         content.categoryIdentifier = "234"
 
@@ -313,16 +316,16 @@ class CreateTaskViewController: BaseViewController {
         content.sound = UNNotificationSound.default
         content.categoryIdentifier = "234"
         
-        let snoozeAction = UNNotificationAction(identifier: "Snooze",
-                                                title: "Snooze", options: [])
-        let deleteAction = UNNotificationAction(identifier: "UYLDeleteAction",
-                                                title: "Delete", options: [.destructive])
-        
-        let category = UNNotificationCategory(identifier: "UYLReminderCategory",
-                                              actions: [snoozeAction,deleteAction],
-                                              intentIdentifiers: [], options: [])
-        
-        center.setNotificationCategories([category])
+//        let snoozeAction = UNNotificationAction(identifier: "Snooze",
+//                                                title: "Snooze", options: [])
+//        let deleteAction = UNNotificationAction(identifier: "UYLDeleteAction",
+//                                                title: "Delete", options: [.destructive])
+//
+//        let category = UNNotificationCategory(identifier: "UYLReminderCategory",
+//                                              actions: [snoozeAction,deleteAction],
+//                                              intentIdentifiers: [], options: [])
+//
+//        center.setNotificationCategories([category])
     
         let preReminderDate = Calendar.current.date(byAdding: .minute, value: -beforeTime, to: newDate) // 5 minutes before event
        
@@ -445,74 +448,64 @@ class CreateTaskViewController: BaseViewController {
         
         let date = Date() // Replace with your desired date
         let calendar = Calendar.current
-//
-//        let hour = calendar.component(.hour, from: date)
-//        let mint = calendar.component(.minute, from: date)
-//        let nu = calendar.component(.weekday, from: date)
-//
-//        let dayNumber = calendar.component(.day, from: date)
-//        let monthsNumber = calendar.component(.month, from: date)
-//        let yearNumber = calendar.component(.year, from: date)
-//        let weeklyNumber = calendar.component(.weekOfMonth, from: date)
-//
-//
+
         print("Day number: (dayNumber)")
         
         // Create a date components object for the desired trigger date and time
         var dateComponents = DateComponents()
         let center = UNUserNotificationCenter.current()
         let content = UNMutableNotificationContent()
-        content.title = "notification title"
-        content.body = "Notification body"
+        content.title = "Repetition"
+        content.body = "Repetition body"
         content.sound = UNNotificationSound.default
-//        content.categoryIdentifier = self.docId
-//        var trigger: UNNotificationTrigger
-        
 
-    
-        
-        
-        
-        
-//        // Configure the notification trigger to repeat every minute
-//        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats:
-//        true)
-//        // Create the notification request
-//        let request = UNNotificationRequest(identifier: "minuteReminder", content:
-//        content, trigger: trigger)
-//        // Add the notification request to the notification center
-//        UNUserNotificationCenter.current().add(request) { (error) in
-//         if let error = error {
-//         print("Error adding notification request: \(error.localizedDescription)")
-//         }
-//        }
-        
-        
-//        let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: myDate)
-//        switch frequency {
-//        case .daily:
-//            // Set the trigger to repeat every day
-////            dateComponents.hour = hour
-//            dateComponents.minute = 1
-//            trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-//        case .weekly:
-//            // Set the trigger to repeat every week on the selected day
-////            dateComponents.weekday = nu // 1=Sunday, 2=Monday, etc.
-//            trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-//        case .monthly:
-//            // Set the trigger to repeat every month on the selected day
-////            dateComponents.day = selectedDayOfMonth
-//            trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-//        default:
-//            // No repetition for one-time notification
-//            trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-//        }
-//
-//        let uniqueID = "34"
-//        let request = UNNotificationRequest(identifier: uniqueID, content: content, trigger: trigger)
+               
+
+                switch caseNumber {
+                case 0: // No repeat
+                    dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: myDate)
+                    let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+                    scheduleNotification(with: trigger, content: content)
+                    break
+                case 1: // Daily repeat
+                    dateComponents.hour = dateComponents.hour! // Example hour, change it to your desired hour
+                    dateComponents.minute = dateComponents.minute!
+                    let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+                    // Create a notification request
+                    content.subtitle = "Daily"
+                    scheduleNotification(with: trigger, content: content)
+                case 2: // Weekly repeat
+                    let triggerDate = calendar.date(byAdding: .weekOfYear, value: 1, to: myDate)!
+                   let dateComponents1 = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate)
+                    let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents1, repeats: true)
+                    content.subtitle = "Weekly"
+                    scheduleNotification(with: trigger, content: content)
+                case 3: // Monthly repeat
+                    var components = DateComponents()
+                    components.day = dateComponents.day // Example date, change it to your desired date
+                    let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
+                    content.subtitle = "Monthly"
+                    scheduleNotification(with: trigger, content: content)
+                default: // No repeat
+                    break
+                }
         
 
     }
+    
+    func scheduleNotification(with trigger: UNNotificationTrigger, content: UNMutableNotificationContent) {
+           // Create notification request
+           let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+
+           // Add the notification request to the notification center
+           UNUserNotificationCenter.current().add(request) { (error) in
+               if let error = error {
+                   print("Error scheduling notification: \(error.localizedDescription)")
+               } else {
+                   print("Notification scheduled successfully.")
+               }
+           }
+       }
 }
 
 
