@@ -7,16 +7,18 @@
 
 import UIKit
 
-class HomeViewController: UIViewController {
-    
-    
-    @IBOutlet weak var dailyBtn: UIButton!
-    @IBOutlet weak var weeklyBtn: UIButton!
-    @IBOutlet weak var monthlyBtn: UIButton!
-    @IBOutlet weak var yearlyBtn: UIButton!
+class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     
     @IBOutlet weak var colView: UICollectionView!
     @IBOutlet weak var tblView: UITableView!
+    
+    @IBOutlet weak var interfaceSegmented: CustomSegmentedControl!{
+        didSet{
+            interfaceSegmented.setButtonTitles(buttonTitles: ["Daily","Weekly","Monthly","Yearly"])
+            interfaceSegmented.selectorViewColor = UIColor(named: "primary-color")!
+            interfaceSegmented.selectorTextColor = UIColor(named: "TextColor")!
+        }
+    }
     
     let dailyDays = ["Yesterday","Today","Tommorow"]
     
@@ -26,6 +28,10 @@ class HomeViewController: UIViewController {
     
     var selectedTab = 0
     var checked = Set<IndexPath>()
+    var centerCell: HomeCollectionViewCell?
+    var tableCenterCell: HomeTableViewCell?
+    var selectedTableIndex = -1
+    var selectedCollectionIndex = -1
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,42 +44,19 @@ class HomeViewController: UIViewController {
         
         self.colView.clipsToBounds = true
         self.colView.layer.cornerRadius = 4
-        
+        self.interfaceSegmented.delegate = self
+        HomeTableViewCell.onDoneBlock = { collectionIndex, tableIndex, sucess in
+            
+            self.selectedTableIndex = tableIndex
+            self.selectedCollectionIndex = collectionIndex
+            print(collectionIndex)
+            print(tableIndex)
+            self.tblView.reloadData()
+        }
     }
     
-    @IBAction func dailyAction(_ sender: UIButton) {
-        self.selectedTab = 0
-        self.dailyBtn.tag = 1
-        self.weeklyBtn.tag = 0
-        self.monthlyBtn.tag = 0
-        self.yearlyBtn.tag = 0
-        self.colView.reloadData()
-    }
-    
-    @IBAction func weeklyAction(_ sender: UIButton) {
-        self.selectedTab = 1
-        self.dailyBtn.tag = 0
-        self.weeklyBtn.tag = 1
-        self.monthlyBtn.tag = 0
-        self.yearlyBtn.tag = 0
-        self.colView.reloadData()
-    }
-    
-    @IBAction func monthlyAction(_ sender: UIButton) {
-        self.selectedTab = 2
-        self.dailyBtn.tag = 0
-        self.weeklyBtn.tag = 0
-        self.monthlyBtn.tag = 1
-        self.yearlyBtn.tag = 0
-        self.colView.reloadData()
-    }
-    
-    @IBAction func yearlyAction(_ sender: UIButton) {
-        self.selectedTab = 3
-        self.dailyBtn.tag = 0
-        self.weeklyBtn.tag = 0
-        self.monthlyBtn.tag = 0
-        self.yearlyBtn.tag = 1
+    func change(to index: Int) {
+        self.selectedTab = index
         self.colView.reloadData()
     }
 
@@ -109,6 +92,21 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        DispatchQueue.main.async {
+            let centerPoint = CGPoint(x: self.colView.frame.width/2 + collectionView.contentOffset.x, y: self.colView.frame.height/2 + collectionView.contentOffset.y)
+            self.centerCell = self.colView.cellForItem(at: indexPath) as? HomeCollectionViewCell
+            
+            self.centerCell?.transformCellToLarge()
+            for cell in collectionView.visibleCells {
+                (cell as? HomeCollectionViewCell)?.transformCellToStandard()
+            }
+            self.centerCell?.transformCellToLarge()
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if self.selectedTab == 0 {
             let width  = (collectionView.frame.width)/3
@@ -130,22 +128,21 @@ extension HomeViewController: UITableViewDelegate,UITableViewDataSource {
         return 6
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
+        let cell = tableView.dequeueReusableCell(withIdentifier: "HomeTableViewCell") as! HomeTableViewCell
         
-        guard let cell = tblView.dequeueReusableCell(withIdentifier: "HomeTableViewCell", for: indexPath) as? HomeTableViewCell else {
-            return UITableViewCell()
+        cell.index = indexPath
+        cell.selectedTableIndex = selectedTableIndex
+        cell.selectedCollectionIndex = selectedCollectionIndex
+        cell.colView.reloadData()
+        if selectedTableIndex == indexPath.row{
+            cell.tasksStackView.isHidden = false
+            cell.transformCellToLarge()
+            cell.colView.reloadData()
+        }else{
+            cell.transformCellToStandard()
+            cell.tasksStackView.isHidden = true
         }
-        cell.tasksStackView.isHidden = !self.checked.contains(indexPath)
-        cell.didTapCategory = {
-            if self.checked.contains(indexPath) {
-                self.checked.remove(indexPath)
-            } else {
-                self.checked.insert(indexPath)
-            }
-            tableView.reloadRows(at:[indexPath], with:.fade)
-        }
-        
-        cell.selectionStyle = .none
         
         return cell
     }

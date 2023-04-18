@@ -10,16 +10,20 @@ import UIKit
 class HomeTableViewCell: UITableViewCell {
     
     @IBOutlet weak var colView: UICollectionView!
+    @IBOutlet weak var timeLbl: UILabel!
     @IBOutlet weak var tasksStackView: UIStackView!
     
+    static var onDoneBlock : ((Int,Int,Bool) -> Void)?
     var didTapCategory:(() -> Void)?
     var checked = Set<IndexPath>()
-    
+    var selcted = -1
+    var index = IndexPath()
+    var selectedTableIndex = Int()
+    var selectedCollectionIndex = Int()
     override func awakeFromNib() {
         super.awakeFromNib()
         self.colView.delegate = self
         self.colView.dataSource = self
-        
         self.loadTaskView(tag: 1)
     }
     
@@ -32,6 +36,23 @@ class HomeTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
+    }
+    
+    func transformCellToLarge() {
+        UIView.animate(withDuration: 0.1) {
+            self.timeLbl.textColor = .black
+            self.timeLbl.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
+        }
+        
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
+    }
+    
+    func transformCellToStandard() {
+        UIView.animate(withDuration: 0.1) {
+            self.timeLbl.textColor = UIColor(named: "LightDarkTextColor")!
+            self.timeLbl.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        }
     }
 
 }
@@ -50,21 +71,21 @@ extension HomeTableViewCell: UICollectionViewDelegate,UICollectionViewDataSource
         cell.bgView.clipsToBounds = true
         cell.bgView.layer.cornerRadius = 4
         
-        cell.seletedCatView.isHidden = !self.checked.contains(indexPath)
+        if index.row == selectedTableIndex{
+            if selectedCollectionIndex == indexPath.row{
+                cell.seletedCatView.isHidden = false
+            }else{
+                cell.seletedCatView.isHidden = true
+            }
+        }else{
+            cell.seletedCatView.isHidden = true
+        }
         
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let onTapCell = self.didTapCategory {
-            onTapCell()
-        }
-        if self.checked.contains(indexPath) {
-            self.checked.remove(indexPath)
-        } else {
-            self.checked.insert(indexPath)
-        }
-        collectionView.reloadData()
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath){
+        HomeTableViewCell.onDoneBlock?(indexPath.row,index.row , true)
     }
 }
 
