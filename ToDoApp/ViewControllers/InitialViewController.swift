@@ -150,7 +150,7 @@ class InitialViewController: BaseViewController {
                                 dict["image_url"] = "profilePicUrl"
                                 let user = User.init(fromDictionary: dict)
                                 Utilities().setCurrentUser(currentUser: user)
-//                                self.createDefaultsCategories(userId: userUID)
+                                self.createDefaultsCategories(userId: userUID)
                                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                                 let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
                                 self.navigationController?.pushViewController(mainTabBarController, animated: true)
@@ -181,7 +181,7 @@ class InitialViewController: BaseViewController {
                                 dict["image_url"] = "profilePicUrl"
                                 let user = User.init(fromDictionary: dict)
                                 Utilities().setCurrentUser(currentUser: user)
-//                                self.createDefaultsCategories(userId: userUID)
+                                self.createDefaultsCategories(userId: userUID)
                                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                                 let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
                                 self.navigationController?.pushViewController(mainTabBarController, animated: true)
@@ -202,7 +202,7 @@ class InitialViewController: BaseViewController {
         let sec = TaskCategory(image: 2, userId: userId, description: "Wake up on the time So you never late!", name: "Sleeping Schedule", taskCount: "0", id: "", colorCode: "#F1A800")
         let third = TaskCategory(image: 3, userId: userId, description: "Never miss an Event to wish to your loved ones", name: "Event Reminder", taskCount: "0", id: "", colorCode: "#FFB185")
         let fourth = TaskCategory(image: 4, userId: userId, description: "Schedule your Exercise to stay healthy", name: "Exercise Schedule", taskCount: "0", id: "", colorCode: "#E784D1")
-        let fifth = TaskCategory(image: 5, userId: userId, description: "Keep yourself hydrated all time!", name: "Food Intake", taskCount: "0", id: "", colorCode: "#C4DF58")
+        let fifth = TaskCategory(image: 5, userId: userId, description: "Keep yourself hydrated all time!", name: "Food Intake", taskCount: "0", id: "", colorCode: "#76DC80")
         let sixth = TaskCategory(image: 6, userId: userId, description: "Wake up on the time So you never late!", name: "Personal Care", taskCount: "0", id: "", colorCode: "#51BBA2")
         categories.append(first)
         categories.append(sec)

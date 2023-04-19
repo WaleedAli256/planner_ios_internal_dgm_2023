@@ -44,7 +44,7 @@ class CustomSegmentedControl: UIView {
     
     func setIndex(index:Int) {
         buttons.forEach({ $0.setTitleColor(textColor, for: .normal) })
-        buttons.forEach({ $0.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .medium)})
+        buttons.forEach({ $0.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .semibold)})
         let button = buttons[index]
         selectedIndex = index
         button.setTitleColor(selectorTextColor, for: .normal)
@@ -115,6 +115,7 @@ extension CustomSegmentedControl {
             button.setTitle(buttonTitle, for: .normal)
             button.addTarget(self, action:#selector(CustomSegmentedControl.buttonAction(sender:)), for: .touchUpInside)
             button.setTitleColor(textColor, for: .normal)
+            button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
             buttons.append(button)
         }
         buttons[0].setTitleColor(selectorTextColor, for: .normal)

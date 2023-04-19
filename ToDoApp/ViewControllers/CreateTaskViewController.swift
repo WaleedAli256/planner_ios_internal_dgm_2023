@@ -42,6 +42,8 @@ class CreateTaskViewController: BaseViewController {
     
     var categories = [TaskCategory]()
     var categoryId = ""
+    var CarColorCode = ""
+    var priortyColor = "medium-text-color"
     var strCategories = [String]()
     var preReminderTime = ["5min","10min","15min","30min","One hour","One day before"]
     var preReminderText = ""
@@ -55,6 +57,9 @@ class CreateTaskViewController: BaseViewController {
         self.RepititionTxtField.inputView = dummyInputView
         self.dateTxtField.inputView = dummyInputView
         self.timeTxtField.inputView = dummyInputView
+        self.catTxtField.endEditing(true)
+        self.catTxtField.resignFirstResponder()
+        
         self.medView.layer.borderColor = UIColor(named: "medium-text-color")?.cgColor
         self.medView.layer.borderWidth = 0.8
     
@@ -97,6 +102,7 @@ class CreateTaskViewController: BaseViewController {
         
         self.catTxtField.didSelect { selectedText, index, id in
             self.categoryId = self.categories[index].id!
+            self.CarColorCode = self.categories[index].colorCode ?? ""
             self.catTxtField.text = self.strCategories[index].description
         }
 
@@ -117,7 +123,7 @@ class CreateTaskViewController: BaseViewController {
             }
             self.preReminderTxtField.text = self.preReminderTime[index].description
         }
-        var dateComponenets = DateComponents()
+//        var dateComponenets = DateComponents()
 //        ["Once in a week","Daily","Once in a month","Only one time"]
         RepititionTxtField.didSelect { selectedText, index, id in
             if index == 0{
@@ -223,7 +229,9 @@ class CreateTaskViewController: BaseViewController {
         self.medView.layer.borderWidth = 0.0
         self.lowView.layer.borderColor = UIColor(named: "low-colorP")?.cgColor
         self.lowView.layer.borderWidth = 0.0
+        self.priortyColor = "high-text-color"
         self.priortyValue = "high"
+        
     }
     
     @IBAction func medPriortyAction(_ sender: UIButton) {
@@ -234,6 +242,7 @@ class CreateTaskViewController: BaseViewController {
         self.medView.layer.borderWidth = 0.8
         self.lowView.layer.borderColor = UIColor(named: "low-colorP")?.cgColor
         self.lowView.layer.borderWidth = 0.0
+        self.priortyColor = "medium-text-color"
         self.priortyValue = "medium"
     }
     
@@ -245,6 +254,7 @@ class CreateTaskViewController: BaseViewController {
         self.medView.layer.borderWidth = 0.0
         self.lowView.layer.borderColor = UIColor(named: "low-text-color-1")?.cgColor
         self.lowView.layer.borderWidth = 1.0
+        self.priortyColor = "low-text-color-1"
         self.priortyValue = "low"
     }
 
@@ -289,8 +299,8 @@ class CreateTaskViewController: BaseViewController {
         let center = UNUserNotificationCenter.current()
         let content = UNMutableNotificationContent()
         content.title = self.titleTxtField.text!
-        content.body = "Simple Notification"
-        content.sound = UNNotificationSound.default
+        content.body = self.detailTxtView.text!
+        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-1.wav"))
         content.categoryIdentifier = "234"
 
         let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: newDate)
@@ -313,7 +323,8 @@ class CreateTaskViewController: BaseViewController {
         let content = UNMutableNotificationContent()
         content.title = self.titleTxtField.text!
         content.body = "5 mints Remaining"
-        content.sound = UNNotificationSound.default
+        
+        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-1.wav"))
         content.categoryIdentifier = "234"
         
 //        let snoozeAction = UNNotificationAction(identifier: "Snooze",
@@ -344,6 +355,8 @@ class CreateTaskViewController: BaseViewController {
             }
         }
     }
+
+    
     func createTask() {
         
         if(validate())
@@ -362,12 +375,14 @@ class CreateTaskViewController: BaseViewController {
                    "userId": Utilities().getCurrentUser().id  ?? "",
                     "categoryId": self.categoryId,
                     "categoryName": self.catTxtField.text!,
-                   "descriptionField": self.detailTxtView.text!,
-                   "date":self.date,
+                   "description": self.detailTxtView.text!,
+                   "date":self.date + " " + self.selectedTime,
                    "time":self.selectedTime,
                    "priority": self.priortyValue ?? "medium",
                    "preReminder":self.preReminderTxtField.text ?? "Never",
-                   "repitition": self.RepititionTxtField.text! ?? "Never"
+                   "repetition": self.RepititionTxtField.text ?? "Never",
+                    "colorCode": self.CarColorCode,
+                    "priorityColorCode":self.priortyColor
                 ]) { err in
                     if let err = err {
                         Utilities.hide_ProgressHud(view: self.view)
@@ -380,13 +395,13 @@ class CreateTaskViewController: BaseViewController {
                         
                         cAlert.ShowToastWithHandler(VC: self, msg: "Task created successfully") { sucess in
                             _ = self.tabBarController?.selectedIndex = 0
-//                            self.titleTxtField.text = ""
-//                            self.detailTxtView.text = "Description"
-//                            self.catTxtField.text = ""
-//                            self.dateTxtField.text = ""
-//                            self.timeTxtField.text = ""
-//                            self.preReminderTxtField.text = ""
-//                            self.RepititionTxtField.text = ""
+                            self.titleTxtField.text = ""
+                            self.detailTxtView.text = "Description"
+                            self.catTxtField.text = ""
+                            self.dateTxtField.text = ""
+                            self.timeTxtField.text = ""
+                            self.preReminderTxtField.text = ""
+                            self.RepititionTxtField.text = ""
                         }
 
                     }
@@ -424,7 +439,7 @@ class CreateTaskViewController: BaseViewController {
             let db = Firestore.firestore()
             db.collection("category").whereField("userId", isEqualTo: userId)
                 .getDocuments() { (querySnapshot, err) in
-                    if let err = err {
+                    if err != nil {
                         print("Error getting documents: (err)")
                         Utilities.hide_ProgressHud(view: self.view)
                     } else {
@@ -446,18 +461,18 @@ class CreateTaskViewController: BaseViewController {
     var frequency = NotificationFrequency.weekly
     func fireNotification(myDate : Date) {
         
-        let date = Date() // Replace with your desired date
+//        let date = Date() // Replace with your desired date
         let calendar = Calendar.current
 
         print("Day number: (dayNumber)")
         
         // Create a date components object for the desired trigger date and time
         var dateComponents = DateComponents()
-        let center = UNUserNotificationCenter.current()
+//        let center = UNUserNotificationCenter.current()
         let content = UNMutableNotificationContent()
-        content.title = "Repetition"
-        content.body = "Repetition body"
-        content.sound = UNNotificationSound.default
+        content.title = self.titleTxtField.text!
+        content.body = self.detailTxtView.text!
+        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-1.wav"))
 
                
 
@@ -563,6 +578,12 @@ extension CreateTaskViewController: UITextFieldDelegate
         }
         else if textField == self.detailTxtView {
             self.detailTxtView.resignFirstResponder()
+        } else if textField == self.dateTxtField || textField == self.timeTxtField || textField == preReminderTxtField || textField == RepititionTxtField || textField == catTxtField {
+            self.catTxtField.resignFirstResponder()
+            self.dateTxtField.resignFirstResponder()
+            self.timeTxtField.resignFirstResponder()
+            self.preReminderTxtField.resignFirstResponder()
+            self.RepititionTxtField.resignFirstResponder()
         }
         return true
     }
@@ -577,7 +598,7 @@ extension CreateTaskViewController: UITextViewDelegate
         {
             if(textView.text == "Description")
             {
-//                textView.textColor = UIColor.black
+                textView.textColor = UIColor(named: "LightDarkTextColor")
                 textView.text = ""
             }
         }
@@ -588,7 +609,7 @@ extension CreateTaskViewController: UITextViewDelegate
         {
             if(textView.text == "")
             {
-                textView.textColor = UIColor.lightGray
+                textView.textColor = UIColor(named: "LightDarkTextColor")
                 textView.text = "Description"
             } else {
                 detailTxtView.resignFirstResponder()

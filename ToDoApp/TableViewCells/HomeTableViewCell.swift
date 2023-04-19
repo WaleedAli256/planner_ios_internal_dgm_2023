@@ -107,7 +107,9 @@ extension HomeTableViewCell: UICollectionViewDelegate,UICollectionViewDataSource
         let silk = self.tasks[indexPath.row]
         
         cell.catLbl.text = silk.catName
-        
+        if let color = silk.tasks.first?.colorCode {
+            cell.bgView.backgroundColor = UIColor(hexString: color)
+        }
         return cell
     }
     

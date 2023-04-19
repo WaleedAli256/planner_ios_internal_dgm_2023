@@ -22,7 +22,7 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
         }
     }
     
-    let dailyTime = ["12 AM", "1 AM", "2 AM", "3 AM", "4 AM", "5 AM", "7 AM", "8 AM", "9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM", "7 PM", "8 PM", "9 PM", "10 PM", "11 PM"]
+    let dailyTime = ["12 AM", "1 AM", "2 AM", "3 AM", "4 AM", "5 AM", "7 AM", "8 AM", "9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM", "6 PM", "7 PM", "8 PM", "9 PM", "10 PM", "11 PM"]
     
     let dailyDays = ["Yesterday","Today","Tommorow"]
     
@@ -44,10 +44,13 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     var allTasks: [Task] = []
     
     var selectedDayTasks:[Task] = []
+//    var updateValues = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.tabBarController?.delegate = self
+        
         self.tblView.delegate = self
         self.tblView.dataSource = self
 
@@ -65,6 +68,11 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
             print(tableIndex)
             self.tblView.reloadData()
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "")
     }
     
@@ -84,8 +92,8 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
                         let objCat = Task.init(fromDictionary: dicCat)
                         self.allTasks.append(objCat)
                         self.selectedDayTasks = []
-                        self.filterDailyTasks(day: 1, task: objCat)
                     }
+                    self.getTasks()
                     self.tblView.reloadData()
                 }
             }
@@ -299,6 +307,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func getTasks() {
+        self.selectedDayTasks.removeAll()
         for tsk in self.allTasks {
             if self.selectedTab == 0 {
                 self.filterDailyTasks(day: self.dailySelected, task: tsk)
@@ -310,6 +319,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 self.filterMonthlyTasks(day: self.yearlySelected, task: tsk)
             }
         }
+//        self.updateValues = true
         self.tblView.reloadData()
     }
 }
@@ -331,6 +341,7 @@ extension HomeViewController: UITableViewDelegate,UITableViewDataSource {
         if indexPath.row == selectedTableIndex {
             cell.tasksStackView.isHidden = false
             cell.transformCellToLarge()
+//            cell.timeLbl.font = UIFont.boldSystemFont(ofSize: 14)
             cell.colView.reloadData()
         }else{
             cell.transformCellToStandard()
@@ -342,7 +353,10 @@ extension HomeViewController: UITableViewDelegate,UITableViewDataSource {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
 
-        
+//        if self.updateValues {
+//            if indexPath.row == self.dailyTime.count - 1 {
+//                self.updateValues = false
+//            }
         let finalTask = self.selectedDayTasks.filter { task in
             if let date = dateFormatter.date(from: task.date ?? "") {
                 let formatter = DateFormatter()
@@ -368,14 +382,20 @@ extension HomeViewController: UITableViewDelegate,UITableViewDataSource {
         for view in cell.tasksStackView.subviews {
             view.removeFromSuperview()
         }
-        for cat in cell.tasks {
-            for task in cat.tasks {
-                cell.loadTaskView(tag: 1, task: task)
-            }
-        }
         
-//        cell.tasks = finalTask
+                for cat in cell.tasks {
+                    for task in cat.tasks {
+                        cell.loadTaskView(tag: 1, task: task)
+                    }
+                }
         
+//        if self.selectedCollectionIndex != -1  && cell.tasks.count > 0 {
+//            let taskss = cell.tasks[self.selectedCollectionIndex]
+//            for teve in taskss.tasks {
+//                cell.loadTaskView(tag: 1, task: teve)
+//            }
+//        }
+//        }
         return cell
     }
     
@@ -383,4 +403,13 @@ extension HomeViewController: UITableViewDelegate,UITableViewDataSource {
         return UITableView.automaticDimension
     }
     
+}
+
+extension HomeViewController: UITabBarControllerDelegate {
+
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+            // Perform actions when tab bar index changes, e.g., call a method, update UI, etc.
+//        self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "")
+            print("Tab bar index changed to \(tabBarController.selectedIndex)")
+        }
 }

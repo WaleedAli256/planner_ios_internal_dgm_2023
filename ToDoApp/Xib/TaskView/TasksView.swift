@@ -19,6 +19,8 @@ class TasksView: UIView{
     @IBOutlet weak var timeLbl: UILabel!
     @IBOutlet weak var repeatLbl: UILabel!
     @IBOutlet weak var preReminderLbl: UILabel!
+    @IBOutlet weak var bgView: UIView!
+    @IBOutlet weak var priorityBgView: UIView!
  
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -40,9 +42,25 @@ class TasksView: UIView{
             self.priorityLbl.text = self.task?.priority
             self.titleLbl.text = self.task?.title
             self.descLbl.text = self.task?.description
-            self.timeLbl.text = self.task?.time
+            self.timeLbl.text = self.task?.date
             self.repeatLbl.text = self.task?.repetition
             self.preReminderLbl.text = self.task?.preReminder
+            if let color = self.task?.priorityColorCode {
+                if self.priorityLbl.text == "high" {
+                    self.priorityBgView.backgroundColor = UIColor(named: "high-color")
+                } else if self.priorityLbl.text == "medium" {
+                    self.priorityBgView.backgroundColor = UIColor(named: "medium-color")
+                    
+                } else if self.priorityLbl.text == "low" {
+                    self.priorityBgView.backgroundColor = UIColor(named: "low-colorP")
+                    
+                }
+                self.priorityLbl.textColor = UIColor(named: color)
+            }
+            
+            if let color = self.task?.colorCode {
+                self.bgView.backgroundColor = UIColor(hexString: color).withAlphaComponent(0.70)
+            }
         }
     }
 }

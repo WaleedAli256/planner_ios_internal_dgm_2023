@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_12" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -12,8 +12,10 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TasksView" customModule="ToDoApp" customModuleProvider="target">
             <connections>
+                <outlet property="bgView" destination="szy-Q1-7ai" id="DSl-tQ-phr"/>
                 <outlet property="descLbl" destination="Aov-Ip-kBB" id="NFD-48-6zv"/>
                 <outlet property="preReminderLbl" destination="ONq-MF-t0q" id="tiF-QS-7va"/>
+                <outlet property="priorityBgView" destination="9tE-rU-XER" id="R7v-NC-0ip"/>
                 <outlet property="priorityLbl" destination="2qL-Sn-hCN" id="44f-hY-haX"/>
                 <outlet property="repeatLbl" destination="9T5-o8-d8e" id="3xy-ZK-ugE"/>
                 <outlet property="timeLbl" destination="CQO-TE-GMp" id="QpC-aD-kcM"/>
@@ -26,16 +28,16 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="szy-Q1-7ai" customClass="CustomView" customModule="ToDoApp" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="59" width="455" height="343"/>
+                    <rect key="frame" x="0.0" y="44" width="455" height="358"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="rQY-Cz-xtT">
-                            <rect key="frame" x="16" y="7.6666666666666856" width="414" height="328"/>
+                            <rect key="frame" x="16" y="7.5" width="414" height="343"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m39-fS-eoy">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="21"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wake up!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G8J-t1-0yJ">
-                                            <rect key="frame" x="-1" y="-0.6666666666666714" width="74" height="21"/>
+                                            <rect key="frame" x="-1" y="-0.5" width="74" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="XNO-BO-T3j"/>
                                                 <constraint firstAttribute="width" constant="74" id="sxm-1S-wJU"/>
@@ -45,13 +47,13 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9tE-rU-XER" customClass="CustomView" customModule="ToDoApp" customModuleProvider="target">
-                                            <rect key="frame" x="81" y="2" width="72.666666666666686" height="16"/>
+                                            <rect key="frame" x="81" y="2" width="72.5" height="16"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="High" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2qL-Sn-hCN">
-                                                    <rect key="frame" x="25" y="2" width="22.666666666666671" height="12"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="medium" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2qL-Sn-hCN">
+                                                    <rect key="frame" x="0.0" y="0.0" width="72.5" height="16"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                                    <color key="textColor" name="high-text-color"/>
+                                                    <color key="textColor" name="medium-text-color"/>
                                                     <nil key="highlightedColor"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadiuss">
@@ -64,13 +66,13 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" name="high-color"/>
                                             <constraints>
-                                                <constraint firstItem="2qL-Sn-hCN" firstAttribute="centerX" secondItem="9tE-rU-XER" secondAttribute="centerX" id="Hcb-sI-LUv"/>
-                                                <constraint firstItem="2qL-Sn-hCN" firstAttribute="leading" secondItem="9tE-rU-XER" secondAttribute="leading" constant="25" id="SVx-nB-58U"/>
-                                                <constraint firstAttribute="trailing" secondItem="2qL-Sn-hCN" secondAttribute="trailing" constant="25" id="Vsq-N1-qyE"/>
+                                                <constraint firstAttribute="trailing" secondItem="2qL-Sn-hCN" secondAttribute="trailing" id="B8w-Ue-HUK"/>
+                                                <constraint firstAttribute="bottom" secondItem="2qL-Sn-hCN" secondAttribute="bottom" id="F94-0y-Exe"/>
+                                                <constraint firstAttribute="width" constant="72.5" id="NYi-35-Le6"/>
+                                                <constraint firstItem="2qL-Sn-hCN" firstAttribute="top" secondItem="9tE-rU-XER" secondAttribute="top" id="PoP-dp-YSD"/>
+                                                <constraint firstItem="2qL-Sn-hCN" firstAttribute="leading" secondItem="9tE-rU-XER" secondAttribute="leading" id="eAl-xn-9p4"/>
                                                 <constraint firstAttribute="height" constant="16" id="nAV-7f-OD6"/>
-                                                <constraint firstItem="2qL-Sn-hCN" firstAttribute="centerY" secondItem="9tE-rU-XER" secondAttribute="centerY" id="rTW-WK-xOc"/>
                                             </constraints>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="cornarRadius">
@@ -98,12 +100,12 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sun,20 Aug 10:00 AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CQO-TE-GMp">
-                                            <rect key="frame" x="19" y="0.3333333333333286" width="383" height="21"/>
+                                            <rect key="frame" x="19" y="0.5" width="383" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="cst-DR-kyV"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                            <color key="textColor" red="0.57647058819999997" green="0.58431372550000005" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -120,7 +122,7 @@
                                     <rect key="frame" x="0.0" y="54" width="414" height="21"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zmH-C0-Nuh" customClass="CustomView" customModule="ToDoApp" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="8.9999999999999858" width="3" height="3"/>
+                                            <rect key="frame" x="0.0" y="9" width="3" height="3"/>
                                             <color key="backgroundColor" name="high-text-color"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="3" id="YYf-dy-6U8"/>
@@ -135,17 +137,17 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Once in a week" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9T5-o8-d8e">
                                             <rect key="frame" x="7" y="5" width="67" height="11"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="9"/>
-                                            <color key="textColor" name="light-grey"/>
+                                            <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 min before reminder" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ONq-MF-t0q">
                                             <rect key="frame" x="85" y="5" width="102" height="11"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="9"/>
-                                            <color key="textColor" name="light-grey"/>
+                                            <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b0k-js-a8t" customClass="CustomView" customModule="ToDoApp" customModuleProvider="target">
-                                            <rect key="frame" x="78" y="8.9999999999999858" width="3" height="3"/>
+                                            <rect key="frame" x="78" y="9" width="3" height="3"/>
                                             <color key="backgroundColor" name="medium-text-color"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="3" id="5Q0-QD-D20"/>
@@ -172,9 +174,9 @@
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Detail here for to do task daily weekly or yearly you can manage in the detail text" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aov-Ip-kBB">
-                                    <rect key="frame" x="0.0" y="81" width="414" height="247"/>
+                                    <rect key="frame" x="0.0" y="81" width="414" height="262"/>
                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="10"/>
-                                    <color key="textColor" red="0.57647058819999997" green="0.58431372550000005" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
@@ -218,14 +220,8 @@
         <namedColor name="Light-orange">
             <color red="1" green="0.8901960784313725" blue="0.99607843137254903" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="high-color">
-            <color red="0.98400002717971802" green="0.77999997138977051" blue="0.80400002002716064" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="high-text-color">
             <color red="1" green="0.15700000524520874" blue="0.15700000524520874" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="light-grey">
-            <color red="0.74900001287460327" green="0.74900001287460327" blue="0.74900001287460327" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="medium-text-color">
             <color red="0.097999997437000275" green="0.46299999952316284" blue="0.82400000095367432" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
