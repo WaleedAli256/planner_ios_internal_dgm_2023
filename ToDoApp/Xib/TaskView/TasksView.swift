@@ -42,16 +42,28 @@ class TasksView: UIView{
             self.priorityLbl.text = self.task?.priority
             self.titleLbl.text = self.task?.title
             self.descLbl.text = self.task?.description
-            self.timeLbl.text = self.task?.date
+            
+            let originalDateFormat = "MM/dd/yyyy h:mm a"
+            let desiredDateFormat = "EE,d MMM h:mm a"
+            let originalDateString = self.task?.date
+
+            if let formattedDate = Utilities.changeDateFormat(fromFormat: originalDateFormat, toFormat: desiredDateFormat, dateString: originalDateString!) {
+                print("Formatted Date: \(formattedDate)")
+                self.timeLbl.text = formattedDate
+            } else {
+                print("Failed to format date")
+            }
+            
+//            self.timeLbl.text = self.task?.date
             self.repeatLbl.text = self.task?.repetition
             self.preReminderLbl.text = self.task?.preReminder
             if let color = self.task?.priorityColorCode {
-                if self.priorityLbl.text == "high" {
+                if self.priorityLbl.text == "High" {
                     self.priorityBgView.backgroundColor = UIColor(named: "high-color")
-                } else if self.priorityLbl.text == "medium" {
+                } else if self.priorityLbl.text == "Medium" {
                     self.priorityBgView.backgroundColor = UIColor(named: "medium-color")
                     
-                } else if self.priorityLbl.text == "low" {
+                } else if self.priorityLbl.text == "Low" {
                     self.priorityBgView.backgroundColor = UIColor(named: "low-colorP")
                     
                 }
@@ -59,8 +71,22 @@ class TasksView: UIView{
             }
             
             if let color = self.task?.colorCode {
-                self.bgView.backgroundColor = UIColor(hexString: color).withAlphaComponent(0.70)
+                self.bgView.backgroundColor = UIColor(hexString: color)
             }
         }
     }
+    
+//    func changeDateFormat(fromFormat: String, toFormat: String, dateString: String) -> String? {
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = fromFormat
+//        
+//        if let date = dateFormatter.date(from: dateString) {
+//            dateFormatter.dateFormat = toFormat
+//            let formattedDate = dateFormatter.string(from: date)
+//            return formattedDate
+//        } else {
+//            return nil
+//        }
+//    }
+        
 }

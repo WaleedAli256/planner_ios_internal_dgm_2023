@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import StoreKit
 
 class SettingViewController: UIViewController {
 
@@ -18,15 +19,46 @@ class SettingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.tblView.delegate = self
         self.tblView.dataSource = self
     }
-    
+        
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         
         
+    }
+    
+    func shareMyApp() {
+        
+        if let urlStr = NSURL(string: "https://apps.apple.com/us/app/idxxxxxxxx?ls=1&mt=8") {
+            let objectsToShare = [urlStr]
+            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+            
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                if let popup = activityVC.popoverPresentationController {
+                    popup.sourceView = self.view
+                    popup.sourceRect = CGRect(x: self.view.frame.size.width / 2, y: self.view.frame.size.height / 4, width: 0, height: 0)
+                }
+            }
+            
+            self.present(activityVC, animated: true, completion: nil)
+        }
+    }
+    
+    
+    func rateUsApp() {
+        
+        guard let url = URL(string: "https://centumsols.com/privacy-policy") else {
+                  return //be safe
+                }
+//           let url = URL(string: "https://centumsols.com/privacy-policy")
+           if #available(iOS 10.0, *) {
+               UIApplication.shared.open(url, options: [:], completionHandler: nil)
+           } else {
+               UIApplication.shared.openURL(url)
+           }
     }
     
 
@@ -53,10 +85,26 @@ extension SettingViewController: UITableViewDelegate,UITableViewDataSource {
             cell.iconImg.tintColor = UIColor.white
             cell.innerView.backgroundColor = UIColor(named: "primary-color")
             cell.dividerView.backgroundColor = UIColor(named: "low-color")?.withAlphaComponent(0.2)
+            
+            if indexPath.row == 0 {
+                let controller = self.storyboard?.instantiateViewController(withIdentifier: "AboutUsViewController") as! AboutUsViewController
+                self.navigationController?.pushViewController(controller, animated: true)
+                
+            } else if indexPath.row == 1 {
+                SKStoreReviewController.requestReview()
+                
+            } else if indexPath.row == 2 {
+                self.shareMyApp()
+                
+            } else if indexPath.row == 3 {
+                self.rateUsApp()
+            }
+            
+            
         }else{
             cell.aboutlbl.textColor = UIColor.black
             cell.iconImg.tintColor = UIColor(named: "primary-color")
-            cell.innerView.backgroundColor = UIColor(named: "secondary-color")
+            cell.innerView.backgroundColor = UIColor(named: "ViewBGLight")
             cell.dividerView.backgroundColor = UIColor(named: "low-color")
 
             
@@ -72,6 +120,7 @@ extension SettingViewController: UITableViewDelegate,UITableViewDataSource {
         } else {
             selectedIndex = indexPath.row
         }
+
         self.tblView.reloadData()
     }
 }

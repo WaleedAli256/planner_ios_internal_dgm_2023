@@ -349,7 +349,6 @@ extension HomeViewController: UITableViewDelegate,UITableViewDataSource {
         }
         
         cell.timeLbl.text = self.dailyTime[indexPath.row]
-        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
 

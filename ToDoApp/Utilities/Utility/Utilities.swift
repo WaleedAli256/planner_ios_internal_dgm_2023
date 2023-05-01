@@ -59,6 +59,8 @@ class Utilities: NSObject {
         userDefaults.setValue(true, forKey: Constants.UserDefaults.isFirstTime)
         userDefaults.synchronize()
     }
+    
+    
 
     static func show_ProgressHud(view: UIView)
     {
@@ -73,8 +75,20 @@ class Utilities: NSObject {
             MBProgressHUD.hide(for: view, animated: false)
         }
     }
-
-
+    
+    static func changeDateFormat(fromFormat: String, toFormat: String, dateString: String) -> String? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = fromFormat
+        
+        if let date = dateFormatter.date(from: dateString) {
+            dateFormatter.dateFormat = toFormat
+            let formattedDate = dateFormatter.string(from: date)
+            return formattedDate
+        } else {
+            return nil
+        }
+    }
+        
 struct Connectivity {
     static let sharedInstance = NetworkReachabilityManager()!
     static var isConnectedToInternet:Bool {

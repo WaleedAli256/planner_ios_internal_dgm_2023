@@ -16,7 +16,7 @@ class CategoryViewController: UIViewController {
     
     var categories: [TaskCategory] = []
     
-    override func viewDidLoad() {
+    override func viewDidLoad() { 
         super.viewDidLoad()
         
         self.catColView.delegate = self
@@ -45,6 +45,12 @@ class CategoryViewController: UIViewController {
             }
     }
     
+    @IBAction func addCateAction(_ sender: UIButton) {
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let addCatVC = storyboard.instantiateViewController(identifier: "AddCategoryViewController")
+        self.navigationController?.pushViewController(addCatVC, animated: true)
+    }
 }
 
 extension CategoryViewController: UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {

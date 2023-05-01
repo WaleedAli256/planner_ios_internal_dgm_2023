@@ -147,9 +147,10 @@ class CreateTaskViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        self.datePicker.date = Date()
         self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
     }
+    
     
     func createDatePicker() {
         self.toolBar.sizeToFit()
@@ -230,7 +231,7 @@ class CreateTaskViewController: BaseViewController {
         self.lowView.layer.borderColor = UIColor(named: "low-colorP")?.cgColor
         self.lowView.layer.borderWidth = 0.0
         self.priortyColor = "high-text-color"
-        self.priortyValue = "high"
+        self.priortyValue = "High"
         
     }
     
@@ -243,7 +244,7 @@ class CreateTaskViewController: BaseViewController {
         self.lowView.layer.borderColor = UIColor(named: "low-colorP")?.cgColor
         self.lowView.layer.borderWidth = 0.0
         self.priortyColor = "medium-text-color"
-        self.priortyValue = "medium"
+        self.priortyValue = "Medium"
     }
     
     @IBAction func lowPriortyAction(_ sender: UIButton) {
@@ -255,7 +256,7 @@ class CreateTaskViewController: BaseViewController {
         self.lowView.layer.borderColor = UIColor(named: "low-text-color-1")?.cgColor
         self.lowView.layer.borderWidth = 1.0
         self.priortyColor = "low-text-color-1"
-        self.priortyValue = "low"
+        self.priortyValue = "Low"
     }
 
     
@@ -377,8 +378,8 @@ class CreateTaskViewController: BaseViewController {
                     "categoryName": self.catTxtField.text!,
                    "description": self.detailTxtView.text!,
                    "date":self.date + " " + self.selectedTime,
-                   "time":self.selectedTime,
-                   "priority": self.priortyValue ?? "medium",
+                   "time":self.date ,
+                   "priority": self.priortyValue ?? "Medium",
                    "preReminder":self.preReminderTxtField.text ?? "Never",
                    "repetition": self.RepititionTxtField.text ?? "Never",
                     "colorCode": self.CarColorCode,
@@ -419,7 +420,10 @@ class CreateTaskViewController: BaseViewController {
                     
                 } else if self.preReminderTxtField.text?.isEmpty == false {
                     //do something
-                    self.createPrereminderforNotification(beforeTime: self.preminderMin, newDate: newDate!)
+                   if self.checkCurrentTime(self.preminderMin) {
+
+                    }
+//                    self.createPrereminderforNotification(beforeTime: self.preminderMin, newDate: newDate!)
                 } else if self.RepititionTxtField.text?.isEmpty == false {
                     self.fireNotification(myDate: newDate!)
                 } else {
@@ -521,6 +525,28 @@ class CreateTaskViewController: BaseViewController {
                }
            }
        }
+    
+    func checkCurrentTime(_ myTimeBefore: Int) -> Bool{
+
+        let compDate = self.date + " " + self.selectedTime
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
+        dateFormatter.timeZone = TimeZone.current
+        let selectedDateTime = dateFormatter.date(from: compDate)
+        
+        // calculate the time intervals for each reminder
+        let fiveMinutesBefore = TimeInterval(myTimeBefore * 60)
+        
+        // create date components for each reminder
+        let fiveMinutesBeforeDate = Calendar.current.date(byAdding: .second, value: Int(fiveMinutesBefore), to: selectedDateTime!)!
+        if selectedDateTime! > fiveMinutesBeforeDate {
+            print("Selected time is greater than \(myTimeBefore) minutes")
+            return true
+        } else {
+            print("Selected time is not greater than \(myTimeBefore) minutes")
+            return false
+        }
+    }
 }
 
 

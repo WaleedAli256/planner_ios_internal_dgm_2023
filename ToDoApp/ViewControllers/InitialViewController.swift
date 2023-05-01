@@ -11,12 +11,25 @@ import GoogleSignIn
 import FirebaseFirestore
 
 class InitialViewController: BaseViewController {
+    
+    @IBOutlet weak var btnSkip: UIButton!
+    
+    var isButtonTapped = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        btnSkip.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
+    
+    @objc func buttonTapped() {
+    
+            btnSkip.isEnabled = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 8.0) {
+                self.btnSkip.isEnabled = true
+        }
+    }
+    
     
 
     @IBAction func loginGoogleAction(_ sender: UIButton) {
@@ -115,6 +128,11 @@ class InitialViewController: BaseViewController {
     @IBAction func skipAction(_ sender: UIButton) {
         
         
+        guard Utilities.Connectivity.isConnectedToInternet  else {
+            self.showAlert(title: "Network Error", message: "Please check your internet connection")
+            return
+        }
+        
         var dict = [String:Any]()
         var userUID = ""
         let db = Firestore.firestore()
@@ -150,7 +168,7 @@ class InitialViewController: BaseViewController {
                                 dict["image_url"] = "profilePicUrl"
                                 let user = User.init(fromDictionary: dict)
                                 Utilities().setCurrentUser(currentUser: user)
-                                self.createDefaultsCategories(userId: userUID)
+//                                self.createDefaultsCategories(userId: userUID)
                                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                                 let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
                                 self.navigationController?.pushViewController(mainTabBarController, animated: true)

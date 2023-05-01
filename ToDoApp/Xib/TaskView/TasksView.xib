@@ -47,12 +47,12 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9tE-rU-XER" customClass="CustomView" customModule="ToDoApp" customModuleProvider="target">
-                                            <rect key="frame" x="81" y="2" width="72.5" height="16"/>
+                                            <rect key="frame" x="81" y="0.0" width="80" height="20"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="medium" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2qL-Sn-hCN">
-                                                    <rect key="frame" x="0.0" y="0.0" width="72.5" height="16"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Medium" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2qL-Sn-hCN">
+                                                    <rect key="frame" x="0.0" y="0.0" width="80" height="20"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" name="medium-text-color"/>
                                                     <nil key="highlightedColor"/>
                                                     <userDefinedRuntimeAttributes>
@@ -69,10 +69,10 @@
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="2qL-Sn-hCN" secondAttribute="trailing" id="B8w-Ue-HUK"/>
                                                 <constraint firstAttribute="bottom" secondItem="2qL-Sn-hCN" secondAttribute="bottom" id="F94-0y-Exe"/>
-                                                <constraint firstAttribute="width" constant="72.5" id="NYi-35-Le6"/>
+                                                <constraint firstAttribute="width" constant="80" id="NYi-35-Le6"/>
                                                 <constraint firstItem="2qL-Sn-hCN" firstAttribute="top" secondItem="9tE-rU-XER" secondAttribute="top" id="PoP-dp-YSD"/>
                                                 <constraint firstItem="2qL-Sn-hCN" firstAttribute="leading" secondItem="9tE-rU-XER" secondAttribute="leading" id="eAl-xn-9p4"/>
-                                                <constraint firstAttribute="height" constant="16" id="nAV-7f-OD6"/>
+                                                <constraint firstAttribute="height" constant="20" id="nAV-7f-OD6"/>
                                             </constraints>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="cornarRadius">
@@ -104,7 +104,7 @@
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="cst-DR-kyV"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -135,19 +135,19 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Once in a week" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9T5-o8-d8e">
-                                            <rect key="frame" x="7" y="5" width="67" height="11"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                                            <rect key="frame" x="7" y="3.5" width="86" height="14.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 min before reminder" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ONq-MF-t0q">
-                                            <rect key="frame" x="85" y="5" width="102" height="11"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                                            <rect key="frame" x="104" y="3.5" width="131" height="14.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b0k-js-a8t" customClass="CustomView" customModule="ToDoApp" customModuleProvider="target">
-                                            <rect key="frame" x="78" y="9" width="3" height="3"/>
+                                            <rect key="frame" x="97" y="9" width="3" height="3"/>
                                             <color key="backgroundColor" name="medium-text-color"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="3" id="5Q0-QD-D20"/>
@@ -175,7 +175,7 @@
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Detail here for to do task daily weekly or yearly you can manage in the detail text" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aov-Ip-kBB">
                                     <rect key="frame" x="0.0" y="81" width="414" height="262"/>
-                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="10"/>
+                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="13"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
