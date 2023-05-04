@@ -780,6 +780,7 @@ PODS:
   - Libuv-gRPC/Interface (0.0.10)
   - MarqueeLabel (4.3.0)
   - MBProgressHUD (1.2.0)
+  - MonthYearPicker (4.0.2)
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
     - nanopb/encode (= 2.30909.0)
@@ -805,6 +806,7 @@ DEPENDENCIES:
   - iOSDropDown
   - IQKeyboardManagerSwift
   - MBProgressHUD
+  - MonthYearPicker
   - NotificationBannerSwift
   - SDWebImage
 
@@ -836,6 +838,7 @@ SPEC REPOS:
     - Libuv-gRPC
     - MarqueeLabel
     - MBProgressHUD
+    - MonthYearPicker
     - nanopb
     - NotificationBannerSwift
     - PromisesObjC
@@ -869,12 +872,13 @@ SPEC CHECKSUMS:
   Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
   MarqueeLabel: 02f5ac8fd6877c94564556cb93fa86c70c08baeb
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+  MonthYearPicker: 91f77106e6806d8c93c69e943ab0795fd420657f
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   NotificationBannerSwift: 437e135298d297fcb03f3eec4466f45cdb128d3d
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   SDWebImage: 1c39de67663e5eebb2f41324d5d580eeea12dd4c
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
 
-PODFILE CHECKSUM: a08d653afd27c8722b16dc046e8d36d65ee19615
+PODFILE CHECKSUM: 08574e1661ae4edff9a768411d15111b002d6436
 
 COCOAPODS: 1.11.3

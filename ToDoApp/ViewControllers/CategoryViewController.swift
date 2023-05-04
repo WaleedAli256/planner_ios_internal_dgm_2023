@@ -21,6 +21,11 @@ class CategoryViewController: UIViewController {
         
         self.catColView.delegate = self
         self.catColView.dataSource = self
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
     }
     
@@ -45,10 +50,12 @@ class CategoryViewController: UIViewController {
             }
     }
     
+    
     @IBAction func addCateAction(_ sender: UIButton) {
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let addCatVC = storyboard.instantiateViewController(identifier: "AddCategoryViewController")
+        let addCatVC = storyboard.instantiateViewController(identifier: "AddCategoryViewController") as! AddCategoryViewController
+        addCatVC.fromEditOrUpdate = "Add Categories"
         self.navigationController?.pushViewController(addCatVC, animated: true)
     }
 }
@@ -68,9 +75,17 @@ extension CategoryViewController: UICollectionViewDelegate,UICollectionViewDataS
         cell.catBGView.backgroundColor = UIColor(hexString: cat.colorCode ?? "")
         cell.catDesc.text = cat.description ?? ""
         cell.catName.text = cat.name ?? ""
-        cell.catImage.image = UIImage(named: "icon-\(cat.image ?? 1)")
-        
+//        cell.catImage.image = UIImage(named: cat.image ?? "")
+        cell.catImage.image = UIImage(named: "cat-icon-\(cat.image ?? 1)")?.withTintColor(.white)
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let addCatVC = storyboard.instantiateViewController(identifier: "AddCategoryViewController") as! AddCategoryViewController
+        addCatVC.fromEditOrUpdate = "Update Category"
+        self.navigationController?.pushViewController(addCatVC, animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

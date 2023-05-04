@@ -47,10 +47,17 @@ class CreateTaskViewController: BaseViewController {
     var strCategories = [String]()
     var preReminderTime = ["5min","10min","15min","30min","One hour","One day before"]
     var preReminderText = ""
-    var repitiotn = ["Once in a week","Daily","Once in a month","Only one time"]
+    var repitiotn = ["Only one time","Daily","Once in a week","Once in a month"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    
+        if detailTxtView.text! == "Description"{
+            detailTxtView.textColor = UIColor(named: "LightDarkTextColor")
+        }else{
+            detailTxtView.textColor = UIColor(named: "textColor")
+        }
+    
         let dummyInputView = UIView(frame: CGRect.zero)
         self.catTxtField.inputView = dummyInputView
         self.preReminderTxtField.inputView = dummyInputView
@@ -190,7 +197,7 @@ class CreateTaskViewController: BaseViewController {
     
     @objc func btnDoneAction(_ sender: UIButton)
     {
-       
+    
         if(self.selectionMode == "Date")
         {
             self.view.endEditing(true)
@@ -296,6 +303,114 @@ class CreateTaskViewController: BaseViewController {
         
         return true
     }
+    
+    func createTask() {
+        
+        if(validate())
+        {
+            guard Utilities.Connectivity.isConnectedToInternet else {
+                self.showAlert(title: "Error", message: "Please check your internet connection")
+                    return
+            }
+                Utilities.show_ProgressHud(view: self.view)
+            
+                let db = Firestore.firestore()
+                let ref = db.collection("tasks").document()
+                ref.setData([
+                    "id": ref.documentID,
+                   "title": self.titleTxtField.text!,
+                   "userId": Utilities().getCurrentUser().id  ?? "",
+                    "categoryId": self.categoryId,
+                    "categoryName": self.catTxtField.text!,
+                   "description": self.detailTxtView.text!,
+                   "date":self.date + " " + self.selectedTime,
+                   "time":self.date ,
+                   "priority": self.priortyValue ?? "Medium",
+                   "preReminder":self.preReminderTxtField.text ?? "Never",
+                   "repetition": self.RepititionTxtField.text ?? "Never",
+                    "colorCode": self.CarColorCode,
+                    "priorityColorCode":self.priortyColor
+                ]) { err in
+                    if let err = err {
+                        Utilities.hide_ProgressHud(view: self.view)
+                        cAlert.ShowToastWithHandler(VC: self, msg: "Error writing document: (\(err)") { sucess in
+                            _ = self.tabBarController?.selectedIndex = 0
+                        }
+
+                    } else {
+                        Utilities.hide_ProgressHud(view: self.view)
+
+                        cAlert.ShowToastWithHandler(VC: self, msg: "Task created successfully") { sucess in
+                            _ = self.tabBarController?.selectedIndex = 0
+                            self.titleTxtField.text = ""
+                            self.detailTxtView.text = "Description"
+                            self.catTxtField.text = ""
+                            self.dateTxtField.text = ""
+                            self.timeTxtField.text = ""
+                            self.preReminderTxtField.text = ""
+                            self.RepititionTxtField.text = ""
+                        }
+
+                    }
+                }
+
+            if self.selectedTime != "" && self.date != "" {
+
+                let mDate = self.date + " " + self.selectedTime
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
+                let newDate = dateFormatter.date(from: mDate)
+
+                if validate() && self.RepititionTxtField.text?.isEmpty == true && self.preReminderTxtField.text?.isEmpty == true {
+                    // do simple notification
+                    self.createNotificationReminder(newDate: newDate!)
+                    
+                } else if validate() && self.preReminderTxtField.text?.isEmpty == false && self.RepititionTxtField.text?.isEmpty == true {
+                    
+                    if self.checkCurrentTime(self.preminderMin) {
+                        self.createPrereminderforNotification(beforeTime: self.preminderMin, newDate: newDate!)
+                     }
+
+                 }  else if validate() && self.preReminderTxtField.text?.isEmpty == false && self.RepititionTxtField.text?.isEmpty == false {
+                    //do something
+                     if self.checkCurrentTime(self.preminderMin) {
+                         self.notifiPreAndRep(myDate: newDate!, beforetim: self.preminderMin)
+                    }
+                     
+                }  else if validate() && self.RepititionTxtField.text?.isEmpty == false && self.preReminderTxtField.text?.isEmpty == true {
+                    self.fireNotification(myDate: newDate!)
+                }
+
+            }
+//
+        }
+    }
+    
+    func getCategories (userId:String) {
+            Utilities.show_ProgressHud(view: self.view)
+            self.categories.removeAll()
+            let db = Firestore.firestore()
+            db.collection("category").whereField("userId", isEqualTo: userId)
+                .getDocuments() { (querySnapshot, err) in
+                    if err != nil {
+                        print("Error getting documents: (err)")
+                        Utilities.hide_ProgressHud(view: self.view)
+                    } else {
+                        for document in querySnapshot!.documents {
+                            let dicCat = document.data()
+                            let objCat = TaskCategory.init(fromDictionary: dicCat)
+                            self.categories.append(objCat)
+                        }
+                        for cat in self.categories {
+                            self.strCategories.append(cat.name!)
+                        }
+                        self.catTxtField.optionArray = self.strCategories
+                        Utilities.hide_ProgressHud(view: self.view)
+                    }
+                    
+            }
+        }
+    
     func createNotificationReminder(newDate:Date){
         let center = UNUserNotificationCenter.current()
         let content = UNMutableNotificationContent()
@@ -327,18 +442,7 @@ class CreateTaskViewController: BaseViewController {
         
         content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-1.wav"))
         content.categoryIdentifier = "234"
-        
-//        let snoozeAction = UNNotificationAction(identifier: "Snooze",
-//                                                title: "Snooze", options: [])
-//        let deleteAction = UNNotificationAction(identifier: "UYLDeleteAction",
-//                                                title: "Delete", options: [.destructive])
-//
-//        let category = UNNotificationCategory(identifier: "UYLReminderCategory",
-//                                              actions: [snoozeAction,deleteAction],
-//                                              intentIdentifiers: [], options: [])
-//
-//        center.setNotificationCategories([category])
-    
+
         let preReminderDate = Calendar.current.date(byAdding: .minute, value: -beforeTime, to: newDate) // 5 minutes before event
        
         let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: preReminderDate!)
@@ -357,111 +461,6 @@ class CreateTaskViewController: BaseViewController {
         }
     }
 
-    
-    func createTask() {
-        
-        if(validate())
-        {
-            guard Utilities.Connectivity.isConnectedToInternet else {
-                self.showAlert(title: "Error", message: "Please check your internet connection")
-                    return
-            }
-                Utilities.show_ProgressHud(view: self.view)
-        
-                let db = Firestore.firestore()
-                let ref = db.collection("tasks").document()
-                ref.setData([
-                    "id": ref.documentID,
-                   "title": self.titleTxtField.text!,
-                   "userId": Utilities().getCurrentUser().id  ?? "",
-                    "categoryId": self.categoryId,
-                    "categoryName": self.catTxtField.text!,
-                   "description": self.detailTxtView.text!,
-                   "date":self.date + " " + self.selectedTime,
-                   "time":self.date ,
-                   "priority": self.priortyValue ?? "Medium",
-                   "preReminder":self.preReminderTxtField.text ?? "Never",
-                   "repetition": self.RepititionTxtField.text ?? "Never",
-                    "colorCode": self.CarColorCode,
-                    "priorityColorCode":self.priortyColor
-                ]) { err in
-                    if let err = err {
-                        Utilities.hide_ProgressHud(view: self.view)
-                        cAlert.ShowToastWithHandler(VC: self, msg: "Error writing document: (\(err)") { sucess in
-                            _ = self.tabBarController?.selectedIndex = 0
-                        }
-                        
-                    } else {
-                        Utilities.hide_ProgressHud(view: self.view)
-                        
-                        cAlert.ShowToastWithHandler(VC: self, msg: "Task created successfully") { sucess in
-                            _ = self.tabBarController?.selectedIndex = 0
-                            self.titleTxtField.text = ""
-                            self.detailTxtView.text = "Description"
-                            self.catTxtField.text = ""
-                            self.dateTxtField.text = ""
-                            self.timeTxtField.text = ""
-                            self.preReminderTxtField.text = ""
-                            self.RepititionTxtField.text = ""
-                        }
-
-                    }
-                }
-                
-            if self.selectedTime != "" && self.date != "" {
-                
-                let mDate = self.date + " " + self.selectedTime
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
-                let newDate = dateFormatter.date(from: mDate)
-                
-                if self.preReminderTxtField.text?.isEmpty == false && self.RepititionTxtField.text?.isEmpty == false {
-                    //do something
-                    
-                } else if self.preReminderTxtField.text?.isEmpty == false {
-                    //do something
-                   if self.checkCurrentTime(self.preminderMin) {
-
-                    }
-//                    self.createPrereminderforNotification(beforeTime: self.preminderMin, newDate: newDate!)
-                } else if self.RepititionTxtField.text?.isEmpty == false {
-                    self.fireNotification(myDate: newDate!)
-                } else {
-                    //do something
-                    createNotificationReminder(newDate: newDate!)
-                    
-                }
-                
-            }
-    
-        }
-    }
-    
-    func getCategories (userId:String) {
-            Utilities.show_ProgressHud(view: self.view)
-            self.categories.removeAll()
-            let db = Firestore.firestore()
-            db.collection("category").whereField("userId", isEqualTo: userId)
-                .getDocuments() { (querySnapshot, err) in
-                    if err != nil {
-                        print("Error getting documents: (err)")
-                        Utilities.hide_ProgressHud(view: self.view)
-                    } else {
-                        for document in querySnapshot!.documents {
-                            let dicCat = document.data()
-                            let objCat = TaskCategory.init(fromDictionary: dicCat)
-                            self.categories.append(objCat)
-                        }
-                        for cat in self.categories {
-                            self.strCategories.append(cat.name!)
-                        }
-                        self.catTxtField.optionArray = self.strCategories
-                        Utilities.hide_ProgressHud(view: self.view)
-                    }
-                    
-            }
-        }
-    
     var frequency = NotificationFrequency.weekly
     func fireNotification(myDate : Date) {
         
@@ -477,8 +476,6 @@ class CreateTaskViewController: BaseViewController {
         content.title = self.titleTxtField.text!
         content.body = self.detailTxtView.text!
         content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-1.wav"))
-
-               
 
                 switch caseNumber {
                 case 0: // No repeat
@@ -507,10 +504,63 @@ class CreateTaskViewController: BaseViewController {
                     scheduleNotification(with: trigger, content: content)
                 default: // No repeat
                     break
+            }
+    
+    }
+    
+    func notifiPreAndRep(myDate : Date, beforetim: Int) {
+        
+//        let date = Date() // Replace with your desired date
+        let calendar = Calendar.current
+        
+        let preReminderDate = Calendar.current.date(byAdding: .minute, value: -beforetim, to: myDate) // 5 minutes before event
+        
+        // Create a date components object for the desired trigger date and time
+        var dateComponents = DateComponents()
+//        let center = UNUserNotificationCenter.current()
+        let content = UNMutableNotificationContent()
+        content.title = self.titleTxtField.text!
+        content.body = self.detailTxtView.text!
+        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-1.wav"))
+
+                switch caseNumber {
+                case 0: // No repeat
+                    dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: preReminderDate!)
+                    let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+                    scheduleNotification(with: trigger, content: content)
+                    break
+                case 1: // Daily repeat
+                    dateComponents.hour = dateComponents.hour! // Example hour, change it to your desired hour
+                    dateComponents.minute = dateComponents.minute!
+                    let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+                    // Create a notification request
+                    content.subtitle = "Daily"
+                    scheduleNotification(with: trigger, content: content)
+                case 2: // Weekly repeat
+                    let triggerDate = calendar.date(byAdding: .weekOfYear, value: 1, to: preReminderDate!)!
+                   let dateComponents1 = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate)
+                    let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents1, repeats: true)
+                    content.subtitle = "Weekly"
+                    scheduleNotification(with: trigger, content: content)
+                case 3: // Monthly repeat
+                    var components = DateComponents()
+                    components.day = dateComponents.day // Example date, change it to your desired date
+                    let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
+                    content.subtitle = "Monthly"
+                    scheduleNotification(with: trigger, content: content)
+                default: // No repeat
+                    break
                 }
         
 
     }
+    
+    
+    
+    
+    
+        
+    
     
     func scheduleNotification(with trigger: UNNotificationTrigger, content: UNMutableNotificationContent) {
            // Create notification request
@@ -531,12 +581,13 @@ class CreateTaskViewController: BaseViewController {
         let compDate = self.date + " " + self.selectedTime
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
-        dateFormatter.timeZone = TimeZone.current
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        dateFormatter.locale = Locale(identifier: "fr")
         let selectedDateTime = dateFormatter.date(from: compDate)
         
         // calculate the time intervals for each reminder
         let fiveMinutesBefore = TimeInterval(myTimeBefore * 60)
-        
         // create date components for each reminder
         let fiveMinutesBeforeDate = Calendar.current.date(byAdding: .second, value: Int(fiveMinutesBefore), to: selectedDateTime!)!
         if selectedDateTime! > fiveMinutesBeforeDate {
@@ -595,6 +646,8 @@ extension CreateTaskViewController: UITextFieldDelegate
            }
            return true
     }
+    
+    
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         

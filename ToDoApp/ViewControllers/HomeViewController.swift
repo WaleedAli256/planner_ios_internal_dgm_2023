@@ -13,7 +13,11 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     
     @IBOutlet weak var colView: UICollectionView!
     @IBOutlet weak var tblView: UITableView!
-    
+    @IBOutlet weak var calendrBtnView: UIView!
+    @IBOutlet weak var lblDateWithYear: UILabel!
+    private var datePicker: UIDatePicker?
+    var myDateWithYear = ""
+    private var selectedDate = MonthYear()
     @IBOutlet weak var interfaceSegmented: CustomSegmentedControl!{
         didSet{
             interfaceSegmented.setButtonTitles(buttonTitles: ["Daily","Weekly","Monthly","Yearly"])
@@ -35,7 +39,7 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     var tableCenterCell: HomeTableViewCell?
     var selectedTableIndex = -1
     var selectedCollectionIndex = -1
-    
+    var catName = ""
     var dailySelected = 1
     var weeklySelected = -1
     var monthlySelected = -1
@@ -48,7 +52,11 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        let dateTap = UITapGestureRecognizer(target: self, action: #selector(showDatePicker))
+        calendrBtnView.addGestureRecognizer(dateTap)
+        
+        self.calendrBtnView.isHidden = true
         self.tabBarController?.delegate = self
         
         self.tblView.delegate = self
@@ -60,8 +68,8 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
         self.colView.clipsToBounds = true
         self.colView.layer.cornerRadius = 4
         self.interfaceSegmented.delegate = self
-        HomeTableViewCell.onDoneBlock = { collectionIndex, tableIndex, sucess in
-            
+        HomeTableViewCell.onDoneBlock = { catName,collectionIndex, tableIndex, sucess in
+            self.catName = catName
             self.selectedTableIndex = tableIndex
             self.selectedCollectionIndex = collectionIndex
             print(collectionIndex)
@@ -72,8 +80,36 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "")
+    }
+    
+    @objc private func showDatePicker() {
+        let minDate = MonthYear()
+        minDate.year -= 1
+        let maxDate = MonthYear()
+        maxDate.year += 50
+        MonthYearPickerViewController.present(vc: self, minDate: minDate, maxDate: maxDate, selectedDate: selectedDate, onDateSelected: onDateSelected)
+    }
+    
+    private func onDateSelected(month: Int, year: Int) {
+        selectedDate = MonthYear(month: month, year: year)
+        let numberDate = formatMonthYear(date: selectedDate)
+        let inputFormatter = DateFormatter()
+        inputFormatter.dateFormat = "MM/yyyy"
+        let date = inputFormatter.date(from: numberDate)
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "MMM-yyyy"
+        let formattedDateString = outputFormatter.string(from: date!)
+        let monthis = String(formattedDateString.prefix(3))
+        let yearis = String(formattedDateString.suffix(2))
+        self.lblDateWithYear.text = "\(monthis)-\(yearis)"
+       
+//        let yearis = lblDateWithYear.text?.suffix(<#T##maxLength: Int##Int#>)
+    }
+    
+    private func formatMonthYear(date: MonthYear) -> String {
+        
+        return date.month < 10 ? "0\(date.month)/\(date.year)" : "\(date.month)/\(date.year)"
     }
     
     func getAllTasks(userId:String) {
@@ -206,6 +242,61 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
         print("Day: \(day)")
     }
     
+    func filterYearlyTasks(day:Int, task:Task) {
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
+
+        var taskDate = Date()
+        if let date = dateFormatter.date(from: task.date ?? "") {
+            taskDate = date
+            print(date)
+        } else {
+            print("Invalid date format")
+            return
+        }
+        
+        let calendar = Calendar.current
+        let taskDay = calendar.component(.day, from: taskDate)
+
+        if day == taskDay {
+            self.selectedDayTasks.append(task)
+        }
+        print("Day: \(day)")
+    }
+
+    @IBAction func CalendrBtnAction(_ sender: UIButton) {
+        
+//        self.setupDatePicker()
+        
+    }
+    
+    private func setupDatePicker() {
+        let picker = datePicker ?? UIDatePicker()
+        picker.datePickerMode = .date
+        if #available(iOS 13.4, *) {
+            picker.preferredDatePickerStyle = .wheels
+        }
+        
+        picker.addTarget(self, action: #selector(dueDateChanged(sender:)), for: .valueChanged)
+        let size = self.view.frame.size
+        picker.frame = CGRect(x: 0.0, y: size.height - 200, width: size.width, height: 200)
+        picker.backgroundColor = UIColor.white
+        
+        self.datePicker = picker
+        self.view.addSubview(self.datePicker!)
+    }
+
+    @objc func dueDateChanged(sender:UIDatePicker){
+        self.myDateWithYear = self.lblDateWithYear.text!
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM-yy"
+        let date = dateFormatter.date(from: self.lblDateWithYear.text!)
+        print(date)
+        
+        
+//        dateFilter.setTitle(dateFormatter.string(from: sender.date), for: .normal)
+    }
 }
 
 
@@ -213,10 +304,16 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if self.selectedTab == 0 {
+            self.calendrBtnView.isHidden = true
             return self.dailyDays.count
         } else if self.selectedTab == 1 {
+            self.calendrBtnView.isHidden = true
             return self.weeklyDays.count
+        } else if self.selectedTab == 2 {
+            self.calendrBtnView.isHidden = true
+            return self.monthlyDays.count
         } else {
+            self.calendrBtnView.isHidden = false
             return self.monthlyDays.count
         }
     }
@@ -298,7 +395,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             let width  = (collectionView.frame.width)/3
             return CGSize(width: width, height: collectionView.frame.height)
         } else if self.selectedTab == 1 {
-            let width  = (collectionView.frame.width)/7
+            let width  = (collectionView.frame.width)/7 + 10
             return CGSize(width: width, height: collectionView.frame.height)
         } else {
             let width  = (collectionView.frame.width)/9
@@ -312,11 +409,11 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             if self.selectedTab == 0 {
                 self.filterDailyTasks(day: self.dailySelected, task: tsk)
             }  else if self.selectedTab == 1 {
-                self.filterWeeklyTasks(day: self.weeklySelected, task: tsk)
+                self.filterWeeklyTasks(day: self.weeklySelected + 1, task: tsk)
             }  else if self.selectedTab == 2 {
-                self.filterMonthlyTasks(day: self.monthlySelected, task: tsk)
+                self.filterMonthlyTasks(day: self.monthlySelected + 1, task: tsk)
             }  else if self.selectedTab == 3 {
-                self.filterMonthlyTasks(day: self.yearlySelected, task: tsk)
+                self.filterYearlyTasks(day: self.yearlySelected + 1, task: tsk)
             }
         }
 //        self.updateValues = true
@@ -333,7 +430,7 @@ extension HomeViewController: UITableViewDelegate,UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(withIdentifier: "HomeTableViewCell") as! HomeTableViewCell
-        
+        cell.catName = self.catName
         cell.index = indexPath
         cell.selectedTableIndex = selectedTableIndex
         cell.selectedCollectionIndex = selectedCollectionIndex
@@ -383,9 +480,13 @@ extension HomeViewController: UITableViewDelegate,UITableViewDataSource {
         }
         
                 for cat in cell.tasks {
-                    for task in cat.tasks {
-                        cell.loadTaskView(tag: 1, task: task)
+                    if cat.catName == self.catName{
+                        for task in cat.tasks {
+                            
+                            cell.loadTaskView(tag: 1, task: task)
+                        }
                     }
+
                 }
         
 //        if self.selectedCollectionIndex != -1  && cell.tasks.count > 0 {
@@ -412,3 +513,4 @@ extension HomeViewController: UITabBarControllerDelegate {
             print("Tab bar index changed to \(tabBarController.selectedIndex)")
         }
 }
+

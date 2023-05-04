@@ -13,6 +13,7 @@ class CalendarViewController: BaseViewController {
 
     @IBOutlet weak var tblHeight: NSLayoutConstraint!
     @IBOutlet weak var tblView: UITableView!
+    @IBOutlet weak var lblMonthName: UILabel!
     @IBOutlet weak var calendar: FSCalendar!
     var selectedIndex = -1
     
@@ -32,7 +33,7 @@ class CalendarViewController: BaseViewController {
         dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
         let dateString = dateFormatter.string(from: currentDate)
         self.selectedDate = dateString
-    
+        calendar.select(Date())
         self.calendar.delegate = self
         self.calendar.dataSource = self
         self.tblView.delegate = self
@@ -141,6 +142,26 @@ class CalendarViewController: BaseViewController {
 //            }
 //        })
 //    }
+    
+    @IBAction func nextbtnAction(_ sender: UIButton) {
+        let monthis = self.getTheMonthByTap(1)
+        self.lblMonthName.text = monthis
+    }
+    
+    @IBAction func previousBtnAction(_ sender: UIButton) {
+        let monthis = self.getTheMonthByTap(-1)
+        self.lblMonthName.text = monthis
+    }
+    
+    func getTheMonthByTap(_ monthNumber: Int) -> String{
+        let currentMonth = calendar.currentPage
+        let nextMonth = Calendar.current.date(byAdding: .month, value: monthNumber, to: currentMonth)
+            calendar.setCurrentPage(nextMonth!, animated: true)
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MMMM yyyy"
+            let nextMonthString = formatter.string(from: nextMonth!)
+            return nextMonthString
+    }
 }
 
 extension CalendarViewController : UITableViewDelegate,UITableViewDataSource{

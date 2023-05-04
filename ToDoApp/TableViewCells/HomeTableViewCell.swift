@@ -12,8 +12,8 @@ class HomeTableViewCell: UITableViewCell {
     @IBOutlet weak var colView: UICollectionView!
     @IBOutlet weak var timeLbl: UILabel!
     @IBOutlet weak var tasksStackView: UIStackView!
-    
-    static var onDoneBlock : ((Int,Int,Bool) -> Void)?
+    var catName = ""
+    static var onDoneBlock : ((String,Int,Int,Bool) -> Void)?
     var didTapCategory:(() -> Void)?
     var checked = Set<IndexPath>()
     var selcted = -1
@@ -95,6 +95,7 @@ extension HomeTableViewCell: UICollectionViewDelegate,UICollectionViewDataSource
         cell.bgView.clipsToBounds = true
         cell.bgView.layer.cornerRadius = 4
         
+        
         if index.row == selectedTableIndex{
             if selectedCollectionIndex == indexPath.row{
                 cell.seletedCatView.isHidden = false
@@ -105,16 +106,24 @@ extension HomeTableViewCell: UICollectionViewDelegate,UICollectionViewDataSource
             cell.seletedCatView.isHidden = true
         }
         let silk = self.tasks[indexPath.row]
-        
-        cell.catLbl.text = silk.catName
+
+        let stringInput = silk.catName
+        let stringInputArr = stringInput.components(separatedBy:" ")
+        var stringNeed = ""
+        for string in stringInputArr {
+            stringNeed += String(string.first!)
+        }
+        cell.catLbl.text = stringNeed
         if let color = silk.tasks.first?.colorCode {
             cell.bgView.backgroundColor = UIColor(hexString: color)
+            cell.seletedCatView.backgroundColor = UIColor(hexString: color)
         }
+       
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath){
-        HomeTableViewCell.onDoneBlock?(indexPath.row,index.row , true)
+        HomeTableViewCell.onDoneBlock?(tasks[indexPath.row].catName,indexPath.row,index.row , true)
     }
 }
 

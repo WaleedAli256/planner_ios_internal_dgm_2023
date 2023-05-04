@@ -18,5 +18,6 @@ pod 'GoogleSignIn'
 pod 'SDWebImage'
 pod 'NotificationBannerSwift'
 pod 'MBProgressHUD'
+pod 'MonthYearPicker'
 
 end

@@ -31,7 +31,7 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wake up!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5ag-Qo-pbP">
                                                 <rect key="frame" x="-1" y="-0.5" width="74" height="21"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="74" id="6JO-pd-fFm"/>
+                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="74" id="6JO-pd-fFm"/>
                                                     <constraint firstAttribute="height" constant="21" id="Dly-3m-cvN"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
