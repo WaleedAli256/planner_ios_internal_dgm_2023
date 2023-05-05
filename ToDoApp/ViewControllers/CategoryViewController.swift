@@ -83,9 +83,11 @@ extension CategoryViewController: UICollectionViewDelegate,UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let addCatVC = storyboard.instantiateViewController(identifier: "AddCategoryViewController") as! AddCategoryViewController
-        addCatVC.fromEditOrUpdate = "Update Category"
-        self.navigationController?.pushViewController(addCatVC, animated: true)
+        let searchTaskVC = storyboard.instantiateViewController(identifier: "SeachTaskViewController") as! SeachTaskViewController
+        searchTaskVC.categoryName = self.categories[indexPath.row].name!
+        searchTaskVC.fromViewController = "CategoryVC"
+        searchTaskVC.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(searchTaskVC, animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

@@ -24,7 +24,7 @@ class CalendarViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.CalendarSelected(notification:)), name: Notification.Name("CalendarSelected"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.CalendarSelected(notification:)), name: Notification.Name("CalendarSelected"), object: nil)
         
         tblView.register(UINib(nibName: "TaskCell", bundle: nil), forCellReuseIdentifier: "TaskCell")
 //
@@ -32,6 +32,11 @@ class CalendarViewController: BaseViewController {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
         let dateString = dateFormatter.string(from: currentDate)
+        self.selectedDate = dateString
+        let dateFormatter2 = DateFormatter()
+        dateFormatter2.dateFormat = "MMMM yyyy"
+        let dateStringr = dateFormatter2.string(from: currentDate)
+        self.lblMonthName.text = dateStringr
         self.selectedDate = dateString
         calendar.select(Date())
         self.calendar.delegate = self
@@ -103,45 +108,47 @@ class CalendarViewController: BaseViewController {
             }
     }
     
-//    @objc func CalendarSelected(notification: Notification) {
-//        self.getTasksByDate(date: self.selectedDate)
-//    }
+    @objc func CalendarSelected(notification: Notification) {
+        self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "")
+    }
     
-//    private func getTasksByDate(date: String)
-//    {
-//        guard Utilities.Connectivity.isConnectedToInternet  else {
-//            self.showAlert(title: "Network Error", message: "Please check your internet connection")
-//            return
 //        }
 //        Utilities.show_ProgressHud(view: self.view)
+    {
+        guard Utilities.Connectivity.isConnectedToInternet  else {
+            self.showAlert(title: "Network Error", message: "Please check your internet connection")
+            return
+        }
+        Utilities.show_ProgressHud(view: self.view)
 //        self.arrTasks.removeAll()
-//        let db = Firestore.firestore()
-//        db.collection("tasks").whereField("userId", isEqualTo: Utilities().getCurrentUser().id ?? "").whereField("date", isEqualTo: self.selectedDate).getDocuments(completion: {(snapshot,error) in
-//            if let err = error
-//            {
-//                Utilities.hide_ProgressHud(view: self.view)
-//                self.showAlert(title: "Error" , message: "\(err)")
-////                Utilities.showAlert("\(err)", subtitle: "",type: .danger)
-////                print("Error getting documents: \(err)")
-//            }
-//            else
-//            {
-//                Utilities.hide_ProgressHud(view: self.view)
-//                for doc in snapshot!.documents
-//                {
-//                    let dictask = doc.data()
-//                    let dateObj = dictask["date"] as! String
-//                    if self.selectedDate == dateObj {
-//                        print(self.selectedDate)
-//                        let objTask = Task.init(fromDictionary: dictask)
-//                        self.arrTasks.append(objTask)
-//                    }
-//                }
-////                self.lblTaskNumber.text = "Tasks (\(self.arrTasks.count))"
-//                self.tblView.reloadData()
-//            }
-//        })
-//    }
+        let db = Firestore.firestore()
+        db.collection("tasks").whereField("userId", isEqualTo: Utilities().getCurrentUser().id ?? "").whereField("date", isEqualTo: self.selectedDate).getDocuments(completion: {(snapshot,error) in
+            if let err = error
+            {
+                Utilities.hide_ProgressHud(view: self.view)
+                self.showAlert(title: "Error" , message: "\(err)")
+//                Utilities.showAlert("\(err)", subtitle: "",type: .danger)
+//                print("Error getting documents: \(err)")
+            }
+            else
+            {
+                Utilities.hide_ProgressHud(view: self.view)
+                for doc in snapshot!.documents
+                {
+                    let dictask = doc.data()
+                    let dateObj = dictask["date"] as! String
+                    if self.selectedDate == dateObj {
+                        print(self.selectedDate)
+                        let objTask = Task.init(fromDictionary: dictask)
+                        self.arrAllTasks.append(objTask)
+                    }
+                }
+//                self.lblTaskNumber.text = "Tasks (\(self.arrTasks.count))"
+                self.calendar.reloadData()
+                self.tblView.reloadData()
+            }
+        })
+    }
     
     @IBAction func nextbtnAction(_ sender: UIButton) {
         let monthis = self.getTheMonthByTap(1)
@@ -225,6 +232,13 @@ extension CalendarViewController : FSCalendarDelegate,FSCalendarDataSource,FSCal
     func calendar(_ calendar: FSCalendar, didDeselect date: Date, at monthPosition: FSCalendarMonthPosition) {
         print("yes")
     }
+    
+    func calendarCurrentPageDidChange(_ calendar: FSCalendar) {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMMM yyyy"
+            let month = dateFormatter.string(from: calendar.currentPage)
+            self.lblMonthName.text = month
+        }
     
     func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
            // Get the number of tasks that occur on the specified date

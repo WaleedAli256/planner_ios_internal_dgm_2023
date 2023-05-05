@@ -13,7 +13,7 @@ class TaskCell: UITableViewCell {
     @IBOutlet weak var lblDetail: UILabel!
     @IBOutlet weak var lblpriority: UILabel!
     @IBOutlet weak var lbltitle: UILabel!
-
+    @IBOutlet weak var priorityView: UIView!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

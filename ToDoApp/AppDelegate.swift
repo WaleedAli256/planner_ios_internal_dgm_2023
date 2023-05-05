@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Thread.sleep(forTimeInterval: 2)
         FirebaseApp.configure()
         IQKeyboardManager.shared.enable = true
+    
         self.saveAnonymouslyUser()
         
         let center = UNUserNotificationCenter.current()

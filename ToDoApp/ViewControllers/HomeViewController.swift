@@ -265,9 +265,13 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
         print("Day: \(day)")
     }
 
-    @IBAction func CalendrBtnAction(_ sender: UIButton) {
+    @IBAction func searchBtnAction(_ sender: UIButton) {
         
-//        self.setupDatePicker()
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let searchTaskVC = storyboard.instantiateViewController(identifier: "SeachTaskViewController") as! SeachTaskViewController
+        searchTaskVC.fromViewController = "HomeVC"
+        searchTaskVC.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(searchTaskVC, animated: true)
         
     }
     

@@ -13,7 +13,7 @@
 		0413060229EFA4F0009116F7 /* alarm-1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0413060129EFA4F0009116F7 /* alarm-1.wav */; };
 		0421ED7E29D5975B00C25C37 /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421ED7D29D5975B00C25C37 /* CustomTabBar.swift */; };
 		0421ED8029D5979A00C25C37 /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421ED7F29D5979A00C25C37 /* CustomTabBarController.swift */; };
-		0423F13F29E01E9100AF7C6F /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0423F13E29E01E9100AF7C6F /* TestViewController.swift */; };
+		0423F13F29E01E9100AF7C6F /* SeachTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0423F13E29E01E9100AF7C6F /* SeachTaskViewController.swift */; };
 		0423F14129E01F4800AF7C6F /* TestTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0423F14029E01F4800AF7C6F /* TestTableCell.swift */; };
 		044C30E429D57EC200DC627B /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C30E329D57EC200DC627B /* CustomView.swift */; };
 		044C30E629D588D100DC627B /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C30E529D588D100DC627B /* CustomLabel.swift */; };
@@ -84,7 +84,7 @@
 		0413060129EFA4F0009116F7 /* alarm-1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "alarm-1.wav"; sourceTree = "<group>"; };
 		0421ED7D29D5975B00C25C37 /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		0421ED7F29D5979A00C25C37 /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
-		0423F13E29E01E9100AF7C6F /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
+		0423F13E29E01E9100AF7C6F /* SeachTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeachTaskViewController.swift; sourceTree = "<group>"; };
 		0423F14029E01F4800AF7C6F /* TestTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTableCell.swift; sourceTree = "<group>"; };
 		044C30E329D57EC200DC627B /* CustomView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomView.swift; sourceTree = "<group>"; };
 		044C30E529D588D100DC627B /* CustomLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
@@ -184,13 +184,13 @@
 				045E429829E57A85005D3204 /* InitialTabController.swift */,
 				045C530829E52537009B1F45 /* CreateTaskViewController.swift */,
 				E0E806FE29EEB52A0068FC37 /* CategoryViewController.swift */,
+				0423F13E29E01E9100AF7C6F /* SeachTaskViewController.swift */,
 				0463DDC429FF0F08007DB454 /* AddCategoryViewController.swift */,
 				04A5093929FFECD6002818CE /* CategoryIconViewController.swift */,
 				040B09142A01441E001D6BA2 /* PopupViewController.swift */,
 				E0E806FC29EEB51C0068FC37 /* HomeViewController.swift */,
 				E0E806FD29EEB5250068FC37 /* InitialViewController.swift */,
 				04D7EF1629D6E1A4006A970D /* CalendarViewController.swift */,
-				0423F13E29E01E9100AF7C6F /* TestViewController.swift */,
 				04F28B7529E3C5F900B5D5DA /* SettingViewController.swift */,
 				04002FD629F7C759004908BB /* AboutUsViewController.swift */,
 			);
@@ -561,7 +561,7 @@
 				04A5093E29FFED92002818CE /* CategoryIconsCollectionViewCell.swift in Sources */,
 				04D1459F29FFBCEA006F1B79 /* UIColorExtension.swift in Sources */,
 				0423F14129E01F4800AF7C6F /* TestTableCell.swift in Sources */,
-				0423F13F29E01E9100AF7C6F /* TestViewController.swift in Sources */,
+				0423F13F29E01E9100AF7C6F /* SeachTaskViewController.swift in Sources */,
 				04F53ECC2A026ABC00852FC1 /* MonthYearPickerViewController.swift in Sources */,
 				04002FD729F7C759004908BB /* AboutUsViewController.swift in Sources */,
 				045E429C29E57ECC005D3204 /* BaseViewController.swift in Sources */,
