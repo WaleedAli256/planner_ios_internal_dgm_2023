@@ -15,6 +15,7 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     @IBOutlet weak var tblView: UITableView!
     @IBOutlet weak var calendrBtnView: UIView!
     @IBOutlet weak var lblDateWithYear: UILabel!
+    
     private var datePicker: UIDatePicker?
     var myDateWithYear = ""
     private var selectedDate = MonthYear()
@@ -30,7 +31,7 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     
     let dailyDays = ["Yesterday","Today","Tommorow"]
     
-    let weeklyDays = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+    let weeklyDays = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
     
     let monthlyDays = ["01","02","03","04","05","06","07","08","09","10", "11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30"]
     
@@ -41,9 +42,9 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     var selectedCollectionIndex = -1
     var catName = ""
     var dailySelected = 1
-    var weeklySelected = -1
-    var monthlySelected = -1
-    var yearlySelected = -1
+    var weeklySelected = 1
+    var monthlySelected = 1
+    var yearlySelected = 1
     
     var allTasks: [Task] = []
     
@@ -52,7 +53,7 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+      
         let dateTap = UITapGestureRecognizer(target: self, action: #selector(showDatePicker))
         calendrBtnView.addGestureRecognizer(dateTap)
         
@@ -80,6 +81,7 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        getTaskAgaintCategory()
         self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "")
     }
     
@@ -90,10 +92,20 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
         maxDate.year += 50
         MonthYearPickerViewController.present(vc: self, minDate: minDate, maxDate: maxDate, selectedDate: selectedDate, onDateSelected: onDateSelected)
     }
-    
+    var selectdYearAndMonth = Date()
     private func onDateSelected(month: Int, year: Int) {
+//        DateComponents
+        let todayDate = Date()
+        var dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: todayDate)
+        dateComponents.year = year
+        dateComponents.month = month
+        selectdYearAndMonth = Calendar.current.date(from: dateComponents)!
+        
+        getDateAfterSelection(segmentIndex: 3)
+        
         selectedDate = MonthYear(month: month, year: year)
         let numberDate = formatMonthYear(date: selectedDate)
+        
         let inputFormatter = DateFormatter()
         inputFormatter.dateFormat = "MM/yyyy"
         let date = inputFormatter.date(from: numberDate)
@@ -134,11 +146,96 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
                 }
             }
     }
+    func scrollMyCollectionView(row : Int){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { // Change `2.0` to the
+            var mySelectedIndexPath = IndexPath(row: 0, section: 0)
+            mySelectedIndexPath = IndexPath(row: row, section: 0)
+            self.colView.scrollToItem(at: mySelectedIndexPath, at: .centeredHorizontally, animated: true)
+        }
+    }
     func change(to index: Int) {
         self.selectedTab = index
+        let todayDate = Date()
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: todayDate)
+        print(dateComponents)
+        dailySelected = 1
+        monthlySelected = dateComponents.day! - 1
+        yearlySelected = dateComponents.day! - 1
+        if index == 0{
+            
+        }else if index == 1{ //weekly seleted
+            
+            let dayNumber = Calendar.current.component(.weekday, from: todayDate)
+            print(dayNumber)
+            weeklySelected = dayNumber - 1
+            scrollMyCollectionView(row: weeklySelected)
+        }else{
+            scrollMyCollectionView(row: monthlySelected)
+        }
         self.colView.reloadData()
+        self.filterTasks(filteredDate: todayDate)
     }
-    
+    func getDateAfterSelection(segmentIndex : Int){
+        var todayDate = Date()
+        if segmentIndex == 0{ //daily Selection
+           
+            if dailySelected == 0{
+                todayDate = Calendar.current.date(byAdding: .day, value: -1, to: todayDate)!
+            }else if dailySelected == 1{
+                todayDate = Date()
+            }else{
+                todayDate = Calendar.current.date(byAdding: .day, value: 1, to: todayDate)!
+            }
+           
+        }else if segmentIndex == 1{
+            
+        }else if segmentIndex == 2{
+            var dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: todayDate)
+            dateComponents.day = monthlySelected + 1
+            todayDate = Calendar.current.date(from: dateComponents)!
+            
+        }else if segmentIndex == 3{
+            var dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: todayDate)
+            
+            let tempDateCom = Calendar.current.dateComponents([.year, .month], from: selectdYearAndMonth)
+            
+            dateComponents.year = tempDateCom.year
+            dateComponents.month = tempDateCom.month
+            dateComponents.day = yearlySelected + 1
+            todayDate = Calendar.current.date(from: dateComponents)!
+            
+            
+        }
+        filterTasks(filteredDate: todayDate)
+    }
+    func filterTasks(filteredDate : Date){
+        let myDateStr = convertDateFormate(filteredDate)
+        selectedDayTasks = arrAllTasks.filter ({$0.time == myDateStr})
+        self.tblView.reloadData()
+        
+    }
+    var arrAllTasks = [Task]()
+    func getTaskAgaintCategory() {
+         Utilities.show_ProgressHud(view: self.view)
+            let db = Firestore.firestore()
+        db.collection("tasks").whereField("userId", isEqualTo: Utilities().getCurrentUser().id ?? "")
+                .getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                        Utilities.hide_ProgressHud(view: self.view)
+                    } else {
+                        self.arrAllTasks.removeAll()
+                        Utilities.hide_ProgressHud(view: self.view)
+                        for document in querySnapshot!.documents {
+                            let dicCat = document.data()
+                            let objCat = Task.init(fromDictionary: dicCat)
+                            self.arrAllTasks.append(objCat)
+                        }
+                }
+            }
+        
+       
+    }
     func filterDailyTasks(day:Int, task:Task) {
         
         let dateFormatter = DateFormatter()
@@ -172,7 +269,6 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
             }
         }
     }
-    
     func filterWeeklyTasks(day:Int, task:Task) {
         
         let dateFormatter = DateFormatter()
@@ -332,6 +428,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             value = self.dailyDays[indexPath.row]
         } else if self.selectedTab == 1 {
             value = self.weeklyDays[indexPath.row]
+            
         } else {
             value = self.monthlyDays[indexPath.row]
         }
@@ -383,14 +480,23 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         if self.selectedTab == 0 {
             self.dailySelected = indexPath.row
+            self.getDateAfterSelection(segmentIndex: selectedTab)
+            
         }  else if self.selectedTab == 1 {
             self.weeklySelected = indexPath.row
+            getDateFromSelectedWeekday(selectedDay: indexPath.row+1)
         }  else if self.selectedTab == 2 {
+            
             self.monthlySelected = indexPath.row
+            self.getDateAfterSelection(segmentIndex: selectedTab)
         }  else if self.selectedTab == 3 {
             self.yearlySelected = indexPath.row
+            self.getDateAfterSelection(segmentIndex: selectedTab)
+            
         }
-        self.getTasks()
+       
+       
+//        self.getTasks()
         collectionView.reloadData()
     }
     
@@ -441,14 +547,14 @@ extension HomeViewController: UITableViewDelegate,UITableViewDataSource {
         cell.colView.reloadData()
         if indexPath.row == selectedTableIndex {
             cell.tasksStackView.isHidden = false
-            cell.transformCellToLarge()
+//            cell.transformCellToLarge()
 //            cell.timeLbl.font = UIFont.boldSystemFont(ofSize: 14)
             cell.colView.reloadData()
         }else{
-            cell.transformCellToStandard()
+//            cell.transformCellToStandard()
             cell.tasksStackView.isHidden = true
         }
-        
+        cell.transformCellToStandard()
         cell.timeLbl.text = self.dailyTime[indexPath.row]
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
@@ -516,5 +622,16 @@ extension HomeViewController: UITabBarControllerDelegate {
 //        self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "")
             print("Tab bar index changed to \(tabBarController.selectedIndex)")
         }
+    
+    func getDateFromSelectedWeekday(selectedDay : Int) {
+        
+        var todayDate = Date()
+        let dayNumber = Calendar.current.component(.weekday, from: todayDate)
+        let numberOfDays = selectedDay - dayNumber
+        todayDate = Calendar.current.date(byAdding: .day, value: numberOfDays, to: todayDate)!
+        
+        filterTasks(filteredDate: todayDate)
+    }
 }
+
 

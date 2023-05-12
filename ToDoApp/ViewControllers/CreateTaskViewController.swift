@@ -18,8 +18,10 @@ class CreateTaskViewController: BaseViewController {
     @IBOutlet weak var catTxtField: DropDown!
     @IBOutlet weak var dateTxtField: UITextField!
     @IBOutlet weak var timeTxtField: UITextField!
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var preReminderTxtField: DropDown!
     @IBOutlet weak var RepititionTxtField: DropDown!
+    var scanTextAlert: UIAlertController?
     
     @IBOutlet weak var highBtn: UIButton!
     @IBOutlet weak var medBtn: UIButton!
@@ -51,7 +53,7 @@ class CreateTaskViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+       
         if detailTxtView.text! == "Description"{
             detailTxtView.textColor = UIColor(named: "LightDarkTextColor")
         }else{
@@ -60,6 +62,7 @@ class CreateTaskViewController: BaseViewController {
     
         let dummyInputView = UIView(frame: CGRect.zero)
         self.catTxtField.inputView = dummyInputView
+
         self.preReminderTxtField.inputView = dummyInputView
         self.RepititionTxtField.inputView = dummyInputView
         self.dateTxtField.inputView = dummyInputView
@@ -81,21 +84,22 @@ class CreateTaskViewController: BaseViewController {
         catTxtField.arrowColor = .lightGray
         catTxtField.selectedRowColor = .white
         catTxtField.itemsTintColor = .red
-        catTxtField.arrowSize = 15
+//        catTxtField.
+        catTxtField.arrowSize = 20
 //        catTxtField.text = "Select Category"
         
         // drop down settings
         preReminderTxtField.arrowColor = .lightGray
         preReminderTxtField.selectedRowColor = .white
         preReminderTxtField.itemsTintColor = .red
-        preReminderTxtField.arrowSize = 15
+        preReminderTxtField.arrowSize = 20
 //        preReminderTxtField.text = "Select Pre Reminder"
         
         // drop down settings
         RepititionTxtField.arrowColor = .lightGray
         RepititionTxtField.selectedRowColor = .white
         RepititionTxtField.itemsTintColor = .red
-        RepititionTxtField.arrowSize = 15
+        RepititionTxtField.arrowSize = 20
 //        RepititionTxtField.text = "Select Repitition"
         
         catTxtField.tintColor = .clear
@@ -154,6 +158,8 @@ class CreateTaskViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.scrollView.scrollsToTop = true
+        self.scrollView.scrollToTop()
         self.datePicker.date = Date()
         self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
     }
@@ -363,22 +369,41 @@ class CreateTaskViewController: BaseViewController {
 
                 if validate() && self.RepititionTxtField.text?.isEmpty == true && self.preReminderTxtField.text?.isEmpty == true {
                     // do simple notification
-                    self.createNotificationReminder(newDate: newDate!)
+//                    self.createNotificationReminder(newDate: newDate!)
+                    self.createNotificationReminder(newDate: newDate!, catId: self.categoryId, taskId: ref.documentID)
                     
                 } else if validate() && self.preReminderTxtField.text?.isEmpty == false && self.RepititionTxtField.text?.isEmpty == true {
                     
-                    if self.checkCurrentTime(self.preminderMin) {
-                        self.createPrereminderforNotification(beforeTime: self.preminderMin, newDate: newDate!)
-                     }
+                    self.checkCurrentTime(self.preminderMin) { status in
+                        if status {
+                            
+                           
+                            
+                            
+                            
+                            self.createPrereminderforNotification(beforeTime: self.preminderMin, newDate: newDate!, taskId: ref.documentID, catId: self.categoryId)
+                            
+                            
+                        } else {
+                            self.showAlert(title: "Error", message: "Pre Reminder time should be greater than current time")
+                        }
+                    }
+                   
 
                  }  else if validate() && self.preReminderTxtField.text?.isEmpty == false && self.RepititionTxtField.text?.isEmpty == false {
                     //do something
-                     if self.checkCurrentTime(self.preminderMin) {
-                         self.notifiPreAndRep(myDate: newDate!, beforetim: self.preminderMin)
-                    }
+                     self.checkCurrentTime(self.preminderMin) { status in
+                         if status {
+                             self.notifiPreAndRep(myDate: newDate!, beforetim: self.preminderMin, taskId: ref.documentID)
+                         } else {
+                             self.showAlert(title: "Error", message: "Pre Reminder time should be greater than current time")
+                         }
+                     }
+                     
+                    
                      
                 }  else if validate() && self.RepititionTxtField.text?.isEmpty == false && self.preReminderTxtField.text?.isEmpty == true {
-                    self.fireNotification(myDate: newDate!)
+                    self.fireNotification(myDate: newDate!, taskId: ref.documentID)
                 }
 
             }
@@ -396,11 +421,13 @@ class CreateTaskViewController: BaseViewController {
                         print("Error getting documents: (err)")
                         Utilities.hide_ProgressHud(view: self.view)
                     } else {
+                        self.categories.removeAll()
                         for document in querySnapshot!.documents {
                             let dicCat = document.data()
                             let objCat = TaskCategory.init(fromDictionary: dicCat)
                             self.categories.append(objCat)
                         }
+                        self.strCategories.removeAll()
                         for cat in self.categories {
                             self.strCategories.append(cat.name!)
                         }
@@ -411,19 +438,19 @@ class CreateTaskViewController: BaseViewController {
             }
         }
     
-    func createNotificationReminder(newDate:Date){
+    func createNotificationReminder(newDate:Date,catId : String,taskId:String){
         let center = UNUserNotificationCenter.current()
         let content = UNMutableNotificationContent()
         content.title = self.titleTxtField.text!
         content.body = self.detailTxtView.text!
         content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-1.wav"))
-        content.categoryIdentifier = "234"
+        content.categoryIdentifier = categoryId
 
         let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: newDate)
     
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
     
-        let uniqueID = "234"// Keep a record of this if necessary
+        let uniqueID = taskId// Keep a record of this if necessary
         let request = UNNotificationRequest(identifier: uniqueID, content: content, trigger: trigger)
         center.add(request) { (error) in
             
@@ -434,14 +461,14 @@ class CreateTaskViewController: BaseViewController {
             }
         }
     }
-    func createPrereminderforNotification(beforeTime : Int, newDate : Date){
+    func createPrereminderforNotification(beforeTime : Int, newDate : Date,taskId : String,catId : String){
         let center = UNUserNotificationCenter.current()
         let content = UNMutableNotificationContent()
         content.title = self.titleTxtField.text!
-        content.body = "5 mints Remaining"
+        content.body = "\(beforeTime) before alarm"
         
         content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-1.wav"))
-        content.categoryIdentifier = "234"
+        content.categoryIdentifier = categoryId
 
         let preReminderDate = Calendar.current.date(byAdding: .minute, value: -beforeTime, to: newDate) // 5 minutes before event
        
@@ -449,7 +476,7 @@ class CreateTaskViewController: BaseViewController {
     
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
     
-        let uniqueID = "234"// Keep a record of this if necessary
+        let uniqueID = taskId// Keep a record of this if necessary
         let request = UNNotificationRequest(identifier: uniqueID, content: content, trigger: trigger)
         center.add(request) { (error) in
             
@@ -462,7 +489,7 @@ class CreateTaskViewController: BaseViewController {
     }
 
     var frequency = NotificationFrequency.weekly
-    func fireNotification(myDate : Date) {
+    func fireNotification(myDate : Date,taskId:String) {
         
 //        let date = Date() // Replace with your desired date
         let calendar = Calendar.current
@@ -476,12 +503,12 @@ class CreateTaskViewController: BaseViewController {
         content.title = self.titleTxtField.text!
         content.body = self.detailTxtView.text!
         content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-1.wav"))
-
+        dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: myDate)
                 switch caseNumber {
                 case 0: // No repeat
-                    dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: myDate)
+                   
                     let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-                    scheduleNotification(with: trigger, content: content)
+                    scheduleNotification(with: trigger, content: content, taskId: taskId)
                     break
                 case 1: // Daily repeat
                     dateComponents.hour = dateComponents.hour! // Example hour, change it to your desired hour
@@ -489,31 +516,54 @@ class CreateTaskViewController: BaseViewController {
                     let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
                     // Create a notification request
                     content.subtitle = "Daily"
-                    scheduleNotification(with: trigger, content: content)
+                    scheduleNotification(with: trigger, content: content, taskId: taskId)
                 case 2: // Weekly repeat
-                    let triggerDate = calendar.date(byAdding: .weekOfYear, value: 1, to: myDate)!
-                   let dateComponents1 = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate)
+                    
+//                    let selectedDate = Date() // Replace with your selected date
+                    let calendar = Calendar.current
+                    let dayNumber = calendar.component(.weekday, from: myDate)
+//
+//                    print("Day number: \(dayNumber)")
+//
+//                    let dateComponents = DateComponents(hour: 5, minute: 36, weekday: dayNumber-1) // 10:00 AM every Tuesday
+//                    let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+                    
+                    var dateComponents1 = DateComponents()
+                    dateComponents1.calendar = Calendar.current
+                    
+                    dateComponents1.weekday = dayNumber
+                    dateComponents1.hour = dateComponents.hour!
+                    dateComponents1.minute = dateComponents.minute!
+
+                    // Create the trigger as a repeating event.
                     let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents1, repeats: true)
+//                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 604800, repeats: true)
+                    
+//                    let triggerDate = calendar.date(byAdding: .weekday, value: 1, to: myDate)!
+//                   let dateComponents1 = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate)
+//                    let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents1, repeats: true)
                     content.subtitle = "Weekly"
-                    scheduleNotification(with: trigger, content: content)
+                    scheduleNotification(with: trigger, content: content, taskId: taskId)
                 case 3: // Monthly repeat
                     var components = DateComponents()
-                    components.day = dateComponents.day // Example date, change it to your desired date
+                    components.day = dateComponents.day! // Example date, change it to your desired date
+                    components.hour = dateComponents.hour!
+                    components.minute = dateComponents.minute!
                     let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
                     content.subtitle = "Monthly"
-                    scheduleNotification(with: trigger, content: content)
+                    scheduleNotification(with: trigger, content: content, taskId: taskId)
                 default: // No repeat
                     break
             }
     
     }
     
-    func notifiPreAndRep(myDate : Date, beforetim: Int) {
+    func notifiPreAndRep(myDate : Date, beforetim: Int,taskId:String) {
         
 //        let date = Date() // Replace with your desired date
         let calendar = Calendar.current
         
-        let preReminderDate = Calendar.current.date(byAdding: .minute, value: -beforetim, to: myDate) // 5 minutes before event
+        
         
         // Create a date components object for the desired trigger date and time
         var dateComponents = DateComponents()
@@ -522,32 +572,45 @@ class CreateTaskViewController: BaseViewController {
         content.title = self.titleTxtField.text!
         content.body = self.detailTxtView.text!
         content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-1.wav"))
-
+        // some minutes before event
+        let preReminderDate = Calendar.current.date(byAdding: .minute, value: -beforetim, to: myDate)
+        dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: preReminderDate!)
+        
                 switch caseNumber {
                 case 0: // No repeat
-                    dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: preReminderDate!)
+                    
                     let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-                    scheduleNotification(with: trigger, content: content)
+                    scheduleNotification(with: trigger, content: content, taskId: taskId)
                     break
                 case 1: // Daily repeat
                     dateComponents.hour = dateComponents.hour! // Example hour, change it to your desired hour
                     dateComponents.minute = dateComponents.minute!
                     let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
                     // Create a notification request
-                    content.subtitle = "Daily"
-                    scheduleNotification(with: trigger, content: content)
+                    content.subtitle = "Daily Reminder"
+                    scheduleNotification(with: trigger, content: content, taskId: taskId)
                 case 2: // Weekly repeat
-                    let triggerDate = calendar.date(byAdding: .weekOfYear, value: 1, to: preReminderDate!)!
-                   let dateComponents1 = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: triggerDate)
+                    
+                    let selectedDate = Date() // Replace with your selected date
+                        let calendar = Calendar.current
+                        let dayNumber = calendar.component(.weekday, from: myDate)
+                        var dateComponents1 = DateComponents()
+                        dateComponents1.calendar = Calendar.current
+                        dateComponents1.weekday = dayNumber
+                        dateComponents1.hour = dateComponents.hour!
+                        dateComponents1.minute = dateComponents.minute!
+                    
                     let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents1, repeats: true)
-                    content.subtitle = "Weekly"
-                    scheduleNotification(with: trigger, content: content)
+                    content.subtitle = "Weekly Reminder"
+                    scheduleNotification(with: trigger, content: content, taskId: taskId)
                 case 3: // Monthly repeat
                     var components = DateComponents()
-                    components.day = dateComponents.day // Example date, change it to your desired date
+                    components.day = dateComponents.day! // Example date, change it to your desired date
+                    components.hour = dateComponents.hour!
+                    components.minute = dateComponents.minute!
                     let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
-                    content.subtitle = "Monthly"
-                    scheduleNotification(with: trigger, content: content)
+                    content.subtitle = "Monthly Reminder"
+                    scheduleNotification(with: trigger, content: content, taskId: taskId)
                 default: // No repeat
                     break
                 }
@@ -562,9 +625,9 @@ class CreateTaskViewController: BaseViewController {
         
     
     
-    func scheduleNotification(with trigger: UNNotificationTrigger, content: UNMutableNotificationContent) {
+    func scheduleNotification(with trigger: UNNotificationTrigger, content: UNMutableNotificationContent,taskId : String) {
            // Create notification request
-           let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+           let request = UNNotificationRequest(identifier: taskId, content: content, trigger: trigger)
 
            // Add the notification request to the notification center
            UNUserNotificationCenter.current().add(request) { (error) in
@@ -576,27 +639,51 @@ class CreateTaskViewController: BaseViewController {
            }
        }
     
-    func checkCurrentTime(_ myTimeBefore: Int) -> Bool{
+    
+    
+    func checkCurrentTime(_ myTimeBefore: Int, completion: @escaping (_ status : Bool) -> Void){
 
         let compDate = self.date + " " + self.selectedTime
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+//        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        dateFormatter.locale = Locale(identifier: "fr")
+        dateFormatter.locale = Locale.current//(identifier: "fr")
         let selectedDateTime = dateFormatter.date(from: compDate)
         
-        // calculate the time intervals for each reminder
-        let fiveMinutesBefore = TimeInterval(myTimeBefore * 60)
-        // create date components for each reminder
-        let fiveMinutesBeforeDate = Calendar.current.date(byAdding: .second, value: Int(fiveMinutesBefore), to: selectedDateTime!)!
-        if selectedDateTime! > fiveMinutesBeforeDate {
-            print("Selected time is greater than \(myTimeBefore) minutes")
-            return true
-        } else {
-            print("Selected time is not greater than \(myTimeBefore) minutes")
-            return false
+        
+        
+        let now = Date().localDate()
+        let nowDatestr = dateFormatter.string(from: now)
+        let nowDate = dateFormatter.date(from: nowDatestr)!
+        
+
+        let birthday: Date = selectedDateTime!
+        let calendar = Calendar.current
+
+        let ageComponents = calendar.dateComponents([.minute], from: nowDate, to: birthday)
+        let age = ageComponents.minute!
+        print(age)
+        
+        if age < myTimeBefore{
+            completion(false)
+        }else{
+            completion(true)
         }
+        
+       
+        
+//        // calculate the time intervals for each reminder
+//        let fiveMinutesBefore = TimeInterval(myTimeBefore * 60)
+//        // create date components for each reminder
+//        let fiveMinutesBeforeDate = Calendar.current.date(byAdding: .second, value: Int(fiveMinutesBefore), to: selectedDateTime!)!
+//        if selectedDateTime! > fiveMinutesBeforeDate {
+//            print("Selected time is greater than \(myTimeBefore) minutes")
+//            completion(true)
+//        } else {
+//            print("Selected time is not greater than \(myTimeBefore) minutes")
+//            completion(false)
+//        }
     }
 }
 
@@ -646,8 +733,6 @@ extension CreateTaskViewController: UITextFieldDelegate
            }
            return true
     }
-    
-    
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
@@ -789,8 +874,25 @@ class cAlert{
     
 }
 
+
+
 enum NotificationFrequency {
     case once, daily, weekly, monthly
 }
 
 
+extension Date {
+    func localDate() -> Date {
+        let nowUTC = Date()
+        let timeZoneOffset = Double(TimeZone.current.secondsFromGMT(for: nowUTC))
+        guard let localDate = Calendar.current.date(byAdding: .second, value: Int(timeZoneOffset), to: nowUTC) else {return Date()}
+
+        return localDate
+    }
+}
+extension UIScrollView {
+    func scrollToTop() {
+        let desiredOffset = CGPoint(x: 0, y: -contentInset.top)
+        setContentOffset(desiredOffset, animated: true)
+   }
+}

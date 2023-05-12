@@ -36,18 +36,17 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m39-fS-eoy">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="21"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wake up!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G8J-t1-0yJ">
-                                            <rect key="frame" x="-1" y="-0.5" width="74" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wake up! ad fa ds fa dsf a dsf asd f asd f asd f asd fa sdf as df asd fa sdf asd f asd f asd fa sdf as df as df" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G8J-t1-0yJ">
+                                            <rect key="frame" x="-1" y="-0.5" width="312" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="XNO-BO-T3j"/>
-                                                <constraint firstAttribute="width" constant="74" id="sxm-1S-wJU"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9tE-rU-XER" customClass="CustomView" customModule="ToDoApp" customModuleProvider="target">
-                                            <rect key="frame" x="81" y="0.0" width="80" height="20"/>
+                                            <rect key="frame" x="319" y="0.0" width="80" height="20"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Medium" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2qL-Sn-hCN">
                                                     <rect key="frame" x="0.0" y="0.0" width="80" height="20"/>
@@ -85,8 +84,9 @@
                                         <constraint firstItem="G8J-t1-0yJ" firstAttribute="leading" secondItem="m39-fS-eoy" secondAttribute="leading" constant="-1" id="IFV-3q-6PQ"/>
                                         <constraint firstItem="9tE-rU-XER" firstAttribute="leading" secondItem="G8J-t1-0yJ" secondAttribute="trailing" constant="8" symbolic="YES" id="YNf-3V-quG"/>
                                         <constraint firstItem="9tE-rU-XER" firstAttribute="centerY" secondItem="G8J-t1-0yJ" secondAttribute="centerY" id="iJp-4o-aEc"/>
+                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="9tE-rU-XER" secondAttribute="trailing" constant="10" id="meb-Ak-1WU"/>
+                                        <constraint firstAttribute="bottom" secondItem="G8J-t1-0yJ" secondAttribute="bottom" constant="0.5" id="qxl-Pw-Z2R"/>
                                         <constraint firstItem="G8J-t1-0yJ" firstAttribute="top" secondItem="m39-fS-eoy" secondAttribute="top" constant="-0.66666603088378906" id="tl4-5J-NuL"/>
-                                        <constraint firstAttribute="height" constant="21" id="wFW-Q0-dHW"/>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n8x-K5-g4f">
@@ -100,7 +100,7 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sun,20 Aug 10:00 AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CQO-TE-GMp">
-                                            <rect key="frame" x="19" y="0.5" width="383" height="21"/>
+                                            <rect key="frame" x="19" y="0.0" width="383" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="cst-DR-kyV"/>
                                             </constraints>
@@ -135,13 +135,13 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Once in a week" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9T5-o8-d8e">
-                                            <rect key="frame" x="7" y="3.5" width="86" height="14.5"/>
+                                            <rect key="frame" x="7" y="3" width="86" height="14.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 min before reminder" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ONq-MF-t0q">
-                                            <rect key="frame" x="104" y="3.5" width="131" height="14.5"/>
+                                            <rect key="frame" x="104" y="3" width="131" height="14.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>

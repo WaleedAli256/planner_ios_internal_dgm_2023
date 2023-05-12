@@ -22,9 +22,11 @@ class AddCategoryViewController: BaseViewController {
     var hexColorCode = ""
     var imageIconNumber: Int?
     var fromEditOrUpdate: String!
+    var categoryObj: TaskCategory!
     var selectedIndex = -1
     var sizeOfCellChange: Bool = false
     fileprivate let maxLen = 250
+    var alertMsg = ""
     var colorsArray = ["#5486E9","#F2AD10","#FFB489","#E784D1","#81DF8A","#51BBA2","#971919"]
     
     override func viewDidLoad() {
@@ -35,6 +37,9 @@ class AddCategoryViewController: BaseViewController {
         }else{
             txtViewDescrip.textColor = UIColor(named: "textColor")
         }
+        self.txtViewDescrip.keyboardToolbar.isHidden = true
+        self.txtViewDescrip.autocorrectionType = .no
+        self.txtCatName.autocorrectionType = .no
         
         self.colview.delegate = self
         self.colview.dataSource = self
@@ -43,10 +48,14 @@ class AddCategoryViewController: BaseViewController {
         self.txtViewDescrip.textContainer.lineFragmentPadding = 15
         self.lblCatTopTitle.text = fromEditOrUpdate
         self.btnCrUpCat.setTitle(fromEditOrUpdate, for: .normal)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if self.fromEditOrUpdate == "Update Category" {
+            self.populateView()
+        }
         self.tabBarController?.tabBar.isHidden = true
     }
     
@@ -55,48 +64,49 @@ class AddCategoryViewController: BaseViewController {
         self.tabBarController?.tabBar.isHidden = false
     }
     
-    func updateOrEditCategory() {
-        
-        if fromEditOrUpdate == "Add Categories" {
-            // for new category
-        } else {
-            // for edit category
-            self.topColView.isHidden = true
-        }
+    func populateView() {
+        self.colview.isHidden = true
+        self.topColView.isHidden = true
+        self.uploadIcon.image = UIImage(named: "cat-icon-\(categoryObj.image!)")?.withTintColor(.white)
+        self.txtCatName.text = categoryObj.name
+        self.txtViewDescrip.text = categoryObj.description
+        self.imageIconNumber = categoryObj.image
+        self.hexColorCode = categoryObj.colorCode!
     }
     
     private func validate() -> Bool
     {
-        if(self.imageIconNumber == 0)
+        if(self.imageIconNumber == nil)
         {
-            self.showAlert(title: "Alert", message:"Please Select the image icon")
+            self.showAlert(title: "Alert", message:"Please select an icon")
             return false
         }
-        if(self.hexColorCode == "")
-        {
-            self.showAlert(title: "Alert", message:"Please Select the Color")
-            return false
+        
+        if fromEditOrUpdate == "Create Category" {
+            if(self.hexColorCode == "")
+            {
+                self.showAlert(title: "Alert", message:"Please select the color")
+                return false
+            }
         }
-        if(self.txtCatName.text!.count < 0)
+        
+        if(self.txtCatName.text!.count == 0)
         {
-            self.showAlert(title: "Alert", message: "Please enter title")
+            self.showAlert(title: "Alert", message: "Please enter category name")
             return false
         }
         if(self.txtViewDescrip.text?.count ?? 0 < 1 || self.txtViewDescrip.text == "Description")
         {
-            self.showAlert(title: "Alert", message:"Please enter description")
+            self.showAlert(title: "Alert", message:"Please enter category description")
             return false
         }
         return true
     }
     
     @IBAction func btnCreateCatAction(_ sender: UIButton) {
-        
-        if validate() {
-//            do something
+    
             self.addNewCategory()
-        
-        }
+
     }
         func addNewCategory() {
             
@@ -106,18 +116,20 @@ class AddCategoryViewController: BaseViewController {
                     self.showAlert(title: "Error", message: "Please check your internet connection")
                         return
                 }
+                
+                if fromEditOrUpdate == "Create Category" {
+                    //for new category
                     Utilities.show_ProgressHud(view: self.view)
                     let db = Firestore.firestore()
                     let ref = db.collection("category").document()
-                    ref.setData([
-                        "id": ref.documentID,
-                        "userId": Utilities().getCurrentUser().id  ?? "",
-                        "name": self.txtCatName.text!,
-                        "description": self.txtViewDescrip.text!,
-                        "colorCode": self.hexColorCode,
-                        "image": self.imageIconNumber ?? 1,
-                        "taskCount": "0",
-                    ]) { err in
+                    var dic = ["id": ref.documentID,
+                                "userId": Utilities().getCurrentUser().id  ?? "",
+                                "name": self.txtCatName.text!,
+                                "description": self.txtViewDescrip.text!,
+                                "colorCode": self.hexColorCode,
+                                "image": self.imageIconNumber ?? 1,
+                                "taskCount": "0"] as [String : Any]
+                    ref.setData(dic) { err in
                         if let err = err {
                             Utilities.hide_ProgressHud(view: self.view)
                             cAlert.ShowToastWithHandler(VC: self, msg: "Error writing document: (\(err)") { sucess in
@@ -126,29 +138,64 @@ class AddCategoryViewController: BaseViewController {
 
                         } else {
                             Utilities.hide_ProgressHud(view: self.view)
-                            
-                            //show popup
-                            let customPopUpVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "PopupViewController") as! PopupViewController
-                //                customPopUpVC.isWorkLabelhidden = false
-                //                customPopUpVC.wordTxt = ""//"Immunosuppressed"
-                //                customPopUpVC.meanignTxt = currentQues!.info ?? ""
-                                self.addChild(customPopUpVC)
-                                customPopUpVC.modalTransitionStyle = .crossDissolve
-                                customPopUpVC.view.frame = self.view.frame
-                                customPopUpVC.delegate = self
-                                self.view.addSubview(customPopUpVC.view)
-                                customPopUpVC.modalTransitionStyle = .coverVertical
-                                customPopUpVC.modalPresentationStyle = .fullScreen
-                                customPopUpVC.didMove(toParent: self)
-
-                                self.txtCatName.text = ""
-                                self.txtViewDescrip.text = "Description"
-                                self.lblUploadIcon.text = "(icon) upload"
+                            self.alertMsg = "You have successfully created a new category!"
+                            self.showPopup()
                     }
+                }
+                    
+                } else {
+                    // for edit category
+                    
+                    let db = Firestore.firestore()
+                    let ref = db.collection("category").document(self.categoryObj?.id ?? "")
+                    var dic1 = ["id": ref.documentID,
+                                "userId": Utilities().getCurrentUser().id  ?? "",
+                                "name": self.txtCatName.text!,
+                                "description": self.txtViewDescrip.text!,
+                                "colorCode": self.hexColorCode,
+                                "image": self.imageIconNumber ?? 1,
+                                "taskCount": "0"] as [String : Any]
+                    
+                    Utilities.show_ProgressHud(view: self.view)
+                    
+//                    db.collection("category").document()
+                    ref.setData(dic1, merge: true) { err in
+                        if let err = err {
+                            Utilities.hide_ProgressHud(view: self.view)
+                            cAlert.ShowToastWithHandler(VC: self, msg: "Error writing document: (\(err)") { sucess in
+                                _ = self.tabBarController?.selectedIndex = 0
+                            }
 
-        
+                        } else {
+                            self.alertMsg = "You have successfully updated a new category!"
+                            Utilities.hide_ProgressHud(view: self.view)
+                            self.showPopup()
+                          
+                    }
+                }
+                    
             }
+                    
         }
+    }
+    
+    func showPopup() {
+        
+        //show popup
+        let customPopUpVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "PopupViewController") as! PopupViewController
+//                customPopUpVC.isWorkLabelhidden = false
+//                customPopUpVC.wordTxt = ""//"Immunosuppressed"
+//                customPopUpVC.meanignTxt = currentQues!.info ?? ""
+            self.addChild(customPopUpVC)
+            customPopUpVC.alertMg = self.alertMsg
+            customPopUpVC.modalTransitionStyle = .crossDissolve
+            customPopUpVC.view.frame = self.view.frame
+            customPopUpVC.delegate = self
+            self.view.addSubview(customPopUpVC.view)
+            customPopUpVC.modalTransitionStyle = .coverVertical
+            customPopUpVC.modalPresentationStyle = .fullScreen
+            
+            customPopUpVC.didMove(toParent: self)
     }
     
     @IBAction func btnUploadAction(_ sender: UIButton) {
@@ -156,6 +203,7 @@ class AddCategoryViewController: BaseViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let catIconVC = storyboard.instantiateViewController(identifier: "CategoryIconViewController") as! CategoryIconViewController
         catIconVC.delegate = self
+        catIconVC.fromEditOrUpdat = self.fromEditOrUpdate
         self.navigationController?.pushViewController(catIconVC, animated: true)
     }
     
@@ -193,6 +241,7 @@ extension AddCategoryViewController: UICollectionViewDelegate, UICollectionViewD
         }else{
             self.selectedIndex = indexPath.row
         }
+        
         self.colview.reloadData()
     }
     
@@ -261,6 +310,19 @@ extension AddCategoryViewController: UITextViewDelegate {
         }
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        switch textField {
+            case txtCatName:
+                self.txtViewDescrip.becomeFirstResponder()
+            case txtViewDescrip:
+                self.txtViewDescrip.resignFirstResponder()
+            default:
+                textField.resignFirstResponder()
+            }
+            return false
+    }
+    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
         if text == "\n" { // Check for "Done" button press
@@ -283,10 +345,15 @@ extension AddCategoryViewController: UITextViewDelegate {
 }
 
 extension AddCategoryViewController: CategoryIconViewControllerDelegate {
-    func uploadCatgoryIcon(_ iconName: String) {
-        let strchar = String(iconName.suffix(2))
-        self.imageIconNumber = Int(strchar)
-        self.uploadIcon.image = UIImage(named: iconName)?.withTintColor(.white)
+    func uploadCatgoryIcon(_ iconName: Int) {
+        if self.fromEditOrUpdate == "Update Category" {
+            categoryObj.image = iconName
+        } else {
+            self.lblUploadIcon.text = "Icon uploaded"
+            self.imageIconNumber = iconName
+            self.uploadIcon.image = UIImage(named: "cat-icon-\(iconName)")?.withTintColor(.white)
+        }
+        
     }
 }
 
@@ -296,6 +363,7 @@ extension AddCategoryViewController: PopupViewControllerDelegate {
     func dimissSuperView() {
         self.navigationController?.popViewController(animated: true)
     }
-
     
 }
+
+

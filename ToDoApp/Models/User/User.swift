@@ -23,7 +23,7 @@ class User: NSObject,NSCoding {
         id = dictionary["id"] as? String
         name = dictionary["name"] as? String
         deviceType = dictionary["deviceType"] as? String
-        userType = dictionary["userType"] as? Int
+        userType = dictionary["isAnonmusUser"] as? Int
         image_url = dictionary["image_url"] as? String
         email = dictionary["email"] as? String
         
@@ -57,7 +57,7 @@ class User: NSObject,NSCoding {
             dictionary["deviceType"] = deviceType
         }
         if userType != nil{
-            dictionary["userType"] = userType
+            dictionary["isAnonmusUser"] = userType
         }
         if email != nil{
             dictionary["email"] = email
@@ -87,7 +87,7 @@ class User: NSObject,NSCoding {
         id = aDecoder.decodeObject(forKey: "id") as? String
         name = aDecoder.decodeObject(forKey: "name") as? String
         deviceType = aDecoder.decodeObject(forKey: "deviceType") as? String
-        userType = aDecoder.decodeObject(forKey: "userType") as? Int
+        userType = aDecoder.decodeObject(forKey: "isAnonmusUser") as? Int
         email = aDecoder.decodeObject(forKey: "email") as? String
         image_url = aDecoder.decodeObject(forKey: "image_url") as? String
 //        tasks = aDecoder.decodeObject(forKey: "tasks") as? [Task]
@@ -107,7 +107,7 @@ class User: NSObject,NSCoding {
             aCoder.encode(name, forKey: "deviceType")
         }
         if userType != nil{
-            aCoder.encode(name, forKey: "userType")
+            aCoder.encode(name, forKey: "isAnonmusUser")
         }
         if email != nil{
             aCoder.encode(email, forKey: "email")

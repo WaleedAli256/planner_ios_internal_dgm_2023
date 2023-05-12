@@ -14,42 +14,55 @@ class CalendarViewController: BaseViewController {
     @IBOutlet weak var tblHeight: NSLayoutConstraint!
     @IBOutlet weak var tblView: UITableView!
     @IBOutlet weak var lblMonthName: UILabel!
+    @IBOutlet weak var profilPic: UIImageView!
     @IBOutlet weak var calendar: FSCalendar!
     var selectedIndex = -1
-    
+    var mySelectedDate = Date()
     var arrAllTasks = [Task]()
     var selectedDate = ""
     var filterArray = [Task]()
+    var cellRow: Int!
+    var actionTyp: String!
+    var actionIndex: Int!
+    var selectedInde: Int = -1
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.CalendarSelected(notification:)), name: Notification.Name("CalendarSelected"), object: nil)
-        
-        tblView.register(UINib(nibName: "TaskCell", bundle: nil), forCellReuseIdentifier: "TaskCell")
-//
-        let currentDate = Date()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
+        dateFormatter.dateFormat = "MM/dd/yyyy"
+        selectedDate = dateFormatter.string(from: Date().localDate())
+        mySelectedDate = dateFormatter.date(from: selectedDate)!
+        
+        
+        self.profilPic.layer.cornerRadius = self.profilPic.frame.size.width / 2
+        self.profilPic.clipsToBounds = true
+        calendar.appearance.weekdayFont = UIFont.systemFont(ofSize: 16.0, weight: .medium)
+        tblView.register(UINib(nibName: "TaskCell", bundle: nil), forCellReuseIdentifier: "TaskCell")
+        let currentDate = Date()
+        
         let dateString = dateFormatter.string(from: currentDate)
         self.selectedDate = dateString
         let dateFormatter2 = DateFormatter()
         dateFormatter2.dateFormat = "MMMM yyyy"
         let dateStringr = dateFormatter2.string(from: currentDate)
         self.lblMonthName.text = dateStringr
-        self.selectedDate = dateString
-        calendar.select(Date())
+//        self.selectedDate = dateString
+//        calendar.select(Date())
         self.calendar.delegate = self
         self.calendar.dataSource = self
         self.tblView.delegate = self
         self.tblView.dataSource = self
-
 //        self.getTasksByDate(date: selectedDate)
+//        self.getTasksByDate(date: selectedDate)
+       
+//        self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "", myDate:  mySelectedDate)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "")
+        self.setData()
+//        self.getTasksByDate(date: selectedDate)
+        self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "", myDate: mySelectedDate)
         self.tblView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
     }
     
@@ -81,9 +94,11 @@ class CalendarViewController: BaseViewController {
         }
     }
     
-    func getAllTasks(userId:String) {
+    func getAllTasks(userId:String,myDate : Date) {
         Utilities.show_ProgressHud(view: self.view)
+        self.selectedInde = -1
         self.arrAllTasks.removeAll()
+        self.filterArray.removeAll()
         let db = Firestore.firestore()
         db.collection("tasks").whereField("userId", isEqualTo: userId)
             .getDocuments() { (querySnapshot, err) in
@@ -96,59 +111,57 @@ class CalendarViewController: BaseViewController {
                         let dicCat = document.data()
                         let objCat = Task.init(fromDictionary: dicCat)
                         self.arrAllTasks.append(objCat)
-//                        self.selectedDayTasks = []
                     }
-                    
-//                    self.getTasks()
+                    let myDateStr = convertDateFormate(myDate)
+                    self.filterArray = self.arrAllTasks.filter ({$0.time == myDateStr})
                     Utilities.hide_ProgressHud(view: self.view)
-//                    self.tblView.reloadData()
+                    self.tblView.reloadData()
                     self.calendar.reloadData()
                     
                 }
             }
     }
     
-    @objc func CalendarSelected(notification: Notification) {
-        self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "")
-    }
+
     
+//    private func getTasksByDate(date: String){
+//        selectedInde = -1
+//        guard Utilities.Connectivity.isConnectedToInternet  else {
+//            self.showAlert(title: "Network Error", message: "Please check your internet connection")
+//            return
 //        }
 //        Utilities.show_ProgressHud(view: self.view)
-    {
-        guard Utilities.Connectivity.isConnectedToInternet  else {
-            self.showAlert(title: "Network Error", message: "Please check your internet connection")
-            return
-        }
-        Utilities.show_ProgressHud(view: self.view)
-//        self.arrTasks.removeAll()
-        let db = Firestore.firestore()
-        db.collection("tasks").whereField("userId", isEqualTo: Utilities().getCurrentUser().id ?? "").whereField("date", isEqualTo: self.selectedDate).getDocuments(completion: {(snapshot,error) in
-            if let err = error
-            {
-                Utilities.hide_ProgressHud(view: self.view)
-                self.showAlert(title: "Error" , message: "\(err)")
-//                Utilities.showAlert("\(err)", subtitle: "",type: .danger)
-//                print("Error getting documents: \(err)")
-            }
-            else
-            {
-                Utilities.hide_ProgressHud(view: self.view)
-                for doc in snapshot!.documents
-                {
-                    let dictask = doc.data()
-                    let dateObj = dictask["date"] as! String
-                    if self.selectedDate == dateObj {
-                        print(self.selectedDate)
-                        let objTask = Task.init(fromDictionary: dictask)
-                        self.arrAllTasks.append(objTask)
-                    }
-                }
-//                self.lblTaskNumber.text = "Tasks (\(self.arrTasks.count))"
-                self.calendar.reloadData()
-                self.tblView.reloadData()
-            }
-        })
-    }
+////        self.arrTasks.removeAll()
+//        let db = Firestore.firestore()
+//        db.collection("tasks").whereField("userId", isEqualTo: Utilities().getCurrentUser().id ?? "").whereField("time", isEqualTo: self.selectedDate).getDocuments(completion: {(snapshot,error) in
+//            if let err = error
+//            {
+//                Utilities.hide_ProgressHud(view: self.view)
+//                self.showAlert(title: "Error" , message: "\(err)")
+//            }
+//            else
+//            {
+//                Utilities.hide_ProgressHud(view: self.view)
+////                self.arrAllTasks.removeAll()
+////                self.filterArray.removeAll()
+//                for doc in snapshot!.documents
+//                {
+//                    let dictask = doc.data()
+//                    let dateObj = dictask["time"] as! String
+//                    if self.selectedDate == dateObj {
+//                        print(self.selectedDate)
+//                        let objTask = Task.init(fromDictionary: dictask)
+////                        self.arrAllTasks.append(objTask)
+//                        self.filterArray.append(objTask)
+//                    }
+//
+//                }
+//                self.calendar.reloadData()
+//                self.tblView.reloadData()
+////                self.lblTaskNumber.text = "Tasks (\(self.arrTasks.count))"
+//            }
+//        })
+//    }
     
     @IBAction func nextbtnAction(_ sender: UIButton) {
         let monthis = self.getTheMonthByTap(1)
@@ -169,6 +182,34 @@ class CalendarViewController: BaseViewController {
             let nextMonthString = formatter.string(from: nextMonth!)
             return nextMonthString
     }
+    
+    func setData(){
+        if Utilities.getIntForKey("isAnonmusUser") == "0" {
+            
+            // Create a URL object for the profile picture
+            let imgUrl = Utilities().getCurrentUser().image_url ?? ""
+            guard let url = URL(string: imgUrl) else { return }
+            
+            // Create a data task to download the profile picture
+            let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                // Check for errors and unwrap the downloaded data
+                guard let data = data, error == nil else {
+                    print("Error downloading profile picture: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+                // Create an image from the downloaded data and display it in the image view
+                DispatchQueue.main.async {
+                    self.profilPic.image = UIImage(data: data)
+                }
+            }
+            // Start the data task
+            task.resume()
+            
+        } else {
+            self.profilPic.image = UIImage(named: "icon-profile")
+        }
+
+    }
 }
 
 extension CalendarViewController : UITableViewDelegate,UITableViewDataSource{
@@ -183,10 +224,36 @@ extension CalendarViewController : UITableViewDelegate,UITableViewDataSource{
         let originalDateFormat = "MM/dd/yyyy h:mm a"
         let desiredDateFormat = "EE,d MMM h:mm a"
         let originalDateString = obj.date
+        cell.selectionStyle = .none
+        cell.btndropdown.tag = indexPath.row
+        if selectedInde == indexPath.row {
+            cell.popupView.isHidden = false
+        } else {
+            cell.popupView.isHidden = true
+        }
 
         if let formattedDate = Utilities.changeDateFormat(fromFormat: originalDateFormat, toFormat: desiredDateFormat, dateString: originalDateString!) {
             print("Formatted Date: \(formattedDate)")
             cell.lblTimeDate.text = formattedDate
+            
+            if obj.priority == "High" || obj.priority == "high" {
+                    cell.priorityView.backgroundColor = UIColor(named: "high-color")
+                    cell.lblpriority.textColor = UIColor(named: "high-text-color")
+                    cell.lblpriority.text = "High"
+                } else if obj.priority == "Medium" || obj.priority == "medium" {
+                    cell.priorityView.backgroundColor = UIColor(named: "medium-color")
+                    cell.lblpriority.textColor = UIColor(named: "medium-text-color")
+                    cell.lblpriority.text = "Medium"
+                } else if obj.priority == "Low" || obj.priority == "low" {
+                    cell.priorityView.backgroundColor = UIColor(named: "low-colorP")
+                    cell.lblpriority.textColor = UIColor(named: "low-text-color")
+                    cell.lblpriority.text = "Low"
+                    
+            }
+            cell.delegate = self
+            cell.delegate2 = self
+            cell.deleteBtn.tag = indexPath.row
+            cell.btndropdown.tag = indexPath.row
             cell.lbltitle.text = obj.title
             cell.lblpriority.text = obj.priority
             if selectedIndex == indexPath.row {
@@ -206,6 +273,7 @@ extension CalendarViewController : UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
+       
         if selectedIndex == indexPath.row{
             selectedIndex = -1
         }else{
@@ -214,14 +282,16 @@ extension CalendarViewController : UITableViewDelegate,UITableViewDataSource{
 
         self.tblView.reloadData()
     }
-
 }
 
 
 extension CalendarViewController : FSCalendarDelegate,FSCalendarDataSource,FSCalendarDelegateAppearance {
     
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        self.selectedInde = -1
+        mySelectedDate = date
         self.calendar.appearance.todayColor = .clear
+        self.calendar.appearance.titleTodayColor = UIColor(named: "LightDarkTextColor")
         let newDateStr = convertDateFormate(date)
         let matchingTasks = arrAllTasks.filter ({$0.time == newDateStr})
         self.filterArray = matchingTasks
@@ -244,31 +314,103 @@ extension CalendarViewController : FSCalendarDelegate,FSCalendarDataSource,FSCal
            // Get the number of tasks that occur on the specified date
             let myDateStr = convertDateFormate(date)
             let matchingTasks = arrAllTasks.filter ({$0.time == myDateStr})
-            self.filterArray = matchingTasks
-            self.tblView.reloadData()
+//            self.filterArray = matchingTasks
             return matchingTasks.count
+    
     }
     
-//    func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, titleDefaultColorFor date: Date) -> UIColor? {
-//        var dateArray = [String]()
-//        for dateObj in self.filterArray {
-//            dateArray.append(dateObj.time!)
-//        }
-//        let myDateStr = convertDateFormate(date)
-//        if dateArray.contains(myDateStr) {
-//            return .blue
-//        } else {
-//            return nil
-//        }
-//    }
-    
-    
-    func convertDateFormate(_ dateis: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd/yyyy"
-        let newDateString = formatter.string(from: dateis)
-        return newDateString
-        
+    func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, titleDefaultColorFor date: Date) -> UIColor? {
+        var dateArray = [String]()
+        for dateObj in self.arrAllTasks {
+            dateArray.append(dateObj.time!)
+        }
+        let myDateStr = convertDateFormate(date)
+        if dateArray.contains(myDateStr) {
+            return UIColor(named: "primary-color")
+        } else {
+            return nil
+        }
     }
+    
+    
+
 }
 
+func convertDateFormate(_ dateis: Date) -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "MM/dd/yyyy"
+    let newDateString = formatter.string(from: dateis)
+    return newDateString
+    
+}
+
+extension CalendarViewController: TaskCellDelegate, TaskCellDelegate2{
+    func btnDelete(_ btnTag: Int) {
+        
+        if btnTag == selectedInde {
+            selectedInde = -1
+        } else {
+            selectedInde = btnTag
+        }
+
+        self.tblView.reloadData()
+        
+        // cate id
+        // get cate / skip
+        // all task again that cate id
+        // chak all task is yours / skip
+        // delete all task
+        // than delete cate
+    }
+    
+    func deleteTaskAgainstId(ind: Int,completion: @escaping (_ status : Bool) -> Void){
+        let db = Firestore.firestore()
+        var taskIds = [String]()
+        db.collection("tasks").whereField("id", isEqualTo: self.filterArray[ind].id!).getDocuments {(querySnapshot , err) in
+            if let err = err {
+                print("Error removing document: \(err)")
+                completion(false)
+            } else {
+                guard let documents = querySnapshot?.documents else { return }
+                       for document in documents {
+                           taskIds.append(document.documentID)
+                           document.reference.delete()
+                }
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: taskIds)
+                print("Document successfully removed!")
+                completion(true)
+
+            }
+        }
+
+    }
+    
+    func btnDeleted(_ btnTag: Int) {
+            
+        let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to delete this task?", preferredStyle: .alert)
+      let okAction = UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive) {
+            UIAlertAction in
+          self.deleteTaskAgainstId(ind: btnTag) { status in
+              if status {
+                  let dateFormatter = DateFormatter()
+                  dateFormatter.dateFormat = "MM/dd/yyyy"
+                  let dateString = dateFormatter.string(from: self.mySelectedDate)
+                  let da = dateFormatter.date(from: dateString)!
+                  self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "", myDate: da)
+              }
+          }
+        }
+      let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+            UIAlertAction in
+           
+        }
+
+        // Add the actions
+        alertController.addAction(okAction)
+        alertController.addAction(cancelAction)
+
+      self.present(alertController, animated: true, completion: nil)
+
+    }
+
+}

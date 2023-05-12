@@ -14,10 +14,9 @@ pod 'FirebaseAuth'
 pod 'Firebase/Core'
 pod 'Firebase/Database'
 pod 'Firebase/Firestore'
-pod 'GoogleSignIn'
+pod 'GoogleSignIn', '~> 6.2.2'
 pod 'SDWebImage'
 pod 'NotificationBannerSwift'
 pod 'MBProgressHUD'
 pod 'MonthYearPicker'
-
 end

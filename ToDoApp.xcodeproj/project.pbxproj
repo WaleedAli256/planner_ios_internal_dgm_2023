@@ -10,6 +10,10 @@
 		04002FD729F7C759004908BB /* AboutUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04002FD629F7C759004908BB /* AboutUsViewController.swift */; };
 		0400828929E803FB00444B26 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0400828829E803FB00444B26 /* User.swift */; };
 		040B09152A01441E001D6BA2 /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040B09142A01441E001D6BA2 /* PopupViewController.swift */; };
+		040F8FE02A090CCA005E7B14 /* MakeDropDown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040F8FDC2A090CC8005E7B14 /* MakeDropDown.swift */; };
+		040F8FE12A090CCA005E7B14 /* CityModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040F8FDD2A090CC9005E7B14 /* CityModel.swift */; };
+		040F8FE22A090CCA005E7B14 /* DropDownTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 040F8FDE2A090CC9005E7B14 /* DropDownTableViewCell.xib */; };
+		040F8FE32A090CCA005E7B14 /* DropDownTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040F8FDF2A090CCA005E7B14 /* DropDownTableViewCell.swift */; };
 		0413060229EFA4F0009116F7 /* alarm-1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0413060129EFA4F0009116F7 /* alarm-1.wav */; };
 		0421ED7E29D5975B00C25C37 /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421ED7D29D5975B00C25C37 /* CustomTabBar.swift */; };
 		0421ED8029D5979A00C25C37 /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421ED7F29D5979A00C25C37 /* CustomTabBarController.swift */; };
@@ -28,8 +32,10 @@
 		0463DDC529FF0F08007DB454 /* AddCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0463DDC429FF0F08007DB454 /* AddCategoryViewController.swift */; };
 		047983AB29E423E6003B9C07 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047983A929E423E6003B9C07 /* TaskCell.swift */; };
 		047983AC29E423E6003B9C07 /* TaskCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047983AA29E423E6003B9C07 /* TaskCell.xib */; };
+		04928C962A0BAD4A008C3E6C /* InitialNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04928C952A0BAD4A008C3E6C /* InitialNavigationController.swift */; };
 		04A5093A29FFECD6002818CE /* CategoryIconViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A5093929FFECD6002818CE /* CategoryIconViewController.swift */; };
 		04A5093E29FFED92002818CE /* CategoryIconsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A5093D29FFED92002818CE /* CategoryIconsCollectionViewCell.swift */; };
+		04BB97CA2A0A563900EF7F50 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BB97C92A0A563900EF7F50 /* TabBarViewController.swift */; };
 		04C0A4FB29D43D18005B82DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0A4FA29D43D18005B82DD /* AppDelegate.swift */; };
 		04C0A4FD29D43D18005B82DD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0A4FC29D43D18005B82DD /* SceneDelegate.swift */; };
 		04C0A50229D43D18005B82DD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04C0A50029D43D18005B82DD /* Main.storyboard */; };
@@ -81,6 +87,10 @@
 		04002FD629F7C759004908BB /* AboutUsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutUsViewController.swift; sourceTree = "<group>"; };
 		0400828829E803FB00444B26 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		040B09142A01441E001D6BA2 /* PopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
+		040F8FDC2A090CC8005E7B14 /* MakeDropDown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MakeDropDown.swift; sourceTree = "<group>"; };
+		040F8FDD2A090CC9005E7B14 /* CityModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityModel.swift; sourceTree = "<group>"; };
+		040F8FDE2A090CC9005E7B14 /* DropDownTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DropDownTableViewCell.xib; sourceTree = "<group>"; };
+		040F8FDF2A090CCA005E7B14 /* DropDownTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropDownTableViewCell.swift; sourceTree = "<group>"; };
 		0413060129EFA4F0009116F7 /* alarm-1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "alarm-1.wav"; sourceTree = "<group>"; };
 		0421ED7D29D5975B00C25C37 /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		0421ED7F29D5979A00C25C37 /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
@@ -99,8 +109,10 @@
 		0463DDC429FF0F08007DB454 /* AddCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCategoryViewController.swift; sourceTree = "<group>"; };
 		047983A929E423E6003B9C07 /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		047983AA29E423E6003B9C07 /* TaskCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCell.xib; sourceTree = "<group>"; };
+		04928C952A0BAD4A008C3E6C /* InitialNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialNavigationController.swift; sourceTree = "<group>"; };
 		04A5093929FFECD6002818CE /* CategoryIconViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryIconViewController.swift; sourceTree = "<group>"; };
 		04A5093D29FFED92002818CE /* CategoryIconsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryIconsCollectionViewCell.swift; sourceTree = "<group>"; };
+		04BB97C92A0A563900EF7F50 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		04C0A4F729D43D18005B82DD /* ToDoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04C0A4FA29D43D18005B82DD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04C0A4FC29D43D18005B82DD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -178,6 +190,17 @@
 			path = User;
 			sourceTree = "<group>";
 		};
+		040F8FDB2A090CA3005E7B14 /* ThirdPartyLibs */ = {
+			isa = PBXGroup;
+			children = (
+				040F8FDD2A090CC9005E7B14 /* CityModel.swift */,
+				040F8FDF2A090CCA005E7B14 /* DropDownTableViewCell.swift */,
+				040F8FDE2A090CC9005E7B14 /* DropDownTableViewCell.xib */,
+				040F8FDC2A090CC8005E7B14 /* MakeDropDown.swift */,
+			);
+			path = ThirdPartyLibs;
+			sourceTree = "<group>";
+		};
 		0410CDFD29D563E9000EA4CB /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -193,6 +216,8 @@
 				04D7EF1629D6E1A4006A970D /* CalendarViewController.swift */,
 				04F28B7529E3C5F900B5D5DA /* SettingViewController.swift */,
 				04002FD629F7C759004908BB /* AboutUsViewController.swift */,
+				04BB97C92A0A563900EF7F50 /* TabBarViewController.swift */,
+				04928C952A0BAD4A008C3E6C /* InitialNavigationController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -320,6 +345,7 @@
 		04C0A4F929D43D18005B82DD /* ToDoApp */ = {
 			isa = PBXGroup;
 			children = (
+				040F8FDB2A090CA3005E7B14 /* ThirdPartyLibs */,
 				04D1459D29FFBCDD006F1B79 /* Extensions */,
 				041305FE29EFA4BC009116F7 /* Alarm tones */,
 				0400828629E803D600444B26 /* Models */,
@@ -521,6 +547,7 @@
 				04C0A50729D43D1A005B82DD /* LaunchScreen.storyboard in Resources */,
 				04F53EC82A026A7F00852FC1 /* MonthYearPickerViewController.xib in Resources */,
 				04C0A50429D43D1A005B82DD /* Assets.xcassets in Resources */,
+				040F8FE22A090CCA005E7B14 /* DropDownTableViewCell.xib in Resources */,
 				04C0A50229D43D18005B82DD /* Main.storyboard in Resources */,
 				044F24A329E7FA64001B95A2 /* GoogleService-Info.plist in Resources */,
 				0413060229EFA4F0009116F7 /* alarm-1.wav in Resources */,
@@ -552,6 +579,7 @@
 				E0E806FF29EEB52A0068FC37 /* HomeViewController.swift in Sources */,
 				E0E8070029EEB52A0068FC37 /* InitialViewController.swift in Sources */,
 				044C30E429D57EC200DC627B /* CustomView.swift in Sources */,
+				040F8FE02A090CCA005E7B14 /* MakeDropDown.swift in Sources */,
 				E0E8070529EEB57E0068FC37 /* TasksView.swift in Sources */,
 				04D1E86529ED0D00002829D5 /* TaskCategory.swift in Sources */,
 				047983AB29E423E6003B9C07 /* TaskCell.swift in Sources */,
@@ -565,12 +593,15 @@
 				04F53ECC2A026ABC00852FC1 /* MonthYearPickerViewController.swift in Sources */,
 				04002FD729F7C759004908BB /* AboutUsViewController.swift in Sources */,
 				045E429C29E57ECC005D3204 /* BaseViewController.swift in Sources */,
+				04928C962A0BAD4A008C3E6C /* InitialNavigationController.swift in Sources */,
 				04F53EC32A02564F00852FC1 /* MonthYear.swift in Sources */,
 				045C530929E52538009B1F45 /* CreateTaskViewController.swift in Sources */,
 				045E429929E57A85005D3204 /* InitialTabController.swift in Sources */,
+				040F8FE12A090CCA005E7B14 /* CityModel.swift in Sources */,
 				04F28B7629E3C5F900B5D5DA /* SettingViewController.swift in Sources */,
 				E0E806FB29EEB4E80068FC37 /* HomeTableViewCell.swift in Sources */,
 				044C30E829D5897100DC627B /* CornerView.swift in Sources */,
+				04BB97CA2A0A563900EF7F50 /* TabBarViewController.swift in Sources */,
 				04F53ECE2A026AC700852FC1 /* CustomVisualEffectView.swift in Sources */,
 				045E429529E57006005D3204 /* Constants.swift in Sources */,
 				045C530D29E526CB009B1F45 /* HomeCollectionViewCell.swift in Sources */,
@@ -587,6 +618,7 @@
 				045E429229E56FE4005D3204 /* Utilities.swift in Sources */,
 				04D1E86229ECFCAF002829D5 /* Task.swift in Sources */,
 				04D1459C29FFBBC3006F1B79 /* ColorCollectionViewCell.swift in Sources */,
+				040F8FE32A090CCA005E7B14 /* DropDownTableViewCell.swift in Sources */,
 				04F53ECB2A026ABC00852FC1 /* MonthYearPickerView.swift in Sources */,
 				044C30E629D588D100DC627B /* CustomLabel.swift in Sources */,
 			);
@@ -765,7 +797,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = B52BPRP6WP;
+				DEVELOPMENT_TEAM = 2G96M6UL62;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ToDoApp/Info.plist;
@@ -796,7 +828,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = B52BPRP6WP;
+				DEVELOPMENT_TEAM = 2G96M6UL62;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ToDoApp/Info.plist;

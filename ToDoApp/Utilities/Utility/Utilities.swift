@@ -29,11 +29,30 @@ class Utilities: NSObject {
         UserDefaults.standard.synchronize()
     }
     
+    static func setStringForKey(_ value:String?, key:String) {
+        UserDefaults.standard.set(value, forKey: key)
+        UserDefaults.standard.synchronize()
+    }
+    
+    static func getStringForKey(_ key:String)->String? {
+        return UserDefaults.standard.string(forKey: key)
+    }
+    
     static func getIsFirstTime() -> Bool
     {
         let isFirstTime = UserDefaults.standard.value(forKey: Constants.UserDefaults.isFirstTime) as? Bool
         return isFirstTime ?? true
     }
+    
+    static func setIntForKey(_ value:Int?, key:String) {
+        UserDefaults.standard.set(value, forKey: key)
+        UserDefaults.standard.synchronize()
+    }
+    
+    static func getIntForKey(_ key:String)->String? {
+        return UserDefaults.standard.string(forKey: key)
+    }
+    
     
     func setCurrentUser(currentUser: User)
     {

@@ -15,14 +15,24 @@ class SeachTaskViewController: BaseViewController {
     @IBOutlet weak var lblTaskCount: UILabel!
     @IBOutlet weak var tblView: UITableView!
     @IBOutlet weak var searchTxtField: UITextField!
+    @IBOutlet weak var alertLabel: UILabel!
+    @IBOutlet weak var lblcatName: UILabel!
+    
     var selectedIndex = -1
     var categoryName = ""
     var arrAllTasks = [Task]()
     var filterSearchTasks = [Task]()
     var fromViewController = ""
+    var selectedInde: Int = -1
+    
+    var cellRow: Int!
+    var actionTyp: String!
+    var actionIndex: Int!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.lblcatName.text = self.categoryName
         self.searchTxtField.delegate = self
         //keyboard settings
         IQKeyboardManager.shared.enableAutoToolbar = false
@@ -49,7 +59,7 @@ class SeachTaskViewController: BaseViewController {
                 self.lblTaskCount.text = "Total Tasks: \(self.filterSearchTasks.count)"
                 self.tblView.reloadData()
             } else {
-                self.showAlert(title: "Alert", message: "No task available ")
+                self.alertLabel.text = "No task available!"
                 self.lblTaskCount.text = "Total Tasks: \(self.filterSearchTasks.count)"
                 self.tblView.reloadData()
             }
@@ -61,13 +71,45 @@ class SeachTaskViewController: BaseViewController {
     }
     
     func getTaskAgaintCategory() {
-        
+        selectedInde = -1
         if self.fromViewController == "HomeVC" {
             
             Utilities.show_ProgressHud(view: self.view)
-            self.arrAllTasks.removeAll()
             let db = Firestore.firestore()
             db.collection("tasks").whereField("userId", isEqualTo: Utilities().getCurrentUser().id ?? "")
+                .getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                        Utilities.hide_ProgressHud(view: self.view)
+                    } else {
+                        self.arrAllTasks.removeAll()
+                        Utilities.hide_ProgressHud(view: self.view)
+                        for document in querySnapshot!.documents {
+                            let dicCat = document.data()
+                            let objCat = Task.init(fromDictionary: dicCat)
+                            self.arrAllTasks.append(objCat)
+                        }
+                        self.filterSearchTasks = self.arrAllTasks
+                        Utilities.hide_ProgressHud(view: self.view)
+                        if self.arrAllTasks.count > 0 {
+                            self.alertLabel.isHidden = true
+                            self.filterSearchTasks = self.arrAllTasks
+                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
+                            self.tblView.reloadData()
+                        } else {
+                            self.alertLabel.isHidden = false
+                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
+                            self.alertLabel.text = "No task available!"
+                            self.tblView.reloadData()
+                    }
+                        
+                }
+            }
+        } else {
+            Utilities.show_ProgressHud(view: self.view)
+            self.arrAllTasks.removeAll()
+            let db = Firestore.firestore()
+            db.collection("tasks").whereField("userId", isEqualTo: Utilities().getCurrentUser().id ?? "").whereField("categoryName", isEqualTo: self.categoryName)
                 .getDocuments() { (querySnapshot, err) in
                     if let err = err {
                         print("Error getting documents: \(err)")
@@ -78,47 +120,27 @@ class SeachTaskViewController: BaseViewController {
                             let dicCat = document.data()
                             let objCat = Task.init(fromDictionary: dicCat)
                             self.arrAllTasks.append(objCat)
+                            
                         }
                         
                         Utilities.hide_ProgressHud(view: self.view)
+                        self.filterSearchTasks = self.arrAllTasks
                         if self.arrAllTasks.count > 0 {
-                            self.filterSearchTasks = self.arrAllTasks
+                            self.alertLabel.isHidden = true
+                           
                             self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
                             self.tblView.reloadData()
                         } else {
-                            self.showAlert(title: "Tasks", message: "No task available")
-                    }
+                            self.alertLabel.isHidden = false
+                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
+                            self.alertLabel.text = "No task available!"
+                            self.tblView.reloadData()
+                        }
                         
                 }
             }
         }
-        Utilities.show_ProgressHud(view: self.view)
-        self.arrAllTasks.removeAll()
-        let db = Firestore.firestore()
-        db.collection("tasks").whereField("userId", isEqualTo: Utilities().getCurrentUser().id ?? "").whereField("categoryName", isEqualTo: self.categoryName)
-            .getDocuments() { (querySnapshot, err) in
-                if let err = err {
-                    print("Error getting documents: \(err)")
-                    Utilities.hide_ProgressHud(view: self.view)
-                } else {
-                    Utilities.hide_ProgressHud(view: self.view)
-                    for document in querySnapshot!.documents {
-                        let dicCat = document.data()
-                        let objCat = Task.init(fromDictionary: dicCat)
-                        self.arrAllTasks.append(objCat)
-                    }
-                    
-                    Utilities.hide_ProgressHud(view: self.view)
-                    if self.arrAllTasks.count > 0 {
-                        self.filterSearchTasks = self.arrAllTasks
-                        self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
-                        self.tblView.reloadData()
-                    } else {
-                        self.showAlert(title: "Tasks", message: "No task available")
-                }
-                    
-            }
-        }
+        
     }
 
 }
@@ -137,6 +159,14 @@ extension SeachTaskViewController: UITableViewDelegate,UITableViewDataSource {
         }
         let obj = self.filterSearchTasks[indexPath.row]
         
+        cell.btndropdown.tag = indexPath.row
+        cell.deleteBtn.tag = indexPath.row
+        
+        if selectedInde == indexPath.row {
+            cell.popupView.isHidden = false
+        } else {
+            cell.popupView.isHidden = true
+        }
 //        if let color = obj.priorityColorCode {
         if obj.priority == "High" || obj.priority == "high" {
                 cell.priorityView.backgroundColor = UIColor(named: "high-color")
@@ -159,7 +189,8 @@ extension SeachTaskViewController: UITableViewDelegate,UITableViewDataSource {
 //        if let formattedDate = Utilities.changeDateFormat(fromFormat: originalDateFormat, toFormat: desiredDateFormat, dateString: originalDateString!) {
 //            print("Formatted Date: \(formattedDate)")
 //            cell.lblpriority.text = obj.priority
-        
+            cell.delegate = self
+            cell.delegate2 = self
             cell.lblTimeDate.text = obj.date
             cell.lbltitle.text = obj.title
             if selectedIndex == indexPath.row {
@@ -217,4 +248,72 @@ extension SeachTaskViewController: UITextFieldDelegate {
            }
            return true
     }
+}
+
+extension SeachTaskViewController: TaskCellDelegate,TaskCellDelegate2{
+    func btnDelete(_ btnTag: Int) {
+        
+        if btnTag == selectedInde {
+            selectedInde = -1
+        } else {
+            selectedInde = btnTag
+        }
+        self.tblView.reloadData()
+    
+        // cate id
+        // get cate / skip
+        // all task again that cate id
+        // chak all task is yours / skip
+        // delete all task
+        // than delete cate
+    }
+    func deleteTaskAgainstId(ind:Int,completion: @escaping (_ status : Bool) -> Void){
+        let db = Firestore.firestore()
+       var taskIds = [String]()
+        db.collection("tasks").whereField("id", isEqualTo: self.filterSearchTasks[ind].id!).getDocuments {(querySnapshot , err) in
+            if let err = err {
+                print("Error removing document: \(err)")
+                completion(false)
+            } else {
+                guard let documents = querySnapshot?.documents else { return }
+                       for document in documents {
+                           taskIds.append(document.documentID)
+                           document.reference.delete()
+                }
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: taskIds)
+//                    self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
+                print("Document successfully removed!")
+                completion(true)
+
+            }
+        }
+
+    }
+    func btnDeleted(_ btnTag: Int) {
+
+          let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to delete this task?", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive) {
+              UIAlertAction in
+            self.deleteTaskAgainstId(ind: btnTag) { status in
+                if status {
+                    self.getTaskAgaintCategory()
+                }
+            }
+          }
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+              UIAlertAction in
+             
+          }
+
+          // Add the actions
+          alertController.addAction(okAction)
+          alertController.addAction(cancelAction)
+
+        self.present(alertController, animated: true, completion: nil)
+        
+
+
+    }
+    
+
 }
