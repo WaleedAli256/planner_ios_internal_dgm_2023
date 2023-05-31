@@ -9,6 +9,7 @@ import UIKit
 import iOSDropDown
 import Firebase
 import FirebaseFirestore
+import GoogleMobileAds
 
 
 class CreateTaskViewController: BaseViewController {
@@ -51,9 +52,10 @@ class CreateTaskViewController: BaseViewController {
     var preReminderText = ""
     var repitiotn = ["Only one time","Daily","Once in a week","Once in a month"]
     
+        
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+
         if detailTxtView.text! == "Description"{
             detailTxtView.textColor = UIColor(named: "LightDarkTextColor")
         }else{
@@ -69,6 +71,7 @@ class CreateTaskViewController: BaseViewController {
         self.timeTxtField.inputView = dummyInputView
         self.catTxtField.endEditing(true)
         self.catTxtField.resignFirstResponder()
+       
         
         self.medView.layer.borderColor = UIColor(named: "medium-text-color")?.cgColor
         self.medView.layer.borderWidth = 0.8
@@ -118,7 +121,6 @@ class CreateTaskViewController: BaseViewController {
         }
 
         preReminderTxtField.didSelect { selectedText, index, id in
-            
             if index == 0 {
                 self.preminderMin = 5
             }else if index == 1{
@@ -162,8 +164,9 @@ class CreateTaskViewController: BaseViewController {
         self.scrollView.scrollToTop()
         self.datePicker.date = Date()
         self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
-    }
     
+    }
+     
     
     func createDatePicker() {
         self.toolBar.sizeToFit()
@@ -276,6 +279,8 @@ class CreateTaskViewController: BaseViewController {
     @IBAction func createTaskAction(_ sender: UIButton) {
         
         self.createTask()
+        
+        
     }
     
     private func validate() -> Bool
@@ -332,8 +337,8 @@ class CreateTaskViewController: BaseViewController {
                    "date":self.date + " " + self.selectedTime,
                    "time":self.date ,
                    "priority": self.priortyValue ?? "Medium",
-                   "preReminder":self.preReminderTxtField.text ?? "Never",
-                   "repetition": self.RepititionTxtField.text ?? "Never",
+                   "preReminder":self.preReminderTxtField.text ?? "None",
+                   "repetition": self.RepititionTxtField.text ?? "None",
                     "colorCode": self.CarColorCode,
                     "priorityColorCode":self.priortyColor
                 ]) { err in
@@ -345,7 +350,6 @@ class CreateTaskViewController: BaseViewController {
 
                     } else {
                         Utilities.hide_ProgressHud(view: self.view)
-
                         cAlert.ShowToastWithHandler(VC: self, msg: "Task created successfully") { sucess in
                             _ = self.tabBarController?.selectedIndex = 0
                             self.titleTxtField.text = ""
@@ -376,11 +380,7 @@ class CreateTaskViewController: BaseViewController {
                     
                     self.checkCurrentTime(self.preminderMin) { status in
                         if status {
-                            
-                           
-                            
-                            
-                            
+                        
                             self.createPrereminderforNotification(beforeTime: self.preminderMin, newDate: newDate!, taskId: ref.documentID, catId: self.categoryId)
                             
                             
@@ -443,7 +443,7 @@ class CreateTaskViewController: BaseViewController {
         let content = UNMutableNotificationContent()
         content.title = self.titleTxtField.text!
         content.body = self.detailTxtView.text!
-        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-1.wav"))
+        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-2.wav"))
         content.categoryIdentifier = categoryId
 
         let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: newDate)
@@ -467,7 +467,7 @@ class CreateTaskViewController: BaseViewController {
         content.title = self.titleTxtField.text!
         content.body = "\(beforeTime) before alarm"
         
-        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-1.wav"))
+        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-2.wav"))
         content.categoryIdentifier = categoryId
 
         let preReminderDate = Calendar.current.date(byAdding: .minute, value: -beforeTime, to: newDate) // 5 minutes before event
@@ -502,7 +502,7 @@ class CreateTaskViewController: BaseViewController {
         let content = UNMutableNotificationContent()
         content.title = self.titleTxtField.text!
         content.body = self.detailTxtView.text!
-        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-1.wav"))
+        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-2.wav"))
         dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: myDate)
                 switch caseNumber {
                 case 0: // No repeat
@@ -571,7 +571,7 @@ class CreateTaskViewController: BaseViewController {
         let content = UNMutableNotificationContent()
         content.title = self.titleTxtField.text!
         content.body = self.detailTxtView.text!
-        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-1.wav"))
+        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "alarm-2.wav"))
         // some minutes before event
         let preReminderDate = Calendar.current.date(byAdding: .minute, value: -beforetim, to: myDate)
         dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: preReminderDate!)
@@ -880,7 +880,6 @@ enum NotificationFrequency {
     case once, daily, weekly, monthly
 }
 
-
 extension Date {
     func localDate() -> Date {
         let nowUTC = Date()
@@ -895,4 +894,12 @@ extension UIScrollView {
         let desiredOffset = CGPoint(x: 0, y: -contentInset.top)
         setContentOffset(desiredOffset, animated: true)
    }
+}
+
+
+
+class NonEditableTextField: UITextField {
+    override var canBecomeFirstResponder: Bool {
+        return false
+    }
 }

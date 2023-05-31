@@ -54,9 +54,18 @@ class TasksView: UIView{
                 print("Failed to format date")
             }
             
-//            self.timeLbl.text = self.task?.date
-            self.repeatLbl.text = self.task?.repetition
-            self.preReminderLbl.text = self.task?.preReminder
+            if let preReminder = self.task?.preReminder, !preReminder.isEmpty {
+                self.preReminderLbl.text = self.task?.preReminder
+            } else {
+                self.preReminderLbl.text = "None"
+            }
+            
+            if let repetition = self.task?.repetition, !repetition.isEmpty {
+                self.repeatLbl.text = self.task?.repetition
+            } else {
+                self.repeatLbl.text = "None"
+            }
+            
             if let color = self.task?.priorityColorCode {
                 if self.priorityLbl.text == "High" {
                     self.priorityBgView.backgroundColor = UIColor(named: "high-color")

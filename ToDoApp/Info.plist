@@ -5,23 +5,14 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>359735858810-66jv9p5seorp32jkt1g3r3m4qtu5ogl0.apps.googleusercontent.com</string>
+				<string>com.googleusercontent.apps.359735858810-66jv9p5seorp32jkt1g3r3m4qtu5ogl0</string>
 			</array>
 		</dict>
 	</array>
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>com.googleusercontent.apps.359735858810-66jv9p5seorp32jkt1g3r3m4qtu5ogl0</string>
-            </array>
-        </dict>
-    </array>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-8414160375988475~8486830576</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

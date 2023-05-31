@@ -10,6 +10,7 @@ import FirebaseCore
 import FirebaseAuth
 import GoogleSignIn
 import IQKeyboardManagerSwift
+import GoogleMobileAds
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Thread.sleep(forTimeInterval: 2)
         FirebaseApp.configure()
         IQKeyboardManager.shared.enable = true
-        
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
 //        let signInConfig = GIDConfiguration.init(clientID: "359735858810-66jv9p5seorp32jkt1g3r3m4qtu5ogl0.apps.googleusercontent.com")
 //
 //        GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in

@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -17,10 +18,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-splash" translatesAutoresizingMaskIntoConstraints="NO" id="qiH-1f-gDd">
-                                <rect key="frame" x="123.5" y="363.5" width="167" height="169"/>
+                                <rect key="frame" x="124" y="363" width="166.5" height="170"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="167" id="H6V-iZ-yRv"/>
-                                    <constraint firstAttribute="height" constant="169" id="Rb6-E1-K1g"/>
+                                    <constraint firstAttribute="width" secondItem="qiH-1f-gDd" secondAttribute="height" multiplier="166:169" id="AIG-YS-Gjl"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -30,6 +30,7 @@
                         <constraints>
                             <constraint firstItem="qiH-1f-gDd" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="PHb-jO-qFQ"/>
                             <constraint firstItem="qiH-1f-gDd" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="t9s-iT-pFh"/>
+                            <constraint firstItem="qiH-1f-gDd" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" multiplier="0.402174" id="ujL-HM-XCn"/>
                         </constraints>
                     </view>
                 </viewController>

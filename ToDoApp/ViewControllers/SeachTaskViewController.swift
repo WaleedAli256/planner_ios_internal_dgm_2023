@@ -289,15 +289,16 @@ extension SeachTaskViewController: TaskCellDelegate,TaskCellDelegate2{
         }
 
     }
+    
     func btnDeleted(_ btnTag: Int) {
 
           let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to delete this task?", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive) {
+          let okAction = UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive) {
               UIAlertAction in
             self.deleteTaskAgainstId(ind: btnTag) { status in
                 if status {
                     self.getTaskAgaintCategory()
-                }
+                } 
             }
           }
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {

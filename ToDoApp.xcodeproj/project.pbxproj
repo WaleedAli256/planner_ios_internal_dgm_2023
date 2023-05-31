@@ -30,6 +30,8 @@
 		045E429929E57A85005D3204 /* InitialTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045E429829E57A85005D3204 /* InitialTabController.swift */; };
 		045E429C29E57ECC005D3204 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045E429B29E57ECC005D3204 /* BaseViewController.swift */; };
 		0463DDC529FF0F08007DB454 /* AddCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0463DDC429FF0F08007DB454 /* AddCategoryViewController.swift */; };
+		046D349E2A0E873700C5610A /* final tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 046D349D2A0E873700C5610A /* final tone.mp3 */; };
+		046D34A02A0E882B00C5610A /* beep4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 046D349F2A0E882B00C5610A /* beep4.mp3 */; };
 		047983AB29E423E6003B9C07 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047983A929E423E6003B9C07 /* TaskCell.swift */; };
 		047983AC29E423E6003B9C07 /* TaskCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047983AA29E423E6003B9C07 /* TaskCell.xib */; };
 		04928C962A0BAD4A008C3E6C /* InitialNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04928C952A0BAD4A008C3E6C /* InitialNavigationController.swift */; };
@@ -49,6 +51,7 @@
 		04D1E86229ECFCAF002829D5 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D1E86129ECFCAF002829D5 /* Task.swift */; };
 		04D1E86529ED0D00002829D5 /* TaskCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D1E86429ED0D00002829D5 /* TaskCategory.swift */; };
 		04D7EF1729D6E1A4006A970D /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D7EF1629D6E1A4006A970D /* CalendarViewController.swift */; };
+		04DFB19D2A120EAA00BC729D /* alarm-2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 04DFB19C2A120EAA00BC729D /* alarm-2.wav */; };
 		04F28B7629E3C5F900B5D5DA /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F28B7529E3C5F900B5D5DA /* SettingViewController.swift */; };
 		04F53EC32A02564F00852FC1 /* MonthYear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F53EC22A02564F00852FC1 /* MonthYear.swift */; };
 		04F53EC82A026A7F00852FC1 /* MonthYearPickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04F53EC72A026A7F00852FC1 /* MonthYearPickerViewController.xib */; };
@@ -107,6 +110,8 @@
 		045E429829E57A85005D3204 /* InitialTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialTabController.swift; sourceTree = "<group>"; };
 		045E429B29E57ECC005D3204 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		0463DDC429FF0F08007DB454 /* AddCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCategoryViewController.swift; sourceTree = "<group>"; };
+		046D349D2A0E873700C5610A /* final tone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "final tone.mp3"; sourceTree = "<group>"; };
+		046D349F2A0E882B00C5610A /* beep4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = beep4.mp3; sourceTree = "<group>"; };
 		047983A929E423E6003B9C07 /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		047983AA29E423E6003B9C07 /* TaskCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCell.xib; sourceTree = "<group>"; };
 		04928C952A0BAD4A008C3E6C /* InitialNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialNavigationController.swift; sourceTree = "<group>"; };
@@ -130,6 +135,7 @@
 		04D1E86129ECFCAF002829D5 /* Task.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		04D1E86429ED0D00002829D5 /* TaskCategory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskCategory.swift; sourceTree = "<group>"; };
 		04D7EF1629D6E1A4006A970D /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
+		04DFB19C2A120EAA00BC729D /* alarm-2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "alarm-2.wav"; sourceTree = "<group>"; };
 		04F28B7529E3C5F900B5D5DA /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		04F53EC22A02564F00852FC1 /* MonthYear.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthYear.swift; sourceTree = "<group>"; };
 		04F53EC72A026A7F00852FC1 /* MonthYearPickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MonthYearPickerViewController.xib; sourceTree = "<group>"; };
@@ -245,6 +251,9 @@
 		041305FE29EFA4BC009116F7 /* Alarm tones */ = {
 			isa = PBXGroup;
 			children = (
+				04DFB19C2A120EAA00BC729D /* alarm-2.wav */,
+				046D349F2A0E882B00C5610A /* beep4.mp3 */,
+				046D349D2A0E873700C5610A /* final tone.mp3 */,
 				0413060129EFA4F0009116F7 /* alarm-1.wav */,
 			);
 			path = "Alarm tones";
@@ -546,12 +555,15 @@
 				047983AC29E423E6003B9C07 /* TaskCell.xib in Resources */,
 				04C0A50729D43D1A005B82DD /* LaunchScreen.storyboard in Resources */,
 				04F53EC82A026A7F00852FC1 /* MonthYearPickerViewController.xib in Resources */,
+				04DFB19D2A120EAA00BC729D /* alarm-2.wav in Resources */,
 				04C0A50429D43D1A005B82DD /* Assets.xcassets in Resources */,
 				040F8FE22A090CCA005E7B14 /* DropDownTableViewCell.xib in Resources */,
 				04C0A50229D43D18005B82DD /* Main.storyboard in Resources */,
+				046D349E2A0E873700C5610A /* final tone.mp3 in Resources */,
 				044F24A329E7FA64001B95A2 /* GoogleService-Info.plist in Resources */,
 				0413060229EFA4F0009116F7 /* alarm-1.wav in Resources */,
 				E0E8070429EEB57E0068FC37 /* TasksView.xib in Resources */,
+				046D34A02A0E882B00C5610A /* beep4.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -797,27 +809,30 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2G96M6UL62;
+				DEVELOPMENT_TEAM = 4SJBBP6DAW;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ToDoApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Daily Planner";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.questgamerz.daily.planner.schedule.planner.todo.list;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cs.daily.planner.schedule.planner.todo.list;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -828,16 +843,19 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2G96M6UL62;
+				DEVELOPMENT_TEAM = 4SJBBP6DAW;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ToDoApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Daily Planner";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -845,11 +863,11 @@
 				);
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.questgamerz.daily.planner.schedule.planner.todo.list;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cs.daily.planner.schedule.planner.todo.list;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

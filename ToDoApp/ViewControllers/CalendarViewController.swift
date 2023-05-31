@@ -52,16 +52,12 @@ class CalendarViewController: BaseViewController {
         self.calendar.dataSource = self
         self.tblView.delegate = self
         self.tblView.dataSource = self
-//        self.getTasksByDate(date: selectedDate)
-//        self.getTasksByDate(date: selectedDate)
-       
-//        self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "", myDate:  mySelectedDate)
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.setData()
-//        self.getTasksByDate(date: selectedDate)
         self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "", myDate: mySelectedDate)
         self.tblView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
     }
@@ -311,10 +307,8 @@ extension CalendarViewController : FSCalendarDelegate,FSCalendarDataSource,FSCal
         }
     
     func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
-           // Get the number of tasks that occur on the specified date
             let myDateStr = convertDateFormate(date)
             let matchingTasks = arrAllTasks.filter ({$0.time == myDateStr})
-//            self.filterArray = matchingTasks
             return matchingTasks.count
     
     }

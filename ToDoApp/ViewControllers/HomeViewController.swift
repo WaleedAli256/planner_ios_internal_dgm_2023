@@ -4,10 +4,10 @@
 //
 //  Created by mac on 07/04/2023.
 //
-
 import UIKit
 import Firebase
 import FirebaseFirestore
+import GoogleMobileAds
 
 class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     
@@ -19,6 +19,16 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     private var datePicker: UIDatePicker?
     var myDateWithYear = ""
     private var selectedDate = MonthYear()
+    
+    // High-sized banner view
+    var highBannerView: GADBannerView!
+        
+        // Medium-sized banner view
+    var mediumBannerView: GADBannerView!
+        
+        // All-sized banner view
+    var allBannerView: GADBannerView!
+    
     @IBOutlet weak var interfaceSegmented: CustomSegmentedControl!{
         didSet{
             interfaceSegmented.setButtonTitles(buttonTitles: ["Daily","Weekly","Monthly","Yearly"])
@@ -33,7 +43,7 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     
     let weeklyDays = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
     
-    let monthlyDays = ["01","02","03","04","05","06","07","08","09","10", "11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30"]
+    var monthlyDays: Int = 0
     
     var selectedTab = 0
     var centerCell: HomeCollectionViewCell?
@@ -47,13 +57,46 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     var yearlySelected = 1
     
     var allTasks: [Task] = []
-    
+    var bannerView: GADBannerView!
     var selectedDayTasks:[Task] = []
-//    var updateValues = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
-      
+    
+        let calendar = Calendar.current
+          let date = Date()
+          let components = calendar.dateComponents([.month, .year], from: date)
+        let month = components.month!
+        let year = components.year!
+        if let days = numberOfDays(inMonth: month, year: year) {
+            print("Number of days in the month: \(days)")
+            self.monthlyDays = days
+        } else {
+            print("Invalid month or year.")
+        }
+
+        // In this case, we instantiate the banner with desired ad size.
+//        bannerView = GADBannerView(adSize: GADAdSizeBanner)
+//        bannerView.adUnitID = "ca-app-pub-8414160375988475/6353645343"
+//        bannerView.rootViewController = self
+//        bannerView.delegate = self
+//        bannerView.load(GADRequest())
+//         addBannerViewToView(bannerView)
+//        loadHighAd()
+//
+//        mediumBannerView = GADBannerView(adSize: GADAdSizeBanner)
+//        mediumBannerView.adUnitID = "ca-app-pub-8414160375988475/8701958152"
+//        mediumBannerView.rootViewController = self
+//        mediumBannerView.load(GADRequest())
+//         addBannerViewToView(mediumBannerView)
+//
+//        allBannerView = GADBannerView(adSize: GADAdSizeBanner)
+//        allBannerView.adUnitID = "ca-app-pub-8414160375988475/5012643512"
+//        allBannerView.rootViewController = self
+//        allBannerView.load(GADRequest())
+//         addBannerViewToView(allBannerView)
+                
+       
         let dateTap = UITapGestureRecognizer(target: self, action: #selector(showDatePicker))
         calendrBtnView.addGestureRecognizer(dateTap)
         
@@ -79,10 +122,89 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
         }
     }
     
+    func numberOfDays(inMonth month: Int, year: Int) -> Int? {
+        let calendar = Calendar.current
+        var components = DateComponents()
+        components.year = year
+        components.month = month
+        components.day = 1
+
+        guard let date = calendar.date(from: components) else {
+            return nil
+        }
+
+        let range = calendar.range(of: .day, in: .month, for: date)
+        return range?.count
+    }
+    
+    func loadHighAd() {
+          let request = GADRequest()
+          bannerView.load(request)
+        addBannerViewToView(bannerView)
+      }
+      
+      func loadMediumAd() {
+          
+          bannerView.adUnitID = "ca-app-pub-8414160375988475/8701958152"
+          let request = GADRequest()
+          bannerView.load(request)
+          addBannerViewToView(bannerView)
+      }
+      
+      func loadAllAd() {
+          bannerView.adUnitID = "ca-app-pub-8414160375988475/5012643512"
+          let request = GADRequest()
+          bannerView.load(request)
+          addBannerViewToView(bannerView)
+      }
+    
+    func addBannerViewToView(_ bannerView: GADBannerView) {
+        bannerView.translatesAutoresizingMaskIntoConstraints = false
+        bannerView.isAutoloadEnabled = true
+        
+        view.addSubview(bannerView)
+        view.addConstraints(
+          [NSLayoutConstraint(item: bannerView,
+                              attribute: .bottom,
+                              relatedBy: .equal,
+                              toItem: view.safeAreaLayoutGuide,
+                              attribute: .bottom,
+                              multiplier: 1,
+                              constant: 0),
+           NSLayoutConstraint(item: bannerView,
+                              attribute: .centerX,
+                              relatedBy: .equal,
+                              toItem: view,
+                              attribute: .centerX,
+                              multiplier: 1,
+                              constant: 0)
+          ])
+       }
+    
+//    func addIntertitial(_ interAdds: GADInterstitialAd! ,_ addId: String) {
+//
+//        var addsInter: GADInterstitialAd!
+//        addsInter = interAdds
+//
+//        let request = GADRequest()
+//         GADInterstitialAd.load(withAdUnitID: addId,
+//                                     request: request,
+//                           completionHandler: { [self] ad, error in
+//                             if let error = error {
+//                               print("Failed to load interstitial ad with error: \(error.localizedDescription)")
+//                               return
+//                             }
+//                        addsInter = ad
+//                        addsInter!.fullScreenContentDelegate = self
+//                }
+//         )
+//    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         getTaskAgaintCategory()
         self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "")
+    
     }
     
     @objc private func showDatePicker() {
@@ -91,6 +213,8 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
         let maxDate = MonthYear()
         maxDate.year += 50
         MonthYearPickerViewController.present(vc: self, minDate: minDate, maxDate: maxDate, selectedDate: selectedDate, onDateSelected: onDateSelected)
+        
+        
     }
     var selectdYearAndMonth = Date()
     private func onDateSelected(month: Int, year: Int) {
@@ -115,9 +239,12 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
         let monthis = String(formattedDateString.prefix(3))
         let yearis = String(formattedDateString.suffix(2))
         self.lblDateWithYear.text = "\(monthis)-\(yearis)"
-       
+        monthlyDays = self.numberOfDays(inMonth: selectedDate.month, year: selectedDate.year)!
+        self.colView.reloadData()
+        
 //        let yearis = lblDateWithYear.text?.suffix(<#T##maxLength: Int##Int#>)
     }
+    
     
     private func formatMonthYear(date: MonthYear) -> String {
         
@@ -362,12 +489,12 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     }
 
     @IBAction func searchBtnAction(_ sender: UIButton) {
-        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let searchTaskVC = storyboard.instantiateViewController(identifier: "SeachTaskViewController") as! SeachTaskViewController
         searchTaskVC.fromViewController = "HomeVC"
         searchTaskVC.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(searchTaskVC, animated: true)
+
         
     }
     
@@ -411,10 +538,10 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             return self.weeklyDays.count
         } else if self.selectedTab == 2 {
             self.calendrBtnView.isHidden = true
-            return self.monthlyDays.count
+            return self.monthlyDays
         } else {
             self.calendrBtnView.isHidden = false
-            return self.monthlyDays.count
+            return self.monthlyDays
         }
     }
 
@@ -430,7 +557,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             value = self.weeklyDays[indexPath.row]
             
         } else {
-            value = self.monthlyDays[indexPath.row]
+            value = "\(indexPath.row + 1)"
         }
         cell.transformCellToStandard()
         if self.selectedTab == 0 {
@@ -634,4 +761,23 @@ extension HomeViewController: UITabBarControllerDelegate {
     }
 }
 
+extension HomeViewController: GADBannerViewDelegate {
+    
+    func bannerView(_ bannerView: GADBannerView, didFailToReceiveAdWithError error: Error) {
+//        self.loadMediumAd()
+        
+    }
+    
+    func bannerViewDidReceiveAd(_ bannerView: GADBannerView) {
+        
+//        if bannerView == highBannerView {
+//            print("high")
+//        } else if bannerView == mediumBannerView {
+//            print("med")
+//        } else if bannerView == allBannerView {
+//            print("all")
+//        }
+    }
+    
+}
 

@@ -126,7 +126,7 @@ class SettingViewController: BaseViewController {
     
     func rateUsApp() {
         
-        guard let url = URL(string: "https://todolist1122.blogspot.com/2023/05/to-do-list.html") else {
+        guard let url = URL(string: "https://centumsolutions1.blogspot.com/2023/05/to-do-list.html") else {
                   return //be safe
                 }
 //           let url = URL(string: "https://centumsols.com/privacy-policy")

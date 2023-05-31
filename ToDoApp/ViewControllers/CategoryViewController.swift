@@ -129,7 +129,7 @@ class CategoryViewController: UIViewController {
                   self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
                   print("Document successfully removed!")
               }
-          }
+          }                              
           self.deleteCategories()
           
           

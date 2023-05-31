@@ -199,6 +199,7 @@ class InitialViewController: BaseViewController {
     
     func checkInternetAvailability() {
         guard Utilities.Connectivity.isConnectedToInternet else {
+            Utilities.hide_ProgressHud(view: self.view)
             self.showAlert(title: "Error", message: "Please check your internet connection")
                 return
         }

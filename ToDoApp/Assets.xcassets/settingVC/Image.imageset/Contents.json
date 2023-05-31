@@ -5,7 +5,6 @@
       "scale" : "1x"
     },
     {
-      "filename" : "370076_account_avatar_client_male_person_icon.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -17,8 +16,5 @@
   "info" : {
     "author" : "xcode",
     "version" : 1
-  },
-  "properties" : {
-    "template-rendering-intent" : "template"
   }
 }
