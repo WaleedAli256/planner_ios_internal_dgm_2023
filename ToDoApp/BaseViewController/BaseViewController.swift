@@ -22,6 +22,42 @@ class BaseViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
+    
+    func setNavBar(_ navTitle: String,_ profilPic: String) {
+        
+//        let image = UIImage(named: imageName)
+//        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+//        imageView.image = profilPic
+//        // Create a UIBarButtonItem with a custom view
+//        let imageBarButton = UIBarButtonItem(customView: imageView)
+        
+        let rightBarButton = UIBarButtonItem(image: UIImage(named: profilPic), style: .plain, target: self,
+                                            action: nil)
+//        navigationController?.navigationBar.isTranslucent = false
+//        navigationController?.navigationBar.backgroundColor = UIColor(named: "bg-color")
+        navigationItem.rightBarButtonItem = rightBarButton
+        self.navigationController?.navigationBar.isHidden = false
+        self.navigationItem.title = navTitle
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(named: "low-text-color")!]
+        self.navigationController?.navigationBar.tintColor = UIColor(named: "low-text-color")
+        self.navigationController?.navigationBar.topItem?.backButtonTitle = ""
+    }
+    
+    func setNavBar(_ navTitle: String) {
+        
+//        let image = UIImage(named: imageName)
+//        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+//        imageView.image = profilPic
+//        // Create a UIBarButtonItem with a custom view
+//        let imageBarButton = UIBarButtonItem(customView: imageView)
+        
+        self.navigationController?.navigationBar.isHidden = false
+        self.navigationItem.title = navTitle
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(named: "low-text-color")!]
+        self.navigationController?.navigationBar.tintColor = UIColor(named: "low-text-color")
+        self.navigationController?.navigationBar.topItem?.backButtonTitle = ""
+    }
+    
 
     /*
     // MARK: - Navigation

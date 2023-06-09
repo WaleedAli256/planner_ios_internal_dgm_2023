@@ -18,7 +18,6 @@ class InitialViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         btnSkip.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
     
@@ -29,8 +28,7 @@ class InitialViewController: BaseViewController {
                 self.btnSkip.isEnabled = true
         }
     }
-    
-    
+
 
     @IBAction func loginGoogleAction(_ sender: UIButton) {
 ////
@@ -105,6 +103,11 @@ class InitialViewController: BaseViewController {
     
     
     @IBAction func skipAction(_ sender: UIButton) {
+        
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let mainTabBarController = storyboard.instantiateViewController(identifier: "SeachTaskViewController") as SeachTaskViewController
+//        self.navigationController?.pushViewController(mainTabBarController, animated: true)
+        
         self.btnSkip.tag = 1
         Utilities.show_ProgressHud(view: self.view)
         self.checkInternetAvailability()
@@ -127,7 +130,7 @@ class InitialViewController: BaseViewController {
                             "deviceType" : "iOS",
                             "isAnonmusUser" : "1",
                             "image_url": "profilePicUrl"
-                    
+
                         ], merge: true) { err in
                             if let err = err {
                                 print("Error adding document: \(err)")
@@ -146,19 +149,19 @@ class InitialViewController: BaseViewController {
                             "deviceType" : "iOS",
                             "isAnonmusUser" : "0",
                             "image_url": "profilePicUrl"
-                            
+
                         ]) { err in
                             if let err = err {
                                 print("Error adding document: \(err)")
                             } else {
                                 createDefaultsCategories(userId: userUID)
                                 self.userLoginParams(userUID, "Annomous user", "Annoumous user email is not exist", "iOS", "1", "profilePicUrl")
-                                
+
                             }
                         }
                     }
                 })
-                
+
             }
         }
     }
@@ -191,9 +194,16 @@ class InitialViewController: BaseViewController {
             Utilities.setIntForKey(0, key: "isAnonmusUser")
         }
         Utilities.hide_ProgressHud(view: self.view)
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
-        self.navigationController?.pushViewController(mainTabBarController, animated: true)
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+               return
+           }
+        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else {
+               return
+           }
+        sceneDelegate.setHomeVC()
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController") as TabBarViewController
+//            .window?.rootViewController = 
             
     }
     

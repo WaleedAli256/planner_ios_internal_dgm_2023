@@ -14,9 +14,12 @@ import GoogleMobileAds
 
 class CreateTaskViewController: BaseViewController {
     
+    
+    
     @IBOutlet weak var titleTxtField: UITextField!
     @IBOutlet weak var detailTxtView: UITextView!
     @IBOutlet weak var catTxtField: DropDown!
+//    @IBOutlet weak var lblCateName: UILabel!
     @IBOutlet weak var dateTxtField: UITextField!
     @IBOutlet weak var timeTxtField: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
@@ -33,6 +36,7 @@ class CreateTaskViewController: BaseViewController {
     @IBOutlet weak var lowView: UIView!
     
     var datePicker = UIDatePicker()
+    var myPickerView = UIPickerView()
     var toolBar = UIToolbar()
     private var selectionMode = ""
     private var selectedTime = ""
@@ -52,10 +56,14 @@ class CreateTaskViewController: BaseViewController {
     var preReminderText = ""
     var repitiotn = ["Only one time","Daily","Once in a week","Once in a month"]
     
-        
+    var preReminderSelect: Bool = false
+    var catFieldSelect: Bool = false
+    var repetitionSelect: Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        self.myPickerView.delegate = self
+        self.myPickerView.dataSource = self
         if detailTxtView.text! == "Description"{
             detailTxtView.textColor = UIColor(named: "LightDarkTextColor")
         }else{
@@ -76,6 +84,9 @@ class CreateTaskViewController: BaseViewController {
         self.medView.layer.borderColor = UIColor(named: "medium-text-color")?.cgColor
         self.medView.layer.borderWidth = 0.8
     
+        self.catTxtField.delegate = self
+        self.preReminderTxtField.delegate = self
+        self.RepititionTxtField.delegate = self
         self.dateTxtField.delegate = self
         self.timeTxtField.delegate = self
         
@@ -84,26 +95,26 @@ class CreateTaskViewController: BaseViewController {
         self.detailTxtView.delegate = self
         
         // drop down settings
-        catTxtField.arrowColor = .lightGray
-        catTxtField.selectedRowColor = .white
-        catTxtField.itemsTintColor = .red
-//        catTxtField.
-        catTxtField.arrowSize = 20
+//        catTxtField.arrowColor = .lightGray
+//        catTxtField.selectedRowColor = .white
+//        catTxtField.itemsTintColor = .red
+////        catTxtField.
+//        catTxtField.arrowSize = 20
 //        catTxtField.text = "Select Category"
         
         // drop down settings
-        preReminderTxtField.arrowColor = .lightGray
-        preReminderTxtField.selectedRowColor = .white
-        preReminderTxtField.itemsTintColor = .red
-        preReminderTxtField.arrowSize = 20
+//        preReminderTxtField.arrowColor = .lightGray
+//        preReminderTxtField.selectedRowColor = .white
+//        preReminderTxtField.itemsTintColor = .red
+//        preReminderTxtField.arrowSize = 20
 //        preReminderTxtField.text = "Select Pre Reminder"
         
         // drop down settings
-        RepititionTxtField.arrowColor = .lightGray
-        RepititionTxtField.selectedRowColor = .white
-        RepititionTxtField.itemsTintColor = .red
-        RepititionTxtField.arrowSize = 20
-//        RepititionTxtField.text = "Select Repitition"
+//        RepititionTxtField.arrowColor = .lightGray
+//        RepititionTxtField.selectedRowColor = .white
+//        RepititionTxtField.itemsTintColor = .red
+//        RepititionTxtField.arrowSize = 20
+////        RepititionTxtField.text = "Select Repitition"
         
         catTxtField.tintColor = .clear
         preReminderTxtField.tintColor = .clear
@@ -111,51 +122,53 @@ class CreateTaskViewController: BaseViewController {
         dateTxtField.tintColor = .clear
         timeTxtField.tintColor = .clear
         
-        RepititionTxtField.optionArray = self.repitiotn
-        preReminderTxtField.optionArray = self.preReminderTime
+//        RepititionTxtField.optionArray = self.repitiotn
+//        preReminderTxtField.optionArray = self.preReminderTime
         
-        self.catTxtField.didSelect { selectedText, index, id in
-            self.categoryId = self.categories[index].id!
-            self.CarColorCode = self.categories[index].colorCode ?? ""
-            self.catTxtField.text = self.strCategories[index].description
-        }
+//        self.catTxtField.didSelect { selectedText, index, id in
+//            self.categoryId = self.categories[index].id!
+//            self.CarColorCode = self.categories[index].colorCode ?? ""
+//            self.catTxtField.text = self.strCategories[index].description
+//        }
 
-        preReminderTxtField.didSelect { selectedText, index, id in
-            if index == 0 {
-                self.preminderMin = 5
-            }else if index == 1{
-                self.preminderMin = 10
-            }else if index == 2{
-                self.preminderMin = 15
-            }else if index == 3{
-                self.preminderMin = 30
-            }else if index == 4{
-                self.preminderMin = 60
-            }else if index == 5{
-                self.preminderMin = 3600
-            }
-            self.preReminderTxtField.text = self.preReminderTime[index].description
-        }
+//        preReminderTxtField.didSelect { selectedText, index, id in
+//            if index == 0 {
+//                self.preminderMin = 5
+//            }else if index == 1{
+//                self.preminderMin = 10
+//            }else if index == 2{
+//                self.preminderMin = 15
+//            }else if index == 3{
+//                self.preminderMin = 30
+//            }else if index == 4{
+//                self.preminderMin = 60
+//            }else if index == 5{
+//                self.preminderMin = 3600
+//            }
+//            self.preReminderTxtField.text = self.preReminderTime[index].description
+//        }
 //        var dateComponenets = DateComponents()
 //        ["Once in a week","Daily","Once in a month","Only one time"]
-        RepititionTxtField.didSelect { selectedText, index, id in
-            if index == 0{
-                self.caseNumber = 0
-                self.frequency = NotificationFrequency.once
-            }else if index == 1{
-                self.caseNumber = 1
-                self.frequency = NotificationFrequency.daily
-            }else if index == 2{
-                self.caseNumber = 2
-                self.frequency = NotificationFrequency.weekly
-            }
-            else if index == 3{
-                self.caseNumber = 3
-                self.frequency = NotificationFrequency.monthly
-            }
-            print(id)
-            self.RepititionTxtField.text = self.repitiotn[index].description
-        }
+//        RepititionTxtField.didSelect { selectedText, index, id in
+//            if index == 0{
+//                self.caseNumber = 0
+//                self.frequency = NotificationFrequency.once
+//            }else if index == 1{
+//                self.caseNumber = 1
+//                self.frequency = NotificationFrequency.daily
+//            }else if index == 2{
+//                self.caseNumber = 2
+//                self.frequency = NotificationFrequency.weekly
+//            }
+//            else if index == 3{
+//                self.caseNumber = 3
+//                self.frequency = NotificationFrequency.monthly
+//            }
+//            print(id)
+//            self.RepititionTxtField.text = self.repitiotn[index].description
+//        }
+        
+//        Utilities.show_ProgressHud(view: self.view)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -177,8 +190,30 @@ class CreateTaskViewController: BaseViewController {
         } else {
             // Fallback on earlier versions
         }
+        
         dateTxtField.inputView = datePicker
         timeTxtField.inputView = datePicker
+    }
+    
+    func simplePickerView() {
+        self.catTxtField.inputAccessoryView = toolBar
+        self.catTxtField.inputView = self.myPickerView
+        
+        self.preReminderTxtField.inputAccessoryView = toolBar
+        self.preReminderTxtField.inputView = self.myPickerView
+        
+        self.RepititionTxtField.inputAccessoryView = toolBar
+        self.RepititionTxtField.inputView = self.myPickerView
+
+        self.toolBar.sizeToFit()
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(btnDoneAction))
+        self.toolBar.setItems([doneButton], animated: true)
+        
+        let selectedRow = 2 // Index of the row you want to select
+        let selectedComponent = 0 // Index of the component you want to select the row in
+        myPickerView.selectRow(selectedRow, inComponent: selectedComponent, animated: false)
+        self.myPickerView.reloadAllComponents()
+
     }
     
     func datePickerTap() {
@@ -227,8 +262,8 @@ class CreateTaskViewController: BaseViewController {
 //            self.timeSelected = true
             self.selectedTime = formatter.string(from: self.datePicker.date)
             self.timeTxtField.text =  self.selectedTime
-           
-              
+        } else {
+            self.self.view.endEditing(true)
         }
 //        self.imgBlur.isHidden = true
     }
@@ -236,6 +271,11 @@ class CreateTaskViewController: BaseViewController {
     @IBAction func priortyAction(_ sender: UIButton) {
         
         
+    }
+    
+    @IBAction func openPickerAction(_ sender: UIButton) {
+        self.myPickerView.selectedRow(inComponent: 2)
+        self.simplePickerView()
     }
     
     @IBAction func highPriortyAction(_ sender: UIButton) {
@@ -280,6 +320,10 @@ class CreateTaskViewController: BaseViewController {
         
         self.createTask()
         
+        
+    }
+    
+    @IBAction func pickerDoneAction(_ sender: UIButton) {
         
     }
     
@@ -412,8 +456,7 @@ class CreateTaskViewController: BaseViewController {
     }
     
     func getCategories (userId:String) {
-            Utilities.show_ProgressHud(view: self.view)
-            self.categories.removeAll()
+            
             let db = Firestore.firestore()
             db.collection("category").whereField("userId", isEqualTo: userId)
                 .getDocuments() { (querySnapshot, err) in
@@ -431,7 +474,7 @@ class CreateTaskViewController: BaseViewController {
                         for cat in self.categories {
                             self.strCategories.append(cat.name!)
                         }
-                        self.catTxtField.optionArray = self.strCategories
+//                        self.catTxtField.optionArray = self.strCategories
                         Utilities.hide_ProgressHud(view: self.view)
                     }
                     
@@ -671,8 +714,6 @@ class CreateTaskViewController: BaseViewController {
             completion(true)
         }
         
-       
-        
 //        // calculate the time intervals for each reminder
 //        let fiveMinutesBefore = TimeInterval(myTimeBefore * 60)
 //        // create date components for each reminder
@@ -687,20 +728,107 @@ class CreateTaskViewController: BaseViewController {
     }
 }
 
+extension CreateTaskViewController: UIPickerViewDelegate,UIPickerViewDataSource {
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if self.catFieldSelect {
+            return self.strCategories.count
+        } else if self.preReminderSelect {
+            return preReminderTime.count
+        } else {
+            return repitiotn.count
+        }
+        
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 40
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        
+        if self.catFieldSelect {
+            return self.strCategories[row]
+        } else if self.preReminderSelect {
+            return preReminderTime[row]
+        } else  {
+            return self.repitiotn[row]
+        }
+        
+         // Replace options with your own array of values
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        
+        if self.catFieldSelect {
+            self.catTxtField.text = self.strCategories[row]
+        } else if self.preReminderSelect {
+            self.preReminderTxtField.text = self.preReminderTime[row]
+            if row == 0 {
+                self.preminderMin = 5
+            }else if row == 1{
+                self.preminderMin = 10
+            }else if row == 2{
+                self.preminderMin = 15
+            }else if row == 3{
+                self.preminderMin = 30
+            }else if row == 4{
+                self.preminderMin = 60
+            }else if row == 5{
+                self.preminderMin = 3600
+            }
+        } else  {
+            if row == 0{
+                self.caseNumber = 0
+                self.frequency = NotificationFrequency.once
+            }else if row == 1{
+                self.caseNumber = 1
+                self.frequency = NotificationFrequency.daily
+            }else if row == 2{
+                self.caseNumber = 2
+                self.frequency = NotificationFrequency.weekly
+            }
+            else if row == 3{
+                self.caseNumber = 3
+                self.frequency = NotificationFrequency.monthly
+            }
+            self.RepititionTxtField.text = self.repitiotn[row]
+        }
+        
+        
+    }
+
+}
+
 
 extension CreateTaskViewController: UITextFieldDelegate
 {
     func textFieldDidBeginEditing(_ textField: UITextField) {
-//        if textField == self.txtTitle {
-//            self.txtTitle.text = ""
-//        }
-//        else if textField == self.txtDescription {
-//            self.txtDescription.text = ""
-//        }
-//        else if textField == self.txtLocation {
-//            self.txtLocation.text = ""
-//        }
-         if textField == self.dateTxtField {
+        if textField == self.RepititionTxtField {
+            self.preReminderSelect = false
+            self.catFieldSelect = false
+            self.repetitionSelect = true
+            self.simplePickerView()
+        }
+        else if textField == self.preReminderTxtField {
+            self.preReminderSelect = true
+            self.catFieldSelect = false
+            self.repetitionSelect = false
+            self.simplePickerView()
+        }
+         if textField == self.catTxtField {
+            //picker view
+             self.catFieldSelect = true
+             self.preReminderSelect = false
+             self.repetitionSelect = false
+             self.simplePickerView()
+    
+        }
+         else if textField == self.dateTxtField {
 //            self.txtFieldDate.text = ""
             self.datePickerTap()
         }

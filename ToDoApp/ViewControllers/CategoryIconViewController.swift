@@ -24,7 +24,7 @@ class CategoryIconViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.setNavBar("Select Icon")
         self.collview.delegate = self
         self.collview.dataSource = self
         self.btnUpdate.setTitle(fromEditOrUpdat, for: .normal)

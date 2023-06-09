@@ -17,6 +17,9 @@ class SeachTaskViewController: BaseViewController {
     @IBOutlet weak var searchTxtField: UITextField!
     @IBOutlet weak var alertLabel: UILabel!
     @IBOutlet weak var lblcatName: UILabel!
+    @IBOutlet weak var searchView: UIView!
+    @IBOutlet weak var btnCrateTask: UIButton!
+    @IBOutlet weak var btnCrateTask2: UIButton!
     
     var selectedIndex = -1
     var categoryName = ""
@@ -32,7 +35,7 @@ class SeachTaskViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.lblcatName.text = self.categoryName
+//        self.lblcatName.text = self.categoryName
         self.searchTxtField.delegate = self
         //keyboard settings
         IQKeyboardManager.shared.enableAutoToolbar = false
@@ -41,11 +44,34 @@ class SeachTaskViewController: BaseViewController {
         
         tblView.register(UINib(nibName: "TaskCell", bundle: nil), forCellReuseIdentifier: "TaskCell")
         searchTxtField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        Utilities.show_ProgressHud(view: self.view)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.getTaskAgaintCategory()
+        self.tabBarController?.tabBar.isHidden = true
+    }
+    
+    func swipeToPop() {
+
+//        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+//        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+    }
+    
+//    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+//
+//        if gestureRecognizer == self.navigationController?.interactivePopGestureRecognizer {
+//            return true
+//        }
+//        return false
+//    }
+    
+    @IBAction func createNewTask(_ sender: UIButton) {
+        //create VC
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let searchTaskVC = storyboard.instantiateViewController(identifier: "CreateTaskViewController") as! CreateTaskViewController
+        self.navigationController?.pushViewController(searchTaskVC, animated: true)
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
@@ -56,11 +82,21 @@ class SeachTaskViewController: BaseViewController {
                 return word.title!.lowercased().contains((self.searchTxtField.text!.lowercased()))
             })
             if self.filterSearchTasks.count > 0 {
+//                self.alertLabel.isHidden = false
+//                self.lblTaskCount.isHidden = false
+//                self.searchView.isHidden = false
                 self.lblTaskCount.text = "Total Tasks: \(self.filterSearchTasks.count)"
+                self.btnCrateTask.isHidden = true
+                self.btnCrateTask2.isHidden = false
                 self.tblView.reloadData()
             } else {
-                self.alertLabel.text = "No task available!"
-                self.lblTaskCount.text = "Total Tasks: \(self.filterSearchTasks.count)"
+                self.alertLabel.isHidden = true
+                self.lblTaskCount.isHidden = true
+                self.searchView.isHidden = true
+                self.btnCrateTask.isHidden = false
+                self.btnCrateTask2.isHidden = true
+//                self.alertLabel.text = "No task available!"
+//                self.lblTaskCount.text = "Total Tasks: \(self.filterSearchTasks.count)"
                 self.tblView.reloadData()
             }
         }
@@ -73,8 +109,8 @@ class SeachTaskViewController: BaseViewController {
     func getTaskAgaintCategory() {
         selectedInde = -1
         if self.fromViewController == "HomeVC" {
-            
-            Utilities.show_ProgressHud(view: self.view)
+//            self.lblcatName.text = "All Tasks"
+            self.setNavBar("All Tasks")
             let db = Firestore.firestore()
             db.collection("tasks").whereField("userId", isEqualTo: Utilities().getCurrentUser().id ?? "")
                 .getDocuments() { (querySnapshot, err) in
@@ -93,20 +129,28 @@ class SeachTaskViewController: BaseViewController {
                         Utilities.hide_ProgressHud(view: self.view)
                         if self.arrAllTasks.count > 0 {
                             self.alertLabel.isHidden = true
+                            self.btnCrateTask.isHidden = true
+                            self.btnCrateTask2.isHidden = false
                             self.filterSearchTasks = self.arrAllTasks
                             self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
                             self.tblView.reloadData()
                         } else {
-                            self.alertLabel.isHidden = false
-                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
-                            self.alertLabel.text = "No task available!"
+                            self.alertLabel.isHidden = true
+                            self.searchView.isHidden = true
+                            self.lblTaskCount.isHidden = true
+                            self.btnCrateTask.isHidden = false
+                            self.btnCrateTask2.isHidden = true
+//                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
+//                            self.alertLabel.text = "No task available!"
                             self.tblView.reloadData()
                     }
                         
                 }
             }
         } else {
-            Utilities.show_ProgressHud(view: self.view)
+            
+//            self.lblcatName.text = self.categoryName
+            self.setNavBar("\(self.categoryName)")
             self.arrAllTasks.removeAll()
             let db = Firestore.firestore()
             db.collection("tasks").whereField("userId", isEqualTo: Utilities().getCurrentUser().id ?? "").whereField("categoryName", isEqualTo: self.categoryName)
@@ -127,13 +171,18 @@ class SeachTaskViewController: BaseViewController {
                         self.filterSearchTasks = self.arrAllTasks
                         if self.arrAllTasks.count > 0 {
                             self.alertLabel.isHidden = true
-                           
                             self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
+                            self.btnCrateTask2.isHidden = false
+                            self.btnCrateTask.isHidden = true
                             self.tblView.reloadData()
                         } else {
-                            self.alertLabel.isHidden = false
-                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
-                            self.alertLabel.text = "No task available!"
+                            self.alertLabel.isHidden = true
+                            self.searchView.isHidden = true
+                            self.lblTaskCount.isHidden = true
+                            self.btnCrateTask.isHidden = false
+                            self.btnCrateTask2.isHidden = true
+//                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
+//                            self.alertLabel.text = "No task available!"
                             self.tblView.reloadData()
                         }
                         

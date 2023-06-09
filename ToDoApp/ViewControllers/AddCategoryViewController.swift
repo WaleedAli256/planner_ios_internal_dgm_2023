@@ -31,6 +31,10 @@ class AddCategoryViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+//        self.navigationController?.navigationBar.isHidden = false
+//        self.navigationItem.title = "Create Category"
+//        self.navigationController?.navigationBar.tintColor = UIColor(named: "low-text-color")
+//        self.navigationController?.navigationBar.topItem?.backButtonTitle = "category"
         
         if txtViewDescrip.text! == "Description"{
             txtViewDescrip.textColor = UIColor(named: "LightDarkTextColor")
@@ -46,7 +50,8 @@ class AddCategoryViewController: BaseViewController {
         self.txtCatName.delegate = self
         self.txtViewDescrip.delegate = self
         self.txtViewDescrip.textContainer.lineFragmentPadding = 15
-        self.lblCatTopTitle.text = fromEditOrUpdate
+//        self.lblCatTopTitle.text = fromEditOrUpdate
+        self.setNavBar("\(fromEditOrUpdate!)")
         self.btnCrUpCat.setTitle(fromEditOrUpdate, for: .normal)
         
     }
@@ -356,7 +361,6 @@ extension AddCategoryViewController: CategoryIconViewControllerDelegate {
         
     }
 }
-
 
 extension AddCategoryViewController: PopupViewControllerDelegate {
     

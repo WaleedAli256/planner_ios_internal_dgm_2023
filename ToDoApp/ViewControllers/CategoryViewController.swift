@@ -9,7 +9,7 @@ import UIKit
 import Firebase
 import FirebaseFirestore
 
-class CategoryViewController: UIViewController {
+class CategoryViewController: BaseViewController {
     
     @IBOutlet weak var profilPic: UIImageView!
     @IBOutlet weak var catColView: UICollectionView!
@@ -27,18 +27,20 @@ class CategoryViewController: UIViewController {
         self.profilPic.clipsToBounds = true
         self.catColView.delegate = self
         self.catColView.dataSource = self
-        
+//        Utilities.show_ProgressHud(view: self.view)
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
         self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
         self.setData()
+//        self.setNavBar("Category", self.profilPic.image!)
     }
     
     func getCategories (userId:String) {
         selectedInde = -1
-        Utilities.show_ProgressHud(view: self.view)
         let db = Firestore.firestore()
         db.collection("category").whereField("userId", isEqualTo: userId)
             .getDocuments() { (querySnapshot, err) in
@@ -146,17 +148,6 @@ class CategoryViewController: UIViewController {
 
       self.present(alertController, animated: true, completion: nil)
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-       
     }
 
     
@@ -225,7 +216,7 @@ extension CategoryViewController: UICollectionViewDelegate,UICollectionViewDataS
         } else {
             cell.popupView.isHidden = true
         }
-//        cell.delegate = self
+        cell.delegate = self
         cell.deleteBtn.tag = indexPath.row
         cell.editBtn.tag = indexPath.row
         cell.catBGView.backgroundColor = UIColor(hexString: cat.colorCode ?? "")
@@ -285,56 +276,56 @@ extension CategoryViewController: PopupViewControllerDelegate {
     }
 }
 
-//extension CategoryViewController: CategoryCollectionViewCellDelegate{
-//    
-//    func editOrDelete(_ actionType: String, _ actionIndex: Int, _ cellIndex: IndexPath) {
-//        
-//        self.cellRow = cellIndex.row
-//        self.actionTyp = actionType
-//        self.actionIndex = actionIndex
-//        print(actionType)
-//        print(actionIndex)
-//        print(cellIndex.row)
-//        
-////        self.categories.remove(at: cellIndex.row)
-//        
-//        if self.actionIndex == 0 {
-//            //edit the category
-//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//            let addCatVC = storyboard.instantiateViewController(identifier: "AddCategoryViewController") as! AddCategoryViewController
-//            addCatVC.fromEditOrUpdate = "Update Category"
-//            addCatVC.categoryObj = self.categories[self.cellRow]
-//            self.navigationController?.pushViewController(addCatVC, animated: true)
-//            
-//            
-//        } else {
-//            let db = Firestore.firestore()
-//            db.collection("tasks").whereField("id", isEqualTo: self.categories[self.cellRow].id!).getDocuments {(querySnapshot , err) in
-//                if let err = err {
-//                    print("Error removing document: \(err)")
-//                } else {
-//                    guard let documents = querySnapshot?.documents else { return }
-//                           for document in documents {
-//                               document.reference.delete()
-//                    }
-//                    self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
-//                    print("Document successfully removed!")
-//                }
-//            }
-//            self.deleteCategories()
-//        }
-//        
-//        
-//            
-//        // cate id
-//        // get cate / skip
-//        // all task again that cate id
-//        // chak all task is yours / skip
-//        // delete all task
-//        // than delete cate
-//        
-//    }
-//    
-//}
+extension CategoryViewController: CategoryCollectionViewCellDelegate{
+    
+    func editOrDelete(_ actionType: String, _ actionIndex: Int, _ cellIndex: IndexPath) {
+        
+        self.cellRow = cellIndex.row
+        self.actionTyp = actionType
+        self.actionIndex = actionIndex
+        print(actionType)
+        print(actionIndex)
+        print(cellIndex.row)
+        
+//        self.categories.remove(at: cellIndex.row)
+        
+        if self.actionIndex == 0 {
+            //edit the category
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let addCatVC = storyboard.instantiateViewController(identifier: "AddCategoryViewController") as! AddCategoryViewController
+            addCatVC.fromEditOrUpdate = "Update Category"
+            addCatVC.categoryObj = self.categories[self.cellRow]
+            self.navigationController?.pushViewController(addCatVC, animated: true)
+            
+            
+        } else {
+            let db = Firestore.firestore()
+            db.collection("tasks").whereField("id", isEqualTo: self.categories[self.cellRow].id!).getDocuments {(querySnapshot , err) in
+                if let err = err {
+                    print("Error removing document: \(err)")
+                } else {
+                    guard let documents = querySnapshot?.documents else { return }
+                           for document in documents {
+                               document.reference.delete()
+                    }
+                    self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
+                    print("Document successfully removed!")
+                }
+            }
+            self.deleteCategories()
+        }
+        
+        
+            
+        // cate id
+        // get cate / skip
+        // all task again that cate id
+        // chak all task is yours / skip
+        // delete all task
+        // than delete cate
+        
+    }
+    
+}
 
 

@@ -62,7 +62,7 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        
         let calendar = Calendar.current
           let date = Date()
           let components = calendar.dateComponents([.month, .year], from: date)
@@ -74,7 +74,7 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
         } else {
             print("Invalid month or year.")
         }
-
+        Utilities.show_ProgressHud(view: self.view)
         // In this case, we instantiate the banner with desired ad size.
 //        bannerView = GADBannerView(adSize: GADAdSizeBanner)
 //        bannerView.adUnitID = "ca-app-pub-8414160375988475/6353645343"
@@ -120,6 +120,13 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
             print(tableIndex)
             self.tblView.reloadData()
         }
+    }
+    
+    
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+//        self.navigationController?.navigationBar.isHidden = true
     }
     
     func numberOfDays(inMonth month: Int, year: Int) -> Int? {
@@ -202,6 +209,7 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
         getTaskAgaintCategory()
         self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "")
     
@@ -252,7 +260,6 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     }
     
     func getAllTasks(userId:String) {
-        Utilities.show_ProgressHud(view: self.view)
         self.allTasks.removeAll()
         let db = Firestore.firestore()
         db.collection("tasks").whereField("userId", isEqualTo: userId)
@@ -343,7 +350,6 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     }
     var arrAllTasks = [Task]()
     func getTaskAgaintCategory() {
-         Utilities.show_ProgressHud(view: self.view)
             let db = Firestore.firestore()
         db.collection("tasks").whereField("userId", isEqualTo: Utilities().getCurrentUser().id ?? "")
                 .getDocuments() { (querySnapshot, err) in
@@ -492,10 +498,12 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let searchTaskVC = storyboard.instantiateViewController(identifier: "SeachTaskViewController") as! SeachTaskViewController
         searchTaskVC.fromViewController = "HomeVC"
-        searchTaskVC.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(searchTaskVC, animated: true)
-
-        
+    
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+ //       let addCatVC = storyboard.instantiateViewController(identifier: "AddCategoryViewController") as! AddCategoryViewController
+ //       addCatVC.fromEditOrUpdate = "Create Category"
+ //       self.navigationController?.pushViewController(addCatVC, animated: true)
     }
     
     private func setupDatePicker() {

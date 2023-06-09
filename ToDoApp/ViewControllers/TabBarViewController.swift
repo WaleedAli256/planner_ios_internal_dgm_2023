@@ -11,6 +11,7 @@ import StoreKit
 import AdSupport
 import AppTrackingTransparency
 
+
 class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
     
     var highInterstitial: GADInterstitialAd?
@@ -22,6 +23,8 @@ class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
     var addIds = ["ca-app-pub-8414160375988475/4551648","ca-app-pub-8414160375988475/4360076824","ca-app-pub-8414160375988475/6799850985"]
     var addIndex = 0
     var addRun : Bool = false
+   
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -31,6 +34,15 @@ class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
             // Fallback on earlier versions
         }
         
+    
+        if #available(iOS 15.0, *) {
+            let appearance = UITabBarAppearance()
+            appearance.backgroundColor = .systemBackground
+            tabBarController?.tabBar.standardAppearance = appearance
+            tabBarController?.tabBar.scrollEdgeAppearance = appearance
+        } else {
+            // Fallback on earlier versions
+        }
         
 //        if let advertisingId = getAdvertisingIdentifier() {
 //            print("Advertising Identifier: \(advertisingId)")
@@ -78,6 +90,11 @@ class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
         }
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
+        self.tabBarController?.tabBar.isHidden = false
+    }
     
     func getAdvertisingIdentifier() -> String? {
         guard ASIdentifierManager.shared().isAdvertisingTrackingEnabled else {
@@ -123,8 +140,6 @@ class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
             })
     }
     
-    
-    
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
 
@@ -134,6 +149,7 @@ class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
 
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
        
+        self.navigationController?.navigationBar.isHidden = true
         guard let selectedIndex = tabBar.items?.firstIndex(of: item) else { return }
 
           // Check if the selected tab index is already in the selectedTabIndices array

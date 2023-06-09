@@ -52,14 +52,19 @@ class CalendarViewController: BaseViewController {
         self.calendar.dataSource = self
         self.tblView.delegate = self
         self.tblView.dataSource = self
-
+        Utilities.show_ProgressHud(view: self.view)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.setData()
-        self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "", myDate: mySelectedDate)
         self.tblView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "", myDate: mySelectedDate)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -91,7 +96,6 @@ class CalendarViewController: BaseViewController {
     }
     
     func getAllTasks(userId:String,myDate : Date) {
-        Utilities.show_ProgressHud(view: self.view)
         self.selectedInde = -1
         self.arrAllTasks.removeAll()
         self.filterArray.removeAll()
@@ -216,6 +220,7 @@ extension CalendarViewController : UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tblView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as! TaskCell
+        
         let obj = self.filterArray[indexPath.row]
         let originalDateFormat = "MM/dd/yyyy h:mm a"
         let desiredDateFormat = "EE,d MMM h:mm a"

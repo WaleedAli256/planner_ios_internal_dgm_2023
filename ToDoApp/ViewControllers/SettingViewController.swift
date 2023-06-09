@@ -31,22 +31,32 @@ class SettingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         self.profpic.layer.cornerRadius = self.profpic.frame.size.width / 2
         self.profpic.clipsToBounds = true
         self.tblView.delegate = self
         self.tblView.dataSource = self
+//        navigationController?.navigationBar.isTranslucent = false
+        if #available(iOS 15.0, *) {
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = .black
+            // Set the appearance for normal state
+            tabBarController?.tabBar.standardAppearance = appearance
+            // Set the appearance for scrolled state
+//            tabBarController?.tabBar.scrollEdgeAppearance = appearance
+        }
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setData()
-        self.tblView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
+//        self.tblView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
-        self.tblView.removeObserver(self, forKeyPath: "contentSize")
+//        self.tblView.removeObserver(self, forKeyPath: "contentSize")
         
     }
         
@@ -92,19 +102,19 @@ class SettingViewController: BaseViewController {
         }
         self.tblView.reloadData()
     }
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?){
-        
-        if(keyPath == "contentSize"){
-            if(self.tblView.contentSize.height < 0)
-            {
-                self.tblHeight.constant = 100
-            }
-            else
-            {
-                self.tblHeight.constant = self.tblView.contentSize.height + 20
-            }
-        }
-    }
+//    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?){
+//
+//        if(keyPath == "contentSize"){
+//            if(self.tblView.contentSize.height < 0)
+//            {
+//                self.tblHeight.constant = 100
+//            }
+//            else
+//            {
+//                self.tblHeight.constant = self.tblView.contentSize.height + 20
+//            }
+//        }
+//    }
 
     func shareMyApp() {
         
@@ -141,7 +151,6 @@ class SettingViewController: BaseViewController {
 ////
         self.checkInternetAvailability()
         Utilities.show_ProgressHud(view: self.view)
-
         let signInConfig = GIDConfiguration.init(clientID: "359735858810-66jv9p5seorp32jkt1g3r3m4qtu5ogl0.apps.googleusercontent.com")
         GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: self) { user, error in
             guard error == nil else {
@@ -325,6 +334,7 @@ extension SettingViewController: UITableViewDelegate,UITableViewDataSource {
         }
         if indexPath.row == 0 {
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "AboutUsViewController") as! AboutUsViewController
+            
             self.navigationController?.pushViewController(controller, animated: true)
             
         } else if indexPath.row == 1 {

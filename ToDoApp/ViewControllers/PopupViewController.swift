@@ -19,6 +19,7 @@ class PopupViewController: UIViewController {
     @IBOutlet weak var lblAlertMsg: UILabel!
     @IBOutlet weak var lblMsgName: UILabel!
     var alertMg = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.7)
