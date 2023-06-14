@@ -14,7 +14,7 @@ import GoogleMobileAds
 
 class CreateTaskViewController: BaseViewController {
     
-    
+    static var onCreateTask:((_ catName: String) -> Void)?
     
     @IBOutlet weak var titleTxtField: UITextField!
     @IBOutlet weak var detailTxtView: UITextView!
@@ -23,6 +23,7 @@ class CreateTaskViewController: BaseViewController {
     @IBOutlet weak var dateTxtField: UITextField!
     @IBOutlet weak var timeTxtField: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var topTitleView: UIView!
     @IBOutlet weak var preReminderTxtField: DropDown!
     @IBOutlet weak var RepititionTxtField: DropDown!
     var scanTextAlert: UIAlertController?
@@ -35,6 +36,7 @@ class CreateTaskViewController: BaseViewController {
     @IBOutlet weak var medView: UIView!
     @IBOutlet weak var lowView: UIView!
     
+    var fromViewController = ""
     var datePicker = UIDatePicker()
     var myPickerView = UIPickerView()
     var toolBar = UIToolbar()
@@ -46,7 +48,7 @@ class CreateTaskViewController: BaseViewController {
     fileprivate let maxLen2 = 50
     fileprivate var preminderMin: Int = 0
     var caseNumber: Int!
-    
+    var mySelectedCategory = ""
     var categories = [TaskCategory]()
     var categoryId = ""
     var CarColorCode = ""
@@ -61,7 +63,8 @@ class CreateTaskViewController: BaseViewController {
     var repetitionSelect: Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.navigationController?.navigationBar.isHidden = true
+        catTxtField.text = mySelectedCategory
         self.myPickerView.delegate = self
         self.myPickerView.dataSource = self
         if detailTxtView.text! == "Description"{
@@ -173,6 +176,13 @@ class CreateTaskViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if fromViewController == "searchTaskViewController" {
+            self.topTitleView.isHidden = true
+            self.setNavBar("Create New Task")
+        } else {
+            self.topTitleView.isHidden = false
+        }
         self.scrollView.scrollsToTop = true
         self.scrollView.scrollToTop()
         self.datePicker.date = Date()
@@ -322,7 +332,14 @@ class CreateTaskViewController: BaseViewController {
         
         
     }
-    
+    @IBAction func CreateCateGoryActon(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let addCatVC = storyboard.instantiateViewController(identifier: "AddCategoryViewController") as! AddCategoryViewController
+//        searchTaskVC.mySelectedCategory = categoryName
+        addCatVC.fromEditOrUpdate = "Create Category"
+//        addCatVC.fromViewController = "searchTaskViewController"
+        self.navigationController?.pushViewController(addCatVC, animated: true)
+    }
     @IBAction func pickerDoneAction(_ sender: UIButton) {
         
     }
@@ -367,7 +384,7 @@ class CreateTaskViewController: BaseViewController {
                 self.showAlert(title: "Error", message: "Please check your internet connection")
                     return
             }
-                Utilities.show_ProgressHud(view: self.view)
+//                Utilities.show_ProgressHud(view: self.view)
             
                 let db = Firestore.firestore()
                 let ref = db.collection("tasks").document()
@@ -395,7 +412,14 @@ class CreateTaskViewController: BaseViewController {
                     } else {
                         Utilities.hide_ProgressHud(view: self.view)
                         cAlert.ShowToastWithHandler(VC: self, msg: "Task created successfully") { sucess in
-                            _ = self.tabBarController?.selectedIndex = 0
+                            
+                            if self.fromViewController == "searchTaskViewController" {
+                                self.navigationController?.popViewController(animated: true)
+                                CreateTaskViewController.onCreateTask?(self.catTxtField.text!)
+                                
+                            } else {
+                                _ = self.tabBarController?.selectedIndex = 0
+                            }
                             self.titleTxtField.text = ""
                             self.detailTxtView.text = "Description"
                             self.catTxtField.text = ""
@@ -456,7 +480,10 @@ class CreateTaskViewController: BaseViewController {
     }
     
     func getCategories (userId:String) {
-            
+        guard Utilities.Connectivity.isConnectedToInternet else {
+            self.showAlert(title: "Error", message: "Please check your internet connection")
+                return
+        }
             let db = Firestore.firestore()
             db.collection("category").whereField("userId", isEqualTo: userId)
                 .getDocuments() { (querySnapshot, err) in
@@ -751,21 +778,22 @@ extension CreateTaskViewController: UIPickerViewDelegate,UIPickerViewDataSource 
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         
-        if self.catFieldSelect {
-            return self.strCategories[row]
-        } else if self.preReminderSelect {
-            return preReminderTime[row]
-        } else  {
-            return self.repitiotn[row]
-        }
-        
-         // Replace options with your own array of values
+            if self.catFieldSelect {
+                return self.strCategories[row]
+            } else if self.preReminderSelect {
+                return preReminderTime[row]
+            } else  {
+                return self.repitiotn[row]
+            }
+
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
         if self.catFieldSelect {
             self.catTxtField.text = self.strCategories[row]
+            self.categoryId = self.categories[row].id!
+            self.CarColorCode = self.categories[row].colorCode ?? ""
         } else if self.preReminderSelect {
             self.preReminderTxtField.text = self.preReminderTime[row]
             if row == 0 {

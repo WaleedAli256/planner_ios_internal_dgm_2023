@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>359735858810-66jv9p5seorp32jkt1g3r3m4qtu5ogl0.apps.googleusercontent.com</string>
+	<string>359735858810-sr15dtug78u96dili2nemsj2dplg80gj.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.359735858810-66jv9p5seorp32jkt1g3r3m4qtu5ogl0</string>
+	<string>com.googleusercontent.apps.359735858810-sr15dtug78u96dili2nemsj2dplg80gj</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>359735858810-s26hh0vokikpadaomivv0pogbl1o9nv4.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.questgamerz.daily.planner.schedule.planner.todo.list</string>
+	<string>com.cs.daily.planner.schedule.list</string>
 	<key>PROJECT_ID</key>
 	<string>plannerapp-dgm-256</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:359735858810:ios:8f12f920df5a26ce33cdc3</string>
+	<string>1:359735858810:ios:e19bc89d47f7026633cdc3</string>
 </dict>
 </plist>

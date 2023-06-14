@@ -44,12 +44,16 @@ class SeachTaskViewController: BaseViewController {
         
         tblView.register(UINib(nibName: "TaskCell", bundle: nil), forCellReuseIdentifier: "TaskCell")
         searchTxtField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-        Utilities.show_ProgressHud(view: self.view)
+//        Utilities.show_ProgressHud(view: self.view)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        CreateTaskViewController.onCreateTask = { catName in
+            self.categoryName = catName
+        }
         self.getTaskAgaintCategory()
+        btnCrateTask2.layer.cornerRadius = 25
         self.tabBarController?.tabBar.isHidden = true
     }
     
@@ -71,6 +75,8 @@ class SeachTaskViewController: BaseViewController {
         //create VC
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let searchTaskVC = storyboard.instantiateViewController(identifier: "CreateTaskViewController") as! CreateTaskViewController
+//        searchTaskVC.mySelectedCategory = categoryName
+        searchTaskVC.fromViewController = "searchTaskViewController"
         self.navigationController?.pushViewController(searchTaskVC, animated: true)
     }
     
@@ -84,18 +90,19 @@ class SeachTaskViewController: BaseViewController {
             if self.filterSearchTasks.count > 0 {
 //                self.alertLabel.isHidden = false
 //                self.lblTaskCount.isHidden = false
-//                self.searchView.isHidden = false
-                self.lblTaskCount.text = "Total Tasks: \(self.filterSearchTasks.count)"
+
+//                self.lblTaskCount.text = "Total Tasks: \(self.filterSearchTasks.count)"
                 self.btnCrateTask.isHidden = true
                 self.btnCrateTask2.isHidden = false
+                self.searchView.isHidden = false
                 self.tblView.reloadData()
             } else {
-                self.alertLabel.isHidden = true
+                self.alertLabel.isHidden = false
                 self.lblTaskCount.isHidden = true
                 self.searchView.isHidden = true
                 self.btnCrateTask.isHidden = false
                 self.btnCrateTask2.isHidden = true
-//                self.alertLabel.text = "No task available!"
+                self.alertLabel.text = "No task available!"
 //                self.lblTaskCount.text = "Total Tasks: \(self.filterSearchTasks.count)"
                 self.tblView.reloadData()
             }
@@ -131,15 +138,17 @@ class SeachTaskViewController: BaseViewController {
                             self.alertLabel.isHidden = true
                             self.btnCrateTask.isHidden = true
                             self.btnCrateTask2.isHidden = false
+                            self.searchView.isHidden = false
                             self.filterSearchTasks = self.arrAllTasks
-                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
+//                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
                             self.tblView.reloadData()
                         } else {
-                            self.alertLabel.isHidden = true
                             self.searchView.isHidden = true
+                            self.alertLabel.isHidden = false
                             self.lblTaskCount.isHidden = true
                             self.btnCrateTask.isHidden = false
                             self.btnCrateTask2.isHidden = true
+                            self.alertLabel.text = "No Task Available!"
 //                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
 //                            self.alertLabel.text = "No task available!"
                             self.tblView.reloadData()
@@ -171,16 +180,18 @@ class SeachTaskViewController: BaseViewController {
                         self.filterSearchTasks = self.arrAllTasks
                         if self.arrAllTasks.count > 0 {
                             self.alertLabel.isHidden = true
-                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
+//                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
+                            self.searchView.isHidden = false
                             self.btnCrateTask2.isHidden = false
                             self.btnCrateTask.isHidden = true
                             self.tblView.reloadData()
                         } else {
-                            self.alertLabel.isHidden = true
                             self.searchView.isHidden = true
-                            self.lblTaskCount.isHidden = true
+                            self.alertLabel.isHidden = false
+//                            self.lblTaskCount.isHidden = true
                             self.btnCrateTask.isHidden = false
                             self.btnCrateTask2.isHidden = true
+                            self.alertLabel.text = "No Task Available!"
 //                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
 //                            self.alertLabel.text = "No task available!"
                             self.tblView.reloadData()

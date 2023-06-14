@@ -14,6 +14,12 @@
 		040F8FE12A090CCA005E7B14 /* CityModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040F8FDD2A090CC9005E7B14 /* CityModel.swift */; };
 		040F8FE22A090CCA005E7B14 /* DropDownTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 040F8FDE2A090CC9005E7B14 /* DropDownTableViewCell.xib */; };
 		040F8FE32A090CCA005E7B14 /* DropDownTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040F8FDF2A090CCA005E7B14 /* DropDownTableViewCell.swift */; };
+		0412A9E62A37009E00A22197 /* ViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0412A9E12A37009900A22197 /* ViewController2.swift */; };
+		0412A9E72A37009E00A22197 /* ViewController3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0412A9E22A37009A00A22197 /* ViewController3.swift */; };
+		0412A9E82A37009E00A22197 /* OnBoardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0412A9E32A37009C00A22197 /* OnBoardingViewController.swift */; };
+		0412A9E92A37009E00A22197 /* OnBoardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0412A9E42A37009D00A22197 /* OnBoardingPageViewController.swift */; };
+		0412A9EA2A37009E00A22197 /* ViewController1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0412A9E52A37009E00A22197 /* ViewController1.swift */; };
+		0412A9EE2A370C3900A22197 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0412A9ED2A370C3900A22197 /* GoogleService-Info.plist */; };
 		0413060229EFA4F0009116F7 /* alarm-1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0413060129EFA4F0009116F7 /* alarm-1.wav */; };
 		0421ED7E29D5975B00C25C37 /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421ED7D29D5975B00C25C37 /* CustomTabBar.swift */; };
 		0421ED8029D5979A00C25C37 /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421ED7F29D5979A00C25C37 /* CustomTabBarController.swift */; };
@@ -22,7 +28,6 @@
 		044C30E429D57EC200DC627B /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C30E329D57EC200DC627B /* CustomView.swift */; };
 		044C30E629D588D100DC627B /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C30E529D588D100DC627B /* CustomLabel.swift */; };
 		044C30E829D5897100DC627B /* CornerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044C30E729D5897100DC627B /* CornerView.swift */; };
-		044F24A329E7FA64001B95A2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 044F24A229E7FA64001B95A2 /* GoogleService-Info.plist */; };
 		045C530929E52538009B1F45 /* CreateTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045C530829E52537009B1F45 /* CreateTaskViewController.swift */; };
 		045C530D29E526CB009B1F45 /* HomeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045C530C29E526CB009B1F45 /* HomeCollectionViewCell.swift */; };
 		045E429229E56FE4005D3204 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045E429129E56FE4005D3204 /* Utilities.swift */; };
@@ -37,6 +42,7 @@
 		04928C962A0BAD4A008C3E6C /* InitialNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04928C952A0BAD4A008C3E6C /* InitialNavigationController.swift */; };
 		04A5093A29FFECD6002818CE /* CategoryIconViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A5093929FFECD6002818CE /* CategoryIconViewController.swift */; };
 		04A5093E29FFED92002818CE /* CategoryIconsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A5093D29FFED92002818CE /* CategoryIconsCollectionViewCell.swift */; };
+		04B32B1A2A39E6C70054AFB7 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B32B192A39E6C70054AFB7 /* SignUpViewController.swift */; };
 		04BB97CA2A0A563900EF7F50 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BB97C92A0A563900EF7F50 /* TabBarViewController.swift */; };
 		04C0A4FB29D43D18005B82DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0A4FA29D43D18005B82DD /* AppDelegate.swift */; };
 		04C0A4FD29D43D18005B82DD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0A4FC29D43D18005B82DD /* SceneDelegate.swift */; };
@@ -94,6 +100,13 @@
 		040F8FDD2A090CC9005E7B14 /* CityModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityModel.swift; sourceTree = "<group>"; };
 		040F8FDE2A090CC9005E7B14 /* DropDownTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DropDownTableViewCell.xib; sourceTree = "<group>"; };
 		040F8FDF2A090CCA005E7B14 /* DropDownTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropDownTableViewCell.swift; sourceTree = "<group>"; };
+		0412A9E02A36F8B700A22197 /* ToDoApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ToDoApp.entitlements; sourceTree = "<group>"; };
+		0412A9E12A37009900A22197 /* ViewController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController2.swift; sourceTree = "<group>"; };
+		0412A9E22A37009A00A22197 /* ViewController3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController3.swift; sourceTree = "<group>"; };
+		0412A9E32A37009C00A22197 /* OnBoardingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnBoardingViewController.swift; sourceTree = "<group>"; };
+		0412A9E42A37009D00A22197 /* OnBoardingPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnBoardingPageViewController.swift; sourceTree = "<group>"; };
+		0412A9E52A37009E00A22197 /* ViewController1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController1.swift; sourceTree = "<group>"; };
+		0412A9ED2A370C3900A22197 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0413060129EFA4F0009116F7 /* alarm-1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "alarm-1.wav"; sourceTree = "<group>"; };
 		0421ED7D29D5975B00C25C37 /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		0421ED7F29D5979A00C25C37 /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
@@ -102,7 +115,6 @@
 		044C30E329D57EC200DC627B /* CustomView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomView.swift; sourceTree = "<group>"; };
 		044C30E529D588D100DC627B /* CustomLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
 		044C30E729D5897100DC627B /* CornerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CornerView.swift; sourceTree = "<group>"; };
-		044F24A229E7FA64001B95A2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		045C530829E52537009B1F45 /* CreateTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTaskViewController.swift; sourceTree = "<group>"; };
 		045C530C29E526CB009B1F45 /* HomeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewCell.swift; sourceTree = "<group>"; };
 		045E429129E56FE4005D3204 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
@@ -117,6 +129,7 @@
 		04928C952A0BAD4A008C3E6C /* InitialNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialNavigationController.swift; sourceTree = "<group>"; };
 		04A5093929FFECD6002818CE /* CategoryIconViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryIconViewController.swift; sourceTree = "<group>"; };
 		04A5093D29FFED92002818CE /* CategoryIconsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryIconsCollectionViewCell.swift; sourceTree = "<group>"; };
+		04B32B192A39E6C70054AFB7 /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		04BB97C92A0A563900EF7F50 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		04C0A4F729D43D18005B82DD /* ToDoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04C0A4FA29D43D18005B82DD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -211,6 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				045E429829E57A85005D3204 /* InitialTabController.swift */,
+				04B32B192A39E6C70054AFB7 /* SignUpViewController.swift */,
 				045C530829E52537009B1F45 /* CreateTaskViewController.swift */,
 				E0E806FE29EEB52A0068FC37 /* CategoryViewController.swift */,
 				0423F13E29E01E9100AF7C6F /* SeachTaskViewController.swift */,
@@ -218,12 +232,17 @@
 				04A5093929FFECD6002818CE /* CategoryIconViewController.swift */,
 				040B09142A01441E001D6BA2 /* PopupViewController.swift */,
 				E0E806FC29EEB51C0068FC37 /* HomeViewController.swift */,
-				E0E806FD29EEB5250068FC37 /* InitialViewController.swift */,
 				04D7EF1629D6E1A4006A970D /* CalendarViewController.swift */,
 				04F28B7529E3C5F900B5D5DA /* SettingViewController.swift */,
 				04002FD629F7C759004908BB /* AboutUsViewController.swift */,
 				04BB97C92A0A563900EF7F50 /* TabBarViewController.swift */,
 				04928C952A0BAD4A008C3E6C /* InitialNavigationController.swift */,
+				E0E806FD29EEB5250068FC37 /* InitialViewController.swift */,
+				0412A9E42A37009D00A22197 /* OnBoardingPageViewController.swift */,
+				0412A9E32A37009C00A22197 /* OnBoardingViewController.swift */,
+				0412A9E52A37009E00A22197 /* ViewController1.swift */,
+				0412A9E12A37009900A22197 /* ViewController2.swift */,
+				0412A9E22A37009A00A22197 /* ViewController3.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -354,6 +373,7 @@
 		04C0A4F929D43D18005B82DD /* ToDoApp */ = {
 			isa = PBXGroup;
 			children = (
+				0412A9E02A36F8B700A22197 /* ToDoApp.entitlements */,
 				040F8FDB2A090CA3005E7B14 /* ThirdPartyLibs */,
 				04D1459D29FFBCDD006F1B79 /* Extensions */,
 				041305FE29EFA4BC009116F7 /* Alarm tones */,
@@ -371,8 +391,8 @@
 				04C0A50029D43D18005B82DD /* Main.storyboard */,
 				04C0A50329D43D1A005B82DD /* Assets.xcassets */,
 				04C0A50529D43D1A005B82DD /* LaunchScreen.storyboard */,
-				044F24A229E7FA64001B95A2 /* GoogleService-Info.plist */,
 				04C0A50829D43D1A005B82DD /* Info.plist */,
+				0412A9ED2A370C3900A22197 /* GoogleService-Info.plist */,
 			);
 			path = ToDoApp;
 			sourceTree = "<group>";
@@ -557,10 +577,10 @@
 				04F53EC82A026A7F00852FC1 /* MonthYearPickerViewController.xib in Resources */,
 				04DFB19D2A120EAA00BC729D /* alarm-2.wav in Resources */,
 				04C0A50429D43D1A005B82DD /* Assets.xcassets in Resources */,
+				0412A9EE2A370C3900A22197 /* GoogleService-Info.plist in Resources */,
 				040F8FE22A090CCA005E7B14 /* DropDownTableViewCell.xib in Resources */,
 				04C0A50229D43D18005B82DD /* Main.storyboard in Resources */,
 				046D349E2A0E873700C5610A /* final tone.mp3 in Resources */,
-				044F24A329E7FA64001B95A2 /* GoogleService-Info.plist in Resources */,
 				0413060229EFA4F0009116F7 /* alarm-1.wav in Resources */,
 				E0E8070429EEB57E0068FC37 /* TasksView.xib in Resources */,
 				046D34A02A0E882B00C5610A /* beep4.mp3 in Resources */,
@@ -614,7 +634,9 @@
 				E0E806FB29EEB4E80068FC37 /* HomeTableViewCell.swift in Sources */,
 				044C30E829D5897100DC627B /* CornerView.swift in Sources */,
 				04BB97CA2A0A563900EF7F50 /* TabBarViewController.swift in Sources */,
+				0412A9EA2A37009E00A22197 /* ViewController1.swift in Sources */,
 				04F53ECE2A026AC700852FC1 /* CustomVisualEffectView.swift in Sources */,
+				0412A9E82A37009E00A22197 /* OnBoardingViewController.swift in Sources */,
 				045E429529E57006005D3204 /* Constants.swift in Sources */,
 				045C530D29E526CB009B1F45 /* HomeCollectionViewCell.swift in Sources */,
 				E0E8070129EEB52A0068FC37 /* CategoryViewController.swift in Sources */,
@@ -624,7 +646,10 @@
 				0421ED7E29D5975B00C25C37 /* CustomTabBar.swift in Sources */,
 				E0E806F929EEB4CB0068FC37 /* CategoryCollectionViewCell.swift in Sources */,
 				04C0A4FB29D43D18005B82DD /* AppDelegate.swift in Sources */,
+				0412A9E72A37009E00A22197 /* ViewController3.swift in Sources */,
+				04B32B1A2A39E6C70054AFB7 /* SignUpViewController.swift in Sources */,
 				E06BF03929E959860020C245 /* CustomSegmentedControl.swift in Sources */,
+				0412A9E62A37009E00A22197 /* ViewController2.swift in Sources */,
 				04C0A4FD29D43D18005B82DD /* SceneDelegate.swift in Sources */,
 				04D7EF1729D6E1A4006A970D /* CalendarViewController.swift in Sources */,
 				045E429229E56FE4005D3204 /* Utilities.swift in Sources */,
@@ -632,6 +657,7 @@
 				04D1459C29FFBBC3006F1B79 /* ColorCollectionViewCell.swift in Sources */,
 				040F8FE32A090CCA005E7B14 /* DropDownTableViewCell.swift in Sources */,
 				04F53ECB2A026ABC00852FC1 /* MonthYearPickerView.swift in Sources */,
+				0412A9E92A37009E00A22197 /* OnBoardingPageViewController.swift in Sources */,
 				044C30E629D588D100DC627B /* CustomLabel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -807,6 +833,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ToDoApp/ToDoApp.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4SJBBP6DAW;
@@ -826,12 +854,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cs.daily.planner.schedule.planner.todo.list;
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cs.daily.planner.schedule.list;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -840,6 +869,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ToDoApp/ToDoApp.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4SJBBP6DAW;
@@ -859,13 +890,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cs.daily.planner.schedule.planner.todo.list;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cs.daily.planner.schedule.list;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

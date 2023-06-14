@@ -15,7 +15,6 @@ class InitialNavigationController: UINavigationController {
         
     }
     
-
     /*
     // MARK: - Navigation
 

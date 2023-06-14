@@ -63,6 +63,10 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        Utilities.setStringForKey(Constants.UserDefaults.currentUserExit, key: "NoUserExist")
+        Utilities.setIsFirstTime(isFirstTime: false)
+        Utilities.setStringForKey("false", key: "logout")
+        
         let calendar = Calendar.current
           let date = Date()
           let components = calendar.dateComponents([.month, .year], from: date)
@@ -74,7 +78,6 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
         } else {
             print("Invalid month or year.")
         }
-        Utilities.show_ProgressHud(view: self.view)
         // In this case, we instantiate the banner with desired ad size.
 //        bannerView = GADBannerView(adSize: GADAdSizeBanner)
 //        bannerView.adUnitID = "ca-app-pub-8414160375988475/6353645343"

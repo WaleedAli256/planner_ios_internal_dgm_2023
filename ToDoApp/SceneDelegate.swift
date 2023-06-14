@@ -18,12 +18,36 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead)
         guard let _ = (scene as? UIWindowScene) else { return }
         
-//        if Utilities.getStringForKey("userexist") == Constants.UserDefaults.currentUserExit {
-//            // if user exists
-//            self.setHomeVC()
-//        } else {
+//        if (isFirstTime()){
 //
+//        } else {
+//            if Utilities.getStringForKey("NoUserExist") == Constants.UserDefaults.currentUserExit && Utilities.getStringForKey("logout") == "false"{
+//                // if user exists
+//                self.setHomeVC()
+//            } else {
+//                self.setLoginVC()
+//            }
 //        }
+        
+        
+        if Utilities.getStringForKey("NoUserExist") == Constants.UserDefaults.currentUserExit && Utilities.getStringForKey("logout") == "false"{
+            // if user exists
+            self.setHomeVC()
+        } else {
+//            self.setLoginVC()
+        }
+    }
+    
+    func isFirstTime() -> Bool
+    {
+        if(Utilities.getIsFirstTime())
+        {
+            return true
+        }
+        else
+        {
+            return false
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -62,12 +86,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
     }
     
-    func setSplashVC() {
+    func setLoginVC() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let initialViewController = storyboard.instantiateViewController(withIdentifier: "InitialViewController")
-//        let navigationController = UINavigationController(rootViewController: initialViewController)
-        self.window?.rootViewController = initialViewController
-        window?.makeKeyAndVisible()
+        var landingController : UIViewController?
+        landingController = storyboard.instantiateViewController(withIdentifier: "InitialNavigationController") as? InitialNavigationController
+//        var navigation: UINavigationController? = nil
+//        if let aController = landingController {
+//            navigation = UINavigationController(rootViewController: aController)
+//        }
+        window?.rootViewController = landingController
     }
 
 

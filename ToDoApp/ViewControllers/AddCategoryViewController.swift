@@ -28,7 +28,7 @@ class AddCategoryViewController: BaseViewController {
     fileprivate let maxLen = 250
     var alertMsg = ""
     var colorsArray = ["#5486E9","#F2AD10","#FFB489","#E784D1","#81DF8A","#51BBA2","#971919"]
-    
+    var fromViewController = ""
     override func viewDidLoad() {
         super.viewDidLoad()
 //        self.navigationController?.navigationBar.isHidden = false
@@ -107,7 +107,12 @@ class AddCategoryViewController: BaseViewController {
         }
         return true
     }
-    
+    @IBAction func CreateCateGoryActon(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let searchTaskVC = storyboard.instantiateViewController(identifier: "CreateTaskViewController") as! CreateTaskViewController
+//        searchTaskVC.mySelectedCategory = categoryName
+        self.navigationController?.pushViewController(searchTaskVC, animated: true)
+    }
     @IBAction func btnCreateCatAction(_ sender: UIButton) {
     
             self.addNewCategory()
@@ -124,7 +129,7 @@ class AddCategoryViewController: BaseViewController {
                 
                 if fromEditOrUpdate == "Create Category" {
                     //for new category
-                    Utilities.show_ProgressHud(view: self.view)
+//                    Utilities.show_ProgressHud(view: self.view)
                     let db = Firestore.firestore()
                     let ref = db.collection("category").document()
                     var dic = ["id": ref.documentID,
@@ -161,7 +166,7 @@ class AddCategoryViewController: BaseViewController {
                                 "image": self.imageIconNumber ?? 1,
                                 "taskCount": "0"] as [String : Any]
                     
-                    Utilities.show_ProgressHud(view: self.view)
+//                    Utilities.show_ProgressHud(view: self.view)
                     
 //                    db.collection("category").document()
                     ref.setData(dic1, merge: true) { err in

@@ -24,9 +24,9 @@ class SettingViewController: BaseViewController {
     var googleUserID = ""
 //    var filterSearchTasks = [Task]()
 //    var labelText = ["About","Rate us","Share app","Privacy policy","Login with Google"]
-    var labelText = ["About","Rate us","Share app","Privacy policy"]
+    var labelText = ["Rate us","Share app","Privacy policy"]
     
-    var tblImages = ["icon-about","icon-rate","icon-share","icon-privacy"]
+    var tblImages = ["icon-rate","icon-share","icon-privacy"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,15 +36,15 @@ class SettingViewController: BaseViewController {
         self.tblView.delegate = self
         self.tblView.dataSource = self
 //        navigationController?.navigationBar.isTranslucent = false
-        if #available(iOS 15.0, *) {
-            let appearance = UITabBarAppearance()
-            appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = .black
-            // Set the appearance for normal state
-            tabBarController?.tabBar.standardAppearance = appearance
-            // Set the appearance for scrolled state
-//            tabBarController?.tabBar.scrollEdgeAppearance = appearance
-        }
+//        if #available(iOS 15.0, *) {
+//            let appearance = UITabBarAppearance()
+//            appearance.configureWithOpaqueBackground()
+//            appearance.backgroundColor = .black
+//            // Set the appearance for normal state
+//            tabBarController?.tabBar.standardAppearance = appearance
+//            // Set the appearance for scrolled state
+////            tabBarController?.tabBar.scrollEdgeAppearance = appearance
+//        }
 
     }
     
@@ -66,9 +66,9 @@ class SettingViewController: BaseViewController {
         
     }
     func setData(){
-        labelText = ["About","Rate us","Share app","Privacy policy"]
-        tblImages = ["icon-about","icon-rate","icon-share","icon-privacy"]
-        if Utilities.getIntForKey("isAnonmusUser") == "0" {
+        labelText = ["Rate us","Share app","Privacy policy"]
+        tblImages = ["icon-rate","icon-share","icon-privacy"]
+        if Utilities.getIntForKey("userType") == "0" || Utilities.getIntForKey("userType") == "2" || Utilities.getIntForKey("userType") == "3"{
             lblName.text = Utilities().getCurrentUser().name ?? ""
             lblemail.text = Utilities().getCurrentUser().email ?? ""
             tblImages.append("icon-log-out")
@@ -150,7 +150,7 @@ class SettingViewController: BaseViewController {
     func loginGoogleAction() {
 ////
         self.checkInternetAvailability()
-        Utilities.show_ProgressHud(view: self.view)
+//        Utilities.show_ProgressHud(view: self.view)
         let signInConfig = GIDConfiguration.init(clientID: "359735858810-66jv9p5seorp32jkt1g3r3m4qtu5ogl0.apps.googleusercontent.com")
         GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: self) { user, error in
             guard error == nil else {
@@ -224,7 +224,7 @@ class SettingViewController: BaseViewController {
     }
     
     func getallTaskAgainUser() {
-        Utilities.show_ProgressHud(view: self.view)
+//        Utilities.show_ProgressHud(view: self.view)
         let db = Firestore.firestore()
         db.collection("tasks").whereField("userId", isEqualTo: Utilities().getCurrentUser().id ?? "")
             .getDocuments() { (querySnapshot, err) in
@@ -253,12 +253,29 @@ class SettingViewController: BaseViewController {
     }
     
     func userLogout() {
-        Utilities.setStringForKey(Constants.UserDefaults.currentUserExit, key: "NoUserExist")
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "InitialNavigationController") as! InitialNavigationController
-        let window = UIApplication.shared.windows.first
-        window?.rootViewController = vc
-        window?.makeKeyAndVisible()
+        
+        let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to logout", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.destructive) {
+            UIAlertAction in
+            
+            Utilities.setStringForKey(Constants.UserDefaults.currentUserExit, key: "NoUserExist")
+            Utilities.setIsFirstTime(isFirstTime: false)
+            Utilities.setStringForKey("true", key: "logout")
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(withIdentifier: "InitialNavigationController") as! InitialNavigationController
+            let window = UIApplication.shared.windows.first
+            window?.rootViewController = vc
+            window?.makeKeyAndVisible()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+              UIAlertAction in
+             
+          }
+        alertController.addAction(okAction)
+        alertController.addAction(cancelAction)
+
+      self.present(alertController, animated: true, completion: nil)
+        
     }
     
     func userLoginParams(_ userID: String, _ name: String, _ email: String, _ devicType: String, _ userTyp: String, _ profImgUrl: String) {
@@ -332,20 +349,19 @@ extension SettingViewController: UITableViewDelegate,UITableViewDataSource {
         } else {
             selectedIndex = indexPath.row
         }
+//        if indexPath.row == 0 {
+//            let controller = self.storyboard?.instantiateViewController(withIdentifier: "AboutUsViewController") as! AboutUsViewController
+//            self.navigationController?.pushViewController(controller, animated: true)
+//
+//        } else
         if indexPath.row == 0 {
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "AboutUsViewController") as! AboutUsViewController
-            
-            self.navigationController?.pushViewController(controller, animated: true)
-            
-        } else if indexPath.row == 1 {
             SKStoreReviewController.requestReview()
             
-        } else if indexPath.row == 2 {
+        } else if indexPath.row == 1 {
             self.shareMyApp()
-            
-        } else if indexPath.row == 3 {
+        } else if indexPath.row == 2 {
             self.rateUsApp()
-        } else if indexPath.row == 4 {
+        } else if indexPath.row == 3 {
             if labelText[indexPath.row] != "Logout"{
                 loginGoogleAction()
             }else{

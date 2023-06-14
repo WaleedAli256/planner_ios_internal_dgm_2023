@@ -8,115 +8,120 @@
 import UIKit
 import Firebase
 import GoogleSignIn
+import CryptoKit
 import FirebaseFirestore
-
+import AuthenticationServices
 class InitialViewController: BaseViewController {
     
+    @IBOutlet weak var myStackView: UIStackView!
     @IBOutlet weak var btnSkip: UIButton!
     let db = Firestore.firestore()
-    var isButtonTapped = false
+    var isAppleButtonTap = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        Utilities.setIsFirstTime(isFirstTime: false)
+        setupProviderLoginView()
         btnSkip.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
     
     @objc func buttonTapped() {
-    
-            btnSkip.isEnabled = false
-            DispatchQueue.main.asyncAfter(deadline: .now() + 8.0) {
-                self.btnSkip.isEnabled = true
+        
+        btnSkip.isEnabled = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + 8.0) {
+            self.btnSkip.isEnabled = true
         }
     }
-
-
+    
+    
     @IBAction func loginGoogleAction(_ sender: UIButton) {
-////
-            self.btnSkip.tag = 0
-            self.checkInternetAvailability()
-            Utilities.show_ProgressHud(view: self.view)
-
-            let signInConfig = GIDConfiguration.init(clientID: "359735858810-66jv9p5seorp32jkt1g3r3m4qtu5ogl0.apps.googleusercontent.com")
-            GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: self) { user, error in
-                guard error == nil else {
-                    Utilities.hide_ProgressHud(view: self.view)
-                    self.showAlert(title: "Login with Google", message: "\(error?.localizedDescription ?? "Unable to signin at this moment")")
-                    return
-
-                }
-                guard let user = user else {
-                    Utilities.hide_ProgressHud(view: self.view)
-                    self.showAlert(title: "Login with Google", message: "\(error?.localizedDescription ?? "Unable to signin at this moment")")
-                    return
-
-                }
-                let userId = user.userID
-                let emailAddress = user.profile?.email
-                let fullName = user.profile?.name
-                let profilePicUrl = user.profile?.imageURL(withDimension: 320)?.absoluteString
-                // If sign in succeeded, display the app's main content View.
-
-                //Check if the user already exists
-                let ref = self.db.collection("users").document(userId ?? "")
-                ref.getDocument(completion: {(document,err) in
-                    if let document = document, document.exists {
-                        //User already exists in our database
-                        self.db.collection("users").document(userId ?? "").setData([
-                            "id":userId ?? "",
-                            "name": fullName ?? "",
-                            "email": emailAddress ?? "",
-                            "imageUrl": profilePicUrl ?? "",
-                            "deviceType" : "iOS",
-                            "isAnonmusUser" : "0",
-                        ], merge: true) { err in
-                            if let err = err {
-                                print("Error adding document: \(err)")
-                            } else {
-                                self.userLoginParams(userId ?? "", fullName ?? "", emailAddress ?? "", "iOS", "0", profilePicUrl ?? "")
-                            }
+        ////
+        self.btnSkip.tag = 0
+        self.checkInternetAvailability()
+//        Utilities.show_ProgressHud(view: self.view)
+        
+        let signInConfig = GIDConfiguration.init(clientID: "359735858810-66jv9p5seorp32jkt1g3r3m4qtu5ogl0.apps.googleusercontent.com")
+        GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: self) { user, error in
+            guard error == nil else {
+                Utilities.hide_ProgressHud(view: self.view)
+                self.showAlert(title: "Login with Google", message: "\(error?.localizedDescription ?? "Unable to signin at this moment")")
+                return
+                
+            }
+            guard let user = user else {
+                Utilities.hide_ProgressHud(view: self.view)
+                self.showAlert(title: "Login with Google", message: "\(error?.localizedDescription ?? "Unable to signin at this moment")")
+                return
+                
+            }
+            let userId = user.userID
+            let emailAddress = user.profile?.email
+            let fullName = user.profile?.name
+            let profilePicUrl = user.profile?.imageURL(withDimension: 320)?.absoluteString
+            // If sign in succeeded, display the app's main content View.
+            
+            //Check if the user already exists
+            let ref = self.db.collection("users").document(userId ?? "")
+            ref.getDocument(completion: {(document,err) in
+                if let document = document, document.exists {
+                    //User already exists in our database
+                    self.db.collection("users").document(userId ?? "").setData([
+                        "id":userId ?? "",
+                        "name": fullName ?? "",
+                        "email": emailAddress ?? "",
+                        "imageUrl": profilePicUrl ?? "",
+                        "deviceType" : "iOS",
+                        "userType" : "0",
+                    ], merge: true) { err in
+                        if let err = err {
+                            print("Error adding document: \(err)")
+                        } else {
+                            self.userLoginParams(userId ?? "", fullName ?? "", emailAddress ?? "", "iOS", "0", profilePicUrl ?? "")
                         }
                     }
-                    else
-                    {
-                        // This  is a new user
-                        self.db.collection("users").document(userId ?? "").setData([
-                            "id":userId ?? "",
-                            "name": fullName ?? "",
-                            "email": emailAddress ?? "",
-                            "imageUrl": profilePicUrl ?? "",
-                            "deviceType" : "iOS",
-                            "isAnonmusUser" : "0",
-                        ]) { err in
-                            if let err = err {
-                                print("Error adding document: \(err)")
-                            } else {
-                                createDefaultsCategories(userId: userId ?? "")
-                                self.userLoginParams(userId ?? "", fullName ?? "", emailAddress ?? "", "iOS", "0", profilePicUrl ?? "")
-                                
-                            }
+                }
+                else
+                {
+                    // This  is a new user
+                    self.db.collection("users").document(userId ?? "").setData([
+                        "id":userId ?? "",
+                        "name": fullName ?? "",
+                        "email": emailAddress ?? "",
+                        "imageUrl": profilePicUrl ?? "",
+                        "deviceType" : "iOS",
+                        "userType" : "0",
+                    ]) { err in
+                        if let err = err {
+                            print("Error adding document: \(err)")
+                        } else {
+                            createDefaultsCategories(userId: userId ?? "")
+                            self.userLoginParams(userId ?? "", fullName ?? "", emailAddress ?? "", "iOS", "0", profilePicUrl ?? "")
+                            
                         }
                     }
-                })
+                }
+            })
         }
-//
+        //
     }
     
     
     @IBAction func skipAction(_ sender: UIButton) {
         
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let mainTabBarController = storyboard.instantiateViewController(identifier: "SeachTaskViewController") as SeachTaskViewController
-//        self.navigationController?.pushViewController(mainTabBarController, animated: true)
+        //        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        //        let mainTabBarController = storyboard.instantiateViewController(identifier: "SeachTaskViewController") as SeachTaskViewController
+        //        self.navigationController?.pushViewController(mainTabBarController, animated: true)
         
         self.btnSkip.tag = 1
-        Utilities.show_ProgressHud(view: self.view)
+//        Utilities.show_ProgressHud(view: self.view)
         self.checkInternetAvailability()
-
+        
         var userUID = ""
         let db = Firestore.firestore()
         Auth.auth().signInAnonymously { authResult, error in
             userUID = (authResult?.user.uid)!
-            let ref = db.collection("users").document(userUID ?? "")
+            let ref = db.collection("users").document(userUID)
             if let error = error {
                 self.showAlert(title: "Error", message: error.localizedDescription)
             } else {
@@ -128,9 +133,9 @@ class InitialViewController: BaseViewController {
                             "name": "Anonymous user",
                             "email": "email",
                             "deviceType" : "iOS",
-                            "isAnonmusUser" : "1",
+                            "userType" : "1",
                             "image_url": "profilePicUrl"
-
+                            
                         ], merge: true) { err in
                             if let err = err {
                                 print("Error adding document: \(err)")
@@ -142,76 +147,77 @@ class InitialViewController: BaseViewController {
                     else
                     {
                         // This  is a new user
-                        self.db.collection("users").document(userUID ?? "").setData([
+                        self.db.collection("users").document(userUID).setData([
                             "id": userUID,
                             "name": "Annomous User",
                             "email": "email",
                             "deviceType" : "iOS",
-                            "isAnonmusUser" : "0",
+                            "userType" : "0",
                             "image_url": "profilePicUrl"
-
+                            
                         ]) { err in
                             if let err = err {
                                 print("Error adding document: \(err)")
                             } else {
                                 createDefaultsCategories(userId: userUID)
                                 self.userLoginParams(userUID, "Annomous user", "Annoumous user email is not exist", "iOS", "1", "profilePicUrl")
-
+                                
                             }
                         }
                     }
                 })
-
+                
             }
         }
     }
     
+    func navigateToHome() {
+        
+        guard UIApplication.shared.delegate is AppDelegate else {
+            return
+        }
+        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else {
+            return
+        }
+        sceneDelegate.setHomeVC()
+    }
+    
     func userLoginParams(_ userID: String, _ name: String, _ email: String, _ devicType: String, _ userTyp: String, _ profImgUrl: String) {
-//        let ref = self.db.collection("users").document(self.firebaseUserId)
+        //        let ref = self.db.collection("users").document(self.firebaseUserId)
         let dict = [
             "id": userID,
             "name": name,
             "email": email,
             "deviceType" : devicType,
-            "isAnonmusUser" : userTyp,
+            "userType" : userTyp,
             "image_url": profImgUrl
         ]
         let user = User.init(fromDictionary: dict)
         Utilities().setCurrentUser(currentUser: user)
         Utilities.setStringForKey(Constants.UserDefaults.currentUserExit, key: "userexist")
-        // uncomment this below line according to the user already exit or not
-//        ref.getDocument { document, error in
-//            if document?.documentID != user.id {
-//
-//            }
-//        }
-//        if Utilities.getStringForKey("userexist") != Constants.UserDefaults.currentUserExit {
-//            createDefaultsCategories(userId: user.id!)
-//        }
-        if self.btnSkip.tag == 1 {
-            Utilities.setIntForKey(1, key: "isAnonmusUser")
+        Utilities.setStringForKey("logout", key: "false")
+        Utilities.setIsFirstTime(isFirstTime: false)
+        if self.btnSkip.tag == 1 || isAppleButtonTap == true{
+            Utilities.setIntForKey(1, key: "userType")
+            Utilities.setIntForKey(2, key: "userType")
         } else {
-            Utilities.setIntForKey(0, key: "isAnonmusUser")
+            Utilities.setIntForKey(0, key: "userType")
         }
         Utilities.hide_ProgressHud(view: self.view)
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-               return
-           }
+        guard UIApplication.shared.delegate is AppDelegate else {
+            return
+        }
         guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else {
-               return
-           }
+            return
+        }
         sceneDelegate.setHomeVC()
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController") as TabBarViewController
-//            .window?.rootViewController = 
-            
     }
     
     func checkInternetAvailability() {
         guard Utilities.Connectivity.isConnectedToInternet else {
             Utilities.hide_ProgressHud(view: self.view)
             self.showAlert(title: "Error", message: "Please check your internet connection")
-                return
+            return
         }
     }
     
@@ -254,4 +260,160 @@ func createDefaultsCategories(userId:String) {
         }
     }
     
+}
+//MARK: - Apple Login
+extension InitialViewController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+    
+    func setupProviderLoginView() {
+        var authorizationButton = ASAuthorizationAppleIDButton()
+        authorizationButton = ASAuthorizationAppleIDButton(type: .signIn, style: .black)
+        authorizationButton.cornerRadius = 12
+        authorizationButton.addTarget(self, action: #selector(handleAuthorizationAppleIDButtonPress), for: .touchUpInside)
+        self.myStackView.addArrangedSubview(authorizationButton)
+    }
+    @objc
+    func handleAuthorizationAppleIDButtonPress() {
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+        
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
+        //        cAlert.ShowToast(VC: self, msg: "This functionality will work when app would be uploaded on testflight")
+    }
+    
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            let nonce = randomNonceString()
+
+            guard let appleIDToken = appleIDCredential.identityToken else {
+                print("Unable to fetch identity token")
+                return
+            }
+            guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
+                print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+                return
+            }
+            
+            if let appleIDCredential = authorization.credential as?  ASAuthorizationAppleIDCredential {
+//            let userIdentifier = appleIDCredential.user
+            let fullName = appleIDCredential.fullName?.familyName
+                
+                let credential = OAuthProvider.credential(withProviderID: "apple.com",
+                                                          idToken: idTokenString,
+                                                          rawNonce: nonce)
+                Auth.auth().signIn(with: credential) { (authResult, error) in
+                    if (error != nil) {
+                        print(error?.localizedDescription ?? "")
+                        return
+                    } else {
+                        guard let user = authResult?.user else { return }
+                        let email = user.email ?? ""
+                        let displayName = fullName ?? "Apple user"
+                        let profilePic = "imageURLString" ?? ""
+                        guard let uid = Auth.auth().currentUser?.uid else { return }
+                        //Check if the user already exists
+                        let ref = self.db.collection("users").document(authResult?.user.uid ?? "")
+                        ref.getDocument(completion: {(document,err) in
+                            if let document = document, document.exists {
+                                //User already exists in our database
+                                self.db.collection("users").document(uid).setData([
+                                    "userToken": "idTokenString",
+                                    "id":uid ,
+                                    "name": displayName,
+                                    "email": email,
+                                    "deviceType" : "iOS",
+                                    "userType" : "2",
+                                    "imageUrl": profilePic,
+                                ], merge: true) { err in
+                                    if let err = err {
+                                        print("Error adding document: \(err)")
+                                    } else {
+                                        self.userLoginParams(user.uid , displayName, user.email!, "iOS", "0", profilePic)
+                                    }
+                                }
+
+
+
+                            }
+                            else
+                            {
+                                // This  is a new user
+                                self.db.collection("users").document(user.uid).setData([
+                                    "userToken": "idTokenString",
+                                    "id":uid ,
+                                    "name": displayName ,
+                                    "email": email,
+                                    "deviceType" : "iOS",
+                                    "userType" : "1",
+                                ]) { err in
+                                    if let err = err {
+                                        print("Error adding document: \(err)")
+                                    } else {
+                                        createDefaultsCategories(userId: user.uid)
+                                        self.userLoginParams(user.uid , displayName, user.email!, "iOS", "0", profilePic)
+
+                                    }
+                                }
+                            }
+                        })
+                        print("User login successfully with apple account")
+                    }
+                }
+            }
+            }
+            
+           
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        print("erro occure")
+    }
+
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
+    }
+
+    func randomNonceString(length: Int = 32) -> String {
+        precondition(length > 0)
+        let charset: Array<Character> = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+        var result = ""
+        var remainingLength = length
+        
+        while remainingLength > 0 {
+            let randoms: [UInt8] = (0 ..< 16).map { _ in
+                var random: UInt8 = 0
+                let errorCode = SecRandomCopyBytes(kSecRandomDefault, 1, &random)
+                if errorCode != errSecSuccess {
+                    fatalError("Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)")
+                }
+                return random
+            }
+            
+            randoms.forEach { random in
+                if remainingLength == 0 {
+                    return
+                }
+                
+                if random < charset.count {
+                    result.append(charset[Int(random)])
+                    remainingLength -= 1
+                }
+            }
+        }
+        
+        return result
+    }
+    
+    @available(iOS 13.0, *)
+    func sha256(_ input: String) -> String {
+        let inputData = Data(input.utf8)
+        let hashedData = SHA256.hash(data: inputData)
+        let hashString = hashedData.compactMap { return String(format: "%02x", $0) }.joined()
+        return hashString
+    }
 }

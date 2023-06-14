@@ -53,7 +53,7 @@ class BaseViewController: UIViewController {
         
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.title = navTitle
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(named: "low-text-color")!]
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(named: "low-text-color")!,NSAttributedString.Key.font:UIFont.systemFont(ofSize: 18.0, weight: .medium)]
         self.navigationController?.navigationBar.tintColor = UIColor(named: "low-text-color")
         self.navigationController?.navigationBar.topItem?.backButtonTitle = ""
     }

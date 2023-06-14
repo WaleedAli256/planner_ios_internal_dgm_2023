@@ -28,6 +28,7 @@ class CalendarViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy"
         selectedDate = dateFormatter.string(from: Date().localDate())
@@ -52,7 +53,7 @@ class CalendarViewController: BaseViewController {
         self.calendar.dataSource = self
         self.tblView.delegate = self
         self.tblView.dataSource = self
-        Utilities.show_ProgressHud(view: self.view)
+//        Utilities.show_ProgressHud(view: self.view)
     }
     
     override func viewWillAppear(_ animated: Bool) {

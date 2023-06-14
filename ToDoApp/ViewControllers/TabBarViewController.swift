@@ -11,7 +11,6 @@ import StoreKit
 import AdSupport
 import AppTrackingTransparency
 
-
 class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
     
     var highInterstitial: GADInterstitialAd?
@@ -105,7 +104,7 @@ class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
     }
     
     func loadMediumAdd(completion: @escaping(_ status: Bool) -> Void) {
-        Utilities.show_ProgressHud(view: self.view)
+//        Utilities.show_ProgressHud(view: self.view)
         let request = GADRequest()
         GADInterstitialAd.load(withAdUnitID: "ca-app-pub-8414160375988475/4360076824",
                                     request: request,
@@ -123,7 +122,7 @@ class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
     }
     
     func loadMyAdds(_ id: String, completion: @escaping(_ status: Bool) -> Void) {
-        Utilities.show_ProgressHud(view: self.view)
+//        Utilities.show_ProgressHud(view: self.view)
         let request = GADRequest()
         GADInterstitialAd.load(withAdUnitID: id,
                                     request: request,
@@ -148,23 +147,24 @@ class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
     }
 
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-       
+        
         self.navigationController?.navigationBar.isHidden = true
         guard let selectedIndex = tabBar.items?.firstIndex(of: item) else { return }
-
-          // Check if the selected tab index is already in the selectedTabIndices array
-          if selectedTabIndices.contains(selectedIndex) {
-              selectedTabIndices = [selectedIndex]
-              clickCount = 1
-          } else {
-              selectedTabIndices.append(selectedIndex)
-              clickCount += 1
-          }
+        
+        // Check if the selected tab index is already in the selectedTabIndices array
+    
+        if selectedTabIndices.contains(selectedIndex) {
+            selectedTabIndices = [selectedIndex]
+            clickCount = 1
+        } else {
+            selectedTabIndices.append(selectedIndex)
+            clickCount += 1
+        }
         if clickCount == 3 && self.addRun == false {
-                // Perform your action here
-//            if self.intertitialAdd != nil {
-//                self.intertitialAdd?.present(fromRootViewController: self)
-//            }
+            // Perform your action here
+            //            if self.intertitialAdd != nil {
+            //                self.intertitialAdd?.present(fromRootViewController: self)
+            //            }
             self.addRun = true
             var myId = ""
             myId = addIds[addIndex]
@@ -174,7 +174,7 @@ class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
                     self.intertitialAdd?.present(fromRootViewController: self)
                 } else {
                     if (self.addIndex < self.addIds.count - 1) {
-                                    self.addIndex += 1
+                        self.addIndex += 1
                         myId = self.addIds[self.addIndex]
                         self.loadMyAdds(myId) { status in
                             if status {
@@ -194,9 +194,9 @@ class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
                     }
                 }
             }
-
+            
         }
-//
+        //
     }
 }
 
