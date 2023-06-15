@@ -152,7 +152,7 @@ class InitialViewController: BaseViewController {
                             "name": "Annomous User",
                             "email": "email",
                             "deviceType" : "iOS",
-                            "userType" : "0",
+                            "userType" : "1",
                             "image_url": "profilePicUrl"
                             
                         ]) { err in
@@ -182,6 +182,8 @@ class InitialViewController: BaseViewController {
         sceneDelegate.setHomeVC()
     }
     
+    
+    
     func userLoginParams(_ userID: String, _ name: String, _ email: String, _ devicType: String, _ userTyp: String, _ profImgUrl: String) {
         //        let ref = self.db.collection("users").document(self.firebaseUserId)
         let dict = [
@@ -197,12 +199,12 @@ class InitialViewController: BaseViewController {
         Utilities.setStringForKey(Constants.UserDefaults.currentUserExit, key: "userexist")
         Utilities.setStringForKey("logout", key: "false")
         Utilities.setIsFirstTime(isFirstTime: false)
-        if self.btnSkip.tag == 1 || isAppleButtonTap == true{
-            Utilities.setIntForKey(1, key: "userType")
-            Utilities.setIntForKey(2, key: "userType")
-        } else {
-            Utilities.setIntForKey(0, key: "userType")
-        }
+//        if self.btnSkip.tag == 1 || isAppleButtonTap == true{
+//            Utilities.setIntForKey(1, key: "userType")
+//            Utilities.setIntForKey(2, key: "userType")
+//        } else {
+//            Utilities.setIntForKey(0, key: "userType")
+//        }
         Utilities.hide_ProgressHud(view: self.view)
         guard UIApplication.shared.delegate is AppDelegate else {
             return
@@ -349,7 +351,7 @@ extension InitialViewController: ASAuthorizationControllerDelegate, ASAuthorizat
                                     "name": displayName ,
                                     "email": email,
                                     "deviceType" : "iOS",
-                                    "userType" : "1",
+                                    "userType" : "2",
                                 ]) { err in
                                     if let err = err {
                                         print("Error adding document: \(err)")

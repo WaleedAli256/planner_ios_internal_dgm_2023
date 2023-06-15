@@ -12,7 +12,7 @@ class User: NSObject,NSCoding {
     var id: String?
     var name: String?
     var deviceType: String?
-    var userType: Int?
+    var userType: String?
     var email: String?
     var image_url: String?
 //    var tasks: [Task]!
@@ -23,7 +23,7 @@ class User: NSObject,NSCoding {
         id = dictionary["id"] as? String
         name = dictionary["name"] as? String
         deviceType = dictionary["deviceType"] as? String
-        userType = dictionary["userType"] as? Int
+        userType = dictionary["userType"] as? String
         image_url = dictionary["image_url"] as? String
         email = dictionary["email"] as? String
         
@@ -87,7 +87,7 @@ class User: NSObject,NSCoding {
         id = aDecoder.decodeObject(forKey: "id") as? String
         name = aDecoder.decodeObject(forKey: "name") as? String
         deviceType = aDecoder.decodeObject(forKey: "deviceType") as? String
-        userType = aDecoder.decodeObject(forKey: "userType") as? Int
+        userType = aDecoder.decodeObject(forKey: "userType") as? String
         email = aDecoder.decodeObject(forKey: "email") as? String
         image_url = aDecoder.decodeObject(forKey: "image_url") as? String
 //        tasks = aDecoder.decodeObject(forKey: "tasks") as? [Task]
@@ -104,10 +104,10 @@ class User: NSObject,NSCoding {
             aCoder.encode(name, forKey: "name")
         }
         if deviceType != nil{
-            aCoder.encode(name, forKey: "deviceType")
+            aCoder.encode(deviceType, forKey: "deviceType")
         }
         if userType != nil{
-            aCoder.encode(name, forKey: "userType")
+            aCoder.encode(userType, forKey: "userType")
         }
         if email != nil{
             aCoder.encode(email, forKey: "email")
@@ -115,12 +115,7 @@ class User: NSObject,NSCoding {
         if image_url != nil{
             aCoder.encode(image_url, forKey: "image_url")
         }
-//        if tasks != nil{
-//            aCoder.encode(tasks, forKey: "tasks")
-//        }
-//        if categories != nil{
-//            aCoder.encode(categories, forKey: "categories")
-//        }
+
 
     }
 }

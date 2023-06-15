@@ -68,7 +68,8 @@ class SettingViewController: BaseViewController {
     func setData(){
         labelText = ["Rate us","Share app","Privacy policy"]
         tblImages = ["icon-rate","icon-share","icon-privacy"]
-        if Utilities.getIntForKey("userType") == "0" || Utilities.getIntForKey("userType") == "2" || Utilities.getIntForKey("userType") == "3"{
+        
+        if Utilities().getCurrentUser().userType == "0" || Utilities().getCurrentUser().userType == "2" {
             lblName.text = Utilities().getCurrentUser().name ?? ""
             lblemail.text = Utilities().getCurrentUser().email ?? ""
             tblImages.append("icon-log-out")
@@ -184,7 +185,7 @@ class SettingViewController: BaseViewController {
                         "email": emailAddress ?? "",
                         "imageUrl": profilePicUrl ?? "",
                         "deviceType" : "iOS",
-                        "isAnonmusUser" : "0",
+                        "userType" : "0",
                     ], merge: true) { err in
                         if let err = err {
                             print("Error adding document: \(err)")
@@ -202,11 +203,12 @@ class SettingViewController: BaseViewController {
                         "email": emailAddress ?? "",
                         "imageUrl": profilePicUrl ?? "",
                         "deviceType" : "iOS",
-                        "isAnonmusUser" : "0",
+                        "userType" : "0",
                     ]) { err in
                         if let err = err {
                             print("Error adding document: \(err)")
                         } else {
+                            createDefaultsCategories(userId: userId!)
                             self.userLoginParams(userId ?? "", fullName ?? "", emailAddress ?? "", "iOS", "0", profilePicUrl ?? "")
                             
                         }
@@ -285,21 +287,18 @@ class SettingViewController: BaseViewController {
             "name": name,
             "email": email,
             "deviceType" : devicType,
-            "isAnonmusUser" : userTyp,
+            "userType" : userTyp,
             "image_url": profImgUrl
         ]
         let user = User.init(fromDictionary: dict)
         Utilities().setCurrentUser(currentUser: user)
         Utilities.setStringForKey(Constants.UserDefaults.currentUserExit, key: "userexist")
 //         uncomment this below line according to the user already exit or not
-        ref.getDocument { document, error in
-            if document?.exists == false {
-                createDefaultsCategories(userId: user.id!)
-            }
-        }
-
-        Utilities.setIntForKey(0, key: "isAnonmusUser")
-        Utilities.hide_ProgressHud(view: self.view)
+//        ref.getDocument { document, error in
+//            if document?.exists == false {
+//                createDefaultsCategories(userId: user.id!)
+//            }
+//        }
         self.tabBarController?.selectedIndex = 0
 //        let storyboard = UIStoryboard(name: "Main", bundle: nil)
 //        let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
