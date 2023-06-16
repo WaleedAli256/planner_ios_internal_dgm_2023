@@ -72,8 +72,9 @@ class SettingViewController: BaseViewController {
         if Utilities().getCurrentUser().userType == "0" || Utilities().getCurrentUser().userType == "2" {
             lblName.text = Utilities().getCurrentUser().name ?? ""
             lblemail.text = Utilities().getCurrentUser().email ?? ""
-            tblImages.append("icon-log-out")
-            self.labelText.append("Logout")
+
+            tblImages.append("icon-signout")
+            self.labelText.append("Sign Out")
             // Create a URL object for the profile picture
             let imgUrl = Utilities().getCurrentUser().image_url ?? ""
             guard let url = URL(string: imgUrl) else { return }
@@ -256,7 +257,7 @@ class SettingViewController: BaseViewController {
     
     func userLogout() {
         
-        let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to logout", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to Sing Out", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.destructive) {
             UIAlertAction in
             
@@ -361,7 +362,7 @@ extension SettingViewController: UITableViewDelegate,UITableViewDataSource {
         } else if indexPath.row == 2 {
             self.rateUsApp()
         } else if indexPath.row == 3 {
-            if labelText[indexPath.row] != "Logout"{
+            if labelText[indexPath.row] != "Sign Out"{
                 loginGoogleAction()
             }else{
                 userLogout()
