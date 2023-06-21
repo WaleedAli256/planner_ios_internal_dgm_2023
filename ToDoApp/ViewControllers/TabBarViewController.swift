@@ -149,6 +149,7 @@ class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
     override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         
         self.navigationController?.navigationBar.isHidden = true
+//        self.navigationController?.navigationBar.barTintColor = UIColor.white
         guard let selectedIndex = tabBar.items?.firstIndex(of: item) else { return }
         
         // Check if the selected tab index is already in the selectedTabIndices array

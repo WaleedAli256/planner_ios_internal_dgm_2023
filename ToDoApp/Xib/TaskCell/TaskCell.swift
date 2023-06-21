@@ -7,14 +7,6 @@
 
 import UIKit
 
-protocol TaskCellDelegate: AnyObject {
-    func btnDelete(_ btnTag: Int)
-}
-
-protocol TaskCellDelegate2: AnyObject {
-    func btnDeleted(_ btnTag: Int)
-}
-
 class TaskCell: UITableViewCell {
    
     @IBOutlet weak var lblTimeDate: UILabel!
@@ -25,12 +17,14 @@ class TaskCell: UITableViewCell {
     @IBOutlet weak var btndropdown: UIButton!
     @IBOutlet weak var popupView: UIView!
     @IBOutlet weak var deleteBtn: UIButton!
+    @IBOutlet weak var topView: UIView!
     
-    var actionIndex = -1
-    var actionType = ""
-    var titles = ["Delete"]
-    var delegate: TaskCellDelegate?
-    var delegate2: TaskCellDelegate2?
+    
+//    var actionIndex = -1
+//    var actionType = ""
+//    var titles = ["Delete"]
+//    var delegate: TaskCellDelegate?
+//    var delegate2: TaskCellDelegate2?
 //    let dropDown = MakeDropDown()
     var dropDownRowHeight: CGFloat = 30
     var indexPath: IndexPath?
@@ -38,9 +32,9 @@ class TaskCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        self.popupView.isHidden = true
+//        self.popupView.isHidden = true
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         
@@ -49,16 +43,16 @@ class TaskCell: UITableViewCell {
     @IBAction func deleteTaskAction(_ sender: UIButton) {
 //        self.popupView.isHidden = false
         // Get the collection view from the cell's superviews
-        if delegate != nil {
-            self.delegate?.btnDelete(sender.tag)
-        }
+//        if delegate != nil {
+//            self.delegate?.btnDelete(sender.tag)
+//        }
     }
     
     @IBAction func btnDeleteCellAction(_ sender: UIButton) {
-        if delegate2 != nil {
-            self.delegate2?.btnDeleted(sender.tag)
-        }
-        
+//        if delegate2 != nil {
+//            self.delegate2?.btnDeleted(sender.tag)
+//        }
+//
 //        guard let tablviewCell = superview as? UITableView else {
 //            return
 //        }

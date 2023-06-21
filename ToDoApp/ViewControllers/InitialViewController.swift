@@ -17,12 +17,14 @@ class InitialViewController: BaseViewController {
     @IBOutlet weak var btnSkip: UIButton!
     let db = Firestore.firestore()
     var isAppleButtonTap = false
+    var changeMode: Bool =  false
+    var isButtonAdded: Bool = false
+    var authorizationButton = ASAuthorizationAppleIDButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         Utilities.setIsFirstTime(isFirstTime: false)
-        setupProviderLoginView()
         btnSkip.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
     
@@ -34,12 +36,50 @@ class InitialViewController: BaseViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.setupProviderLoginView()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+           super.traitCollectionDidChange(previousTraitCollection)
+//        self.setupProviderLoginView()
+    }
+    
+    func setupProviderLoginView() {
+//      authorizationButton.removeFromSuperview()
+        authorizationButton.cornerRadius = 12
+        if traitCollection.userInterfaceStyle == .dark {
+                // Code for dark mode
+            authorizationButton = ASAuthorizationAppleIDButton(type: .signIn, style: .whiteOutline)
+            } else {
+                // Code for light mode
+                authorizationButton = ASAuthorizationAppleIDButton(type: .signIn, style: .whiteOutline)
+            }
+        authorizationButton.addTarget(self, action: #selector(handleAuthorizationAppleIDButtonPress), for: .touchUpInside)
+        self.myStackView.addArrangedSubview(authorizationButton)
+    }
+    
+    @objc
+    func handleAuthorizationAppleIDButtonPress() {
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+        
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
+        //        cAlert.ShowToast(VC: self, msg: "This functionality will work when app would be uploaded on testflight")
+    }
+    
     
     @IBAction func loginGoogleAction(_ sender: UIButton) {
         ////
         self.btnSkip.tag = 0
         self.checkInternetAvailability()
-//        Utilities.show_ProgressHud(view: self.view)
+        Utilities.show_ProgressHud(view: self.view)
         
         let signInConfig = GIDConfiguration.init(clientID: "359735858810-66jv9p5seorp32jkt1g3r3m4qtu5ogl0.apps.googleusercontent.com")
         GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: self) { user, error in
@@ -114,7 +154,7 @@ class InitialViewController: BaseViewController {
         //        self.navigationController?.pushViewController(mainTabBarController, animated: true)
         
         self.btnSkip.tag = 1
-//        Utilities.show_ProgressHud(view: self.view)
+        Utilities.show_ProgressHud(view: self.view)
         self.checkInternetAvailability()
         
         var userUID = ""
@@ -223,13 +263,12 @@ class InitialViewController: BaseViewController {
         }
     }
     
-    
 }
 
 func createDefaultsCategories(userId:String) {
     
     var categories = [TaskCategory]()
-    let first = TaskCategory(image: 1, userId: userId, description: "Keep yourself hydrated all time!", name: "Water Intake", taskCount: "0", id: "", colorCode: "#5486E9")
+    let first = TaskCategory(image: 1, userId: userId, description: "Keep yourself hydrated all time!", name: "Water Intake", taskCount: "0", id: "", colorCode: "#5486E9") 
     let sec = TaskCategory(image: 2, userId: userId, description: "Wake up on the time So you never late!", name: "Sleeping Schedule", taskCount: "0", id: "", colorCode: "#F1A800")
     let third = TaskCategory(image: 3, userId: userId, description: "Never miss an Event to wish to your loved ones", name: "Event Reminder", taskCount: "0", id: "", colorCode: "#FFB185")
     let fourth = TaskCategory(image: 4, userId: userId, description: "Schedule your Exercise to stay healthy", name: "Exercise Schedule", taskCount: "0", id: "", colorCode: "#E784D1")
@@ -266,27 +305,6 @@ func createDefaultsCategories(userId:String) {
 //MARK: - Apple Login
 extension InitialViewController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     
-    func setupProviderLoginView() {
-        var authorizationButton = ASAuthorizationAppleIDButton()
-        authorizationButton = ASAuthorizationAppleIDButton(type: .signIn, style: .black)
-        authorizationButton.cornerRadius = 12
-        authorizationButton.addTarget(self, action: #selector(handleAuthorizationAppleIDButtonPress), for: .touchUpInside)
-        self.myStackView.addArrangedSubview(authorizationButton)
-    }
-    @objc
-    func handleAuthorizationAppleIDButtonPress() {
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        let request = appleIDProvider.createRequest()
-        request.requestedScopes = [.fullName, .email]
-        
-        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-        authorizationController.delegate = self
-        authorizationController.presentationContextProvider = self
-        authorizationController.performRequests()
-        //        cAlert.ShowToast(VC: self, msg: "This functionality will work when app would be uploaded on testflight")
-    }
-    
-    
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
@@ -300,7 +318,7 @@ extension InitialViewController: ASAuthorizationControllerDelegate, ASAuthorizat
                 print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
                 return
             }
-            
+            Utilities.show_ProgressHud(view: self.view)
             if let appleIDCredential = authorization.credential as?  ASAuthorizationAppleIDCredential {
 //            let userIdentifier = appleIDCredential.user
             let fullName = appleIDCredential.fullName?.familyName

@@ -136,17 +136,30 @@ class SettingViewController: BaseViewController {
     }
     
     
-    func rateUsApp() {
+    func openPrivacyPolicy() {
         
         guard let url = URL(string: "https://centumsolutions1.blogspot.com/2023/05/to-do-list.html") else {
                   return //be safe
                 }
 //           let url = URL(string: "https://centumsols.com/privacy-policy")
-           if #available(iOS 10.0, *) {
+           if #available(iOS 13.0, *) {
                UIApplication.shared.open(url, options: [:], completionHandler: nil)
            } else {
                UIApplication.shared.openURL(url)
            }
+        
+    }
+    
+    func requestAppReview() {
+        if #available(iOS 10.3, *) {
+            SKStoreReviewController.requestReview()
+        } else {
+            // Fallback for earlier iOS versions
+            let appStoreReviewURL = "itms-apps://itunes.apple.com/app/[Your-App-ID]?action=write-review"
+            if let url = URL(string: appStoreReviewURL) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+        }
     }
     
     func loginGoogleAction() {
@@ -156,14 +169,14 @@ class SettingViewController: BaseViewController {
         let signInConfig = GIDConfiguration.init(clientID: "359735858810-66jv9p5seorp32jkt1g3r3m4qtu5ogl0.apps.googleusercontent.com")
         GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: self) { user, error in
             guard error == nil else {
-                Utilities.hide_ProgressHud(view: self.view)
+//                Utilities.hide_ProgressHud(view: self.view)
                 self.showAlert(title: "Login with Google", message: "\(error?.localizedDescription ?? "Unable to signin at this moment")")
                 return
 
             }
             guard let user = user else {
-                Utilities.hide_ProgressHud(view: self.view)
-                self.showAlert(title: "Login with Google", message: "\(error?.localizedDescription ?? "Unable to signin at this moment")")
+//                Utilities.hide_ProgressHud(view: self.view)
+                self.showAlert(title: "Login with Google", message: "\(error?.localizedDescription ?? "Unable to Signin at this moment")")
                 return
 
             }
@@ -257,7 +270,7 @@ class SettingViewController: BaseViewController {
     
     func userLogout() {
         
-        let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to Sing Out", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to Sign out", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.destructive) {
             UIAlertAction in
             
@@ -300,6 +313,7 @@ class SettingViewController: BaseViewController {
 //                createDefaultsCategories(userId: user.id!)
 //            }
 //        }
+        Utilities.hide_ProgressHud(view: self.view)
         self.tabBarController?.selectedIndex = 0
 //        let storyboard = UIStoryboard(name: "Main", bundle: nil)
 //        let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
@@ -355,12 +369,13 @@ extension SettingViewController: UITableViewDelegate,UITableViewDataSource {
 //
 //        } else
         if indexPath.row == 0 {
+//            self.requestAppReview()
             SKStoreReviewController.requestReview()
             
         } else if indexPath.row == 1 {
             self.shareMyApp()
         } else if indexPath.row == 2 {
-            self.rateUsApp()
+            self.openPrivacyPolicy()
         } else if indexPath.row == 3 {
             if labelText[indexPath.row] != "Sign Out"{
                 loginGoogleAction()

@@ -23,6 +23,10 @@ class CategoryViewController: BaseViewController {
     override func viewDidLoad() { 
         super.viewDidLoad()
         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
+        profilPic.addGestureRecognizer(tapGesture)
+        profilPic.isUserInteractionEnabled = true
+        
         self.profilPic.layer.cornerRadius = self.profilPic.frame.size.width / 2
         self.profilPic.clipsToBounds = true
         self.catColView.delegate = self
@@ -37,6 +41,10 @@ class CategoryViewController: BaseViewController {
         self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
         self.setData()
 //        self.setNavBar("Category", self.profilPic.image!)
+    }
+    
+    @objc func imageTapped() {
+        self.tabBarController?.selectedIndex = 4
     }
     
     func getCategories (userId:String) {
@@ -110,7 +118,7 @@ class CategoryViewController: BaseViewController {
         
         
         let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to delete this task?", preferredStyle: .alert)
-      let okAction = UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive) {
+      let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.destructive) {
             UIAlertAction in
           var taskIds = [String]()
           self.cellRow = sender.tag
@@ -249,7 +257,7 @@ extension CategoryViewController: UICollectionViewDelegate,UICollectionViewDataS
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let searchTaskVC = storyboard.instantiateViewController(identifier: "SeachTaskViewController") as! SeachTaskViewController
-        searchTaskVC.categoryName = self.categories[indexPath.row].name!
+        searchTaskVC.selectedCategory = self.categories[indexPath.row]
         searchTaskVC.fromViewController = "CategoryVC"
         searchTaskVC.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(searchTaskVC, animated: true)

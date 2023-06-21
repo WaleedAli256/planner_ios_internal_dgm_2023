@@ -19,10 +19,10 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mlm-Hu-ypu" customClass="CustomView" customModule="ToDoApp" customModuleProvider="target">
-                        <rect key="frame" x="25" y="15" width="340" height="98"/>
+                        <rect key="frame" x="0.0" y="5" width="390" height="103"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aMe-TG-dDz" customClass="DropDown">
-                                <rect key="frame" x="300" y="0.0" width="40" height="40"/>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aMe-TG-dDz" customClass="DropDown">
+                                <rect key="frame" x="350" y="0.0" width="40" height="40"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rJi-CN-ksS">
                                         <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
@@ -42,18 +42,18 @@
                                     <constraint firstAttribute="bottom" secondItem="rJi-CN-ksS" secondAttribute="bottom" id="q8R-fd-uG1"/>
                                 </constraints>
                             </view>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-dots-grey" translatesAutoresizingMaskIntoConstraints="NO" id="dCa-2b-lNd">
-                                <rect key="frame" x="324" y="8" width="4" height="16"/>
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-dots-grey" translatesAutoresizingMaskIntoConstraints="NO" id="dCa-2b-lNd">
+                                <rect key="frame" x="374" y="8" width="4" height="16"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="16" id="5NY-05-L5S"/>
                                     <constraint firstAttribute="width" constant="4" id="NqJ-FS-qUQ"/>
                                 </constraints>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="Vc2-X3-YUE">
-                                <rect key="frame" x="16" y="11" width="299" height="79.5"/>
+                                <rect key="frame" x="16" y="10" width="359" height="85.5"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="usU-M2-pf0">
-                                        <rect key="frame" x="0.0" y="0.0" width="299" height="21"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="359" height="21"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wake up!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5ag-Qo-pbP">
                                                 <rect key="frame" x="-1" y="-0.5" width="74" height="21"/>
@@ -62,7 +62,7 @@
                                                     <constraint firstAttribute="height" constant="21" id="Dly-3m-cvN"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
-                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="textColor" name="TextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L6M-Aj-a8H" customClass="CustomView" customModule="ToDoApp" customModuleProvider="target">
@@ -111,7 +111,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0aa-H4-bz6">
-                                        <rect key="frame" x="0.0" y="27" width="299" height="21"/>
+                                        <rect key="frame" x="0.0" y="27" width="359" height="21"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-calendar" translatesAutoresizingMaskIntoConstraints="NO" id="yLz-dy-1q3" customClass="hO">
                                                 <rect key="frame" x="0.0" y="4" width="14" height="13"/>
@@ -121,7 +121,7 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sun,20 Aug 10:00 AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MHj-pr-q1M">
-                                                <rect key="frame" x="19" y="0.5" width="268" height="21"/>
+                                                <rect key="frame" x="19" y="0.5" width="328" height="21"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="21" id="JIi-9U-UOd"/>
                                                 </constraints>
@@ -141,20 +141,21 @@
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Detail here for to do task daily weekly or yearly you can manage in the detail text" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bqu-ma-aGh">
-                                        <rect key="frame" x="0.0" y="54" width="299" height="25.5"/>
+                                        <rect key="frame" x="0.0" y="54" width="359" height="31.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
                                         <color key="textColor" red="0.57647058819999997" green="0.58431372550000005" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="0aa-H4-bz6" firstAttribute="top" secondItem="usU-M2-pf0" secondAttribute="bottom" constant="6" id="7w4-pl-gQH"/>
                                     <constraint firstAttribute="trailing" secondItem="usU-M2-pf0" secondAttribute="trailing" id="lRE-ua-ZJS"/>
                                 </constraints>
                             </stackView>
                             <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ig4-YK-aMW" customClass="CustomView" customModule="ToDoApp" customModuleProvider="target">
-                                <rect key="frame" x="195" y="24" width="130" height="40"/>
+                                <rect key="frame" x="245" y="24" width="130" height="40"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P2Z-xE-KNh">
                                         <rect key="frame" x="0.0" y="0.0" width="130" height="40"/>
@@ -191,9 +192,9 @@
                             <constraint firstItem="Vc2-X3-YUE" firstAttribute="leading" secondItem="mlm-Hu-ypu" secondAttribute="leading" constant="16" id="QFa-le-3gr"/>
                             <constraint firstAttribute="bottom" secondItem="Vc2-X3-YUE" secondAttribute="bottom" constant="7.3300000000000001" id="W0e-rL-T7i"/>
                             <constraint firstItem="dCa-2b-lNd" firstAttribute="top" secondItem="mlm-Hu-ypu" secondAttribute="top" constant="8" id="aSV-DW-AiR"/>
-                            <constraint firstItem="Vc2-X3-YUE" firstAttribute="top" secondItem="mlm-Hu-ypu" secondAttribute="top" constant="11" id="ja6-hH-Jwr"/>
+                            <constraint firstItem="Vc2-X3-YUE" firstAttribute="top" secondItem="mlm-Hu-ypu" secondAttribute="top" constant="10" id="ja6-hH-Jwr"/>
                             <constraint firstItem="aMe-TG-dDz" firstAttribute="top" secondItem="mlm-Hu-ypu" secondAttribute="top" id="ji7-dH-An7"/>
-                            <constraint firstAttribute="trailing" secondItem="Vc2-X3-YUE" secondAttribute="trailing" constant="25" id="pBE-Gk-6ga"/>
+                            <constraint firstAttribute="trailing" secondItem="Vc2-X3-YUE" secondAttribute="trailing" constant="15" id="pBE-Gk-6ga"/>
                             <constraint firstItem="ig4-YK-aMW" firstAttribute="top" secondItem="dCa-2b-lNd" secondAttribute="bottom" id="wf5-IT-Zd4"/>
                             <constraint firstAttribute="trailing" secondItem="ig4-YK-aMW" secondAttribute="trailing" constant="15" id="zEE-fW-kp4"/>
                             <constraint firstAttribute="trailing" secondItem="aMe-TG-dDz" secondAttribute="trailing" id="zi3-du-ONg"/>
@@ -210,10 +211,10 @@
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
-                    <constraint firstItem="mlm-Hu-ypu" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="25" id="gSe-wF-84a"/>
-                    <constraint firstItem="mlm-Hu-ypu" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="15" id="wQF-Kp-eZs"/>
-                    <constraint firstAttribute="trailing" secondItem="mlm-Hu-ypu" secondAttribute="trailing" constant="25" id="wso-bw-i2h"/>
-                    <constraint firstAttribute="bottom" secondItem="mlm-Hu-ypu" secondAttribute="bottom" id="z6h-eg-RyX"/>
+                    <constraint firstItem="mlm-Hu-ypu" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="UH9-rK-G8B"/>
+                    <constraint firstItem="mlm-Hu-ypu" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="gSe-wF-84a"/>
+                    <constraint firstAttribute="trailing" secondItem="mlm-Hu-ypu" secondAttribute="trailing" id="wso-bw-i2h"/>
+                    <constraint firstAttribute="bottom" secondItem="mlm-Hu-ypu" secondAttribute="bottom" constant="5" id="z6h-eg-RyX"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
@@ -234,6 +235,9 @@
     <resources>
         <image name="icon-calendar" width="25" height="24"/>
         <image name="icon-dots-grey" width="3.5" height="16"/>
+        <namedColor name="TextColor">
+            <color red="0.16500000655651093" green="0.16500000655651093" blue="0.16500000655651093" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="create-bg-color">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

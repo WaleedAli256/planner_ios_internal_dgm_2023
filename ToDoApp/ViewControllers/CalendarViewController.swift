@@ -29,6 +29,10 @@ class CalendarViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
+        profilPic.addGestureRecognizer(tapGesture)
+        profilPic.isUserInteractionEnabled = true
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy"
         selectedDate = dateFormatter.string(from: Date().localDate())
@@ -76,6 +80,10 @@ class CalendarViewController: BaseViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func imageTapped() {
+        self.tabBarController?.selectedIndex = 4
     }
     
     deinit {
@@ -211,11 +219,68 @@ class CalendarViewController: BaseViewController {
         }
 
     }
+    
+    func deleteTaskAgainstId(taskId: String,completion: @escaping (_ status : Bool) -> Void){
+        let db = Firestore.firestore()
+        var taskIds = [String]()
+        db.collection("tasks").whereField("id", isEqualTo: taskId).getDocuments {(querySnapshot , err) in
+            if let err = err {
+                print("Error removing document: \(err)")
+                completion(false)
+            } else {
+                guard let documents = querySnapshot?.documents else { return }
+                       for document in documents {
+                           taskIds.append(document.documentID)
+                           document.reference.delete()
+                }
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: taskIds)
+                print("Document successfully removed!")
+                completion(true)
+
+            }
+        }
+
+    }
 }
 
 extension CalendarViewController : UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.filterArray.count
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") {
+            (action, view, completionHandler) in
+            
+            let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to delete this task?", preferredStyle: .alert)
+          let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.destructive) {
+                UIAlertAction in
+              self.deleteTaskAgainstId(taskId: self.filterArray[indexPath.row].id!) { status in
+                  if status {
+                      let dateFormatter = DateFormatter()
+                      dateFormatter.dateFormat = "MM/dd/yyyy"
+                      let dateString = dateFormatter.string(from: self.mySelectedDate)
+                      let da = dateFormatter.date(from: dateString)!
+                      self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "", myDate: da)
+                  }
+              }
+            }
+          let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+                UIAlertAction in
+
+            }
+
+            // Add the actions
+            alertController.addAction(okAction)
+            alertController.addAction(cancelAction)
+
+            self.present(alertController, animated: true, completion: nil)
+        }
+        deleteAction.backgroundColor = UIColor(named: "bg-color")
+        deleteAction.image = UIImage(named: "icon-delete")
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        return configuration
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -252,8 +317,8 @@ extension CalendarViewController : UITableViewDelegate,UITableViewDataSource{
                     cell.lblpriority.text = "Low"
                     
             }
-            cell.delegate = self
-            cell.delegate2 = self
+//            cell.delegate = self
+//            cell.delegate2 = self
             cell.deleteBtn.tag = indexPath.row
             cell.btndropdown.tag = indexPath.row
             cell.lbltitle.text = obj.title
@@ -344,73 +409,73 @@ func convertDateFormate(_ dateis: Date) -> String {
     
 }
 
-extension CalendarViewController: TaskCellDelegate, TaskCellDelegate2{
-    func btnDelete(_ btnTag: Int) {
-        
-        if btnTag == selectedInde {
-            selectedInde = -1
-        } else {
-            selectedInde = btnTag
-        }
-
-        self.tblView.reloadData()
-        
-        // cate id
-        // get cate / skip
-        // all task again that cate id
-        // chak all task is yours / skip
-        // delete all task
-        // than delete cate
-    }
-    
-    func deleteTaskAgainstId(ind: Int,completion: @escaping (_ status : Bool) -> Void){
-        let db = Firestore.firestore()
-        var taskIds = [String]()
-        db.collection("tasks").whereField("id", isEqualTo: self.filterArray[ind].id!).getDocuments {(querySnapshot , err) in
-            if let err = err {
-                print("Error removing document: \(err)")
-                completion(false)
-            } else {
-                guard let documents = querySnapshot?.documents else { return }
-                       for document in documents {
-                           taskIds.append(document.documentID)
-                           document.reference.delete()
-                }
-                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: taskIds)
-                print("Document successfully removed!")
-                completion(true)
-
-            }
-        }
-
-    }
-    
-    func btnDeleted(_ btnTag: Int) {
-            
-        let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to delete this task?", preferredStyle: .alert)
-      let okAction = UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive) {
-            UIAlertAction in
-          self.deleteTaskAgainstId(ind: btnTag) { status in
-              if status {
-                  let dateFormatter = DateFormatter()
-                  dateFormatter.dateFormat = "MM/dd/yyyy"
-                  let dateString = dateFormatter.string(from: self.mySelectedDate)
-                  let da = dateFormatter.date(from: dateString)!
-                  self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "", myDate: da)
-              }
-          }
-        }
-      let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-            UIAlertAction in
-           
-        }
-
-        // Add the actions
-        alertController.addAction(okAction)
-        alertController.addAction(cancelAction)
-
-      self.present(alertController, animated: true, completion: nil)
-
-    }
-
-}
+//extension CalendarViewController: TaskCellDelegate, TaskCellDelegate2{
+//    func btnDelete(_ btnTag: Int) {
+//        
+//        if btnTag == selectedInde {
+//            selectedInde = -1
+//        } else {
+//            selectedInde = btnTag
+//        }
+//
+//        self.tblView.reloadData()
+//        
+//        // cate id
+//        // get cate / skip
+//        // all task again that cate id
+//        // chak all task is yours / skip
+//        // delete all task
+//        // than delete cate
+//    }
+//    
+//    func deleteTaskAgainstId(ind: Int,completion: @escaping (_ status : Bool) -> Void){
+//        let db = Firestore.firestore()
+//        var taskIds = [String]()
+//        db.collection("tasks").whereField("id", isEqualTo: self.filterArray[ind].id!).getDocuments {(querySnapshot , err) in
+//            if let err = err {
+//                print("Error removing document: \(err)")
+//                completion(false)
+//            } else {
+//                guard let documents = querySnapshot?.documents else { return }
+//                       for document in documents {
+//                           taskIds.append(document.documentID)
+//                           document.reference.delete()
+//                }
+//                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: taskIds)
+//                print("Document successfully removed!")
+//                completion(true)
+//
+//            }
+//        }
+//
+//    }
+//    
+//    func btnDeleted(_ btnTag: Int) {
+//            
+//        let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to delete this task?", preferredStyle: .alert)
+//      let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.destructive) {
+//            UIAlertAction in
+//          self.deleteTaskAgainstId(ind: btnTag) { status in
+//              if status {
+//                  let dateFormatter = DateFormatter()
+//                  dateFormatter.dateFormat = "MM/dd/yyyy"
+//                  let dateString = dateFormatter.string(from: self.mySelectedDate)
+//                  let da = dateFormatter.date(from: dateString)!
+//                  self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "", myDate: da)
+//              }
+//          }
+//        }
+//      let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+//            UIAlertAction in
+//
+//        }
+//
+//        // Add the actions
+//        alertController.addAction(okAction)
+//        alertController.addAction(cancelAction)
+//
+//      self.present(alertController, animated: true, completion: nil)
+//
+//    }
+//
+//}

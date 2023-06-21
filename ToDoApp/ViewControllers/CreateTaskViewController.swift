@@ -48,7 +48,7 @@ class CreateTaskViewController: BaseViewController {
     fileprivate let maxLen2 = 50
     fileprivate var preminderMin: Int = 0
     var caseNumber: Int!
-    var mySelectedCategory = ""
+    var selectedCategry:TaskCategory?
     var categories = [TaskCategory]()
     var categoryId = ""
     var CarColorCode = ""
@@ -56,15 +56,17 @@ class CreateTaskViewController: BaseViewController {
     var strCategories = [String]()
     var preReminderTime = ["5min","10min","15min","30min","One hour","One day before"]
     var preReminderText = ""
+    var categoryText = ""
+    var repitionText = ""
     var repitiotn = ["Only one time","Daily","Once in a week","Once in a month"]
     
     var preReminderSelect: Bool = false
     var catFieldSelect: Bool = false
     var repetitionSelect: Bool = false
+    var taskDocumentID: String = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = true
-        catTxtField.text = mySelectedCategory
         self.myPickerView.delegate = self
         self.myPickerView.dataSource = self
         if detailTxtView.text! == "Description"{
@@ -177,12 +179,15 @@ class CreateTaskViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if fromViewController == "searchTaskViewController" {
+        if self.selectedCategry != nil || self.fromViewController == "HomeVC"{
             self.topTitleView.isHidden = true
             self.setNavBar("Create New Task")
         } else {
             self.topTitleView.isHidden = false
         }
+        
+        self.catTxtField.text = selectedCategry?.name ?? ""
+        self.CarColorCode = selectedCategry?.colorCode ?? ""
         self.scrollView.scrollsToTop = true
         self.scrollView.scrollToTop()
         self.datePicker.date = Date()
@@ -206,6 +211,7 @@ class CreateTaskViewController: BaseViewController {
     }
     
     func simplePickerView() {
+        self.selectionMode = "pickerView"
         self.catTxtField.inputAccessoryView = toolBar
         self.catTxtField.inputView = self.myPickerView
         
@@ -273,13 +279,27 @@ class CreateTaskViewController: BaseViewController {
             self.selectedTime = formatter.string(from: self.datePicker.date)
             self.timeTxtField.text =  self.selectedTime
         } else {
+            if self.catFieldSelect {
+                if self.CarColorCode == "" {
+                    self.CarColorCode = self.categories[2].colorCode!
+                }
+                self.catTxtField.text = self.categoryText
+            } else if self.preReminderSelect {
+                if self.preminderMin == 0 {
+                    self.preminderMin = 15
+                }
+                self.preReminderTxtField.text = self.preReminderText
+            } else if self.repetitionSelect {
+                self.RepititionTxtField.text = self.repitionText
+            }
+            
+//            self.RepititionTxtField.text = self.pre
             self.self.view.endEditing(true)
         }
 //        self.imgBlur.isHidden = true
     }
     
     @IBAction func priortyAction(_ sender: UIButton) {
-        
         
     }
     
@@ -376,6 +396,55 @@ class CreateTaskViewController: BaseViewController {
         return true
     }
     
+    func saveDataOnCreateTask(_ documentId: String) {
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("tasks").document()
+        ref.setData([
+            "id": documentId,
+           "title": self.titleTxtField.text!,
+           "userId": Utilities().getCurrentUser().id  ?? "",
+            "categoryId": self.categoryId,
+            "categoryName": self.catTxtField.text!,
+           "description": self.detailTxtView.text!,
+           "date":self.date + " " + self.selectedTime,
+           "time":self.date ,
+           "priority": self.priortyValue ?? "Medium",
+           "preReminder":self.preReminderTxtField.text ?? "None",
+           "repetition": self.RepititionTxtField.text ?? "None",
+            "colorCode": self.CarColorCode,
+            "priorityColorCode":self.priortyColor
+        ]) { err in
+            if let err = err {
+                Utilities.hide_ProgressHud(view: self.view)
+                cAlert.ShowToastWithHandler(VC: self, msg: "Error writing document: (\(err)") { sucess in
+                    _ = self.tabBarController?.selectedIndex = 0
+                }
+
+            } else {
+                Utilities.hide_ProgressHud(view: self.view)
+                cAlert.ShowToastWithHandler(VC: self, msg: "Task created successfully") { sucess in
+                    
+                    if self.fromViewController == "CategoryVC" ||  self.fromViewController == "HomeVC" {
+                        self.navigationController?.popViewController(animated: true)
+                        CreateTaskViewController.onCreateTask?(self.catTxtField.text!)
+                        
+                    } else {
+                        _ = self.tabBarController?.selectedIndex = 0
+                    }
+                    self.titleTxtField.text = ""
+                    self.detailTxtView.text = "Description"
+                    self.catTxtField.text = ""
+                    self.dateTxtField.text = ""
+                    self.timeTxtField.text = ""
+                    self.preReminderTxtField.text = ""
+                    self.RepititionTxtField.text = ""
+                }
+
+            }
+        }
+    }
+    
     func createTask() {
         
         if(validate())
@@ -386,52 +455,9 @@ class CreateTaskViewController: BaseViewController {
             }
 //                Utilities.show_ProgressHud(view: self.view)
             
-                let db = Firestore.firestore()
-                let ref = db.collection("tasks").document()
-                ref.setData([
-                    "id": ref.documentID,
-                   "title": self.titleTxtField.text!,
-                   "userId": Utilities().getCurrentUser().id  ?? "",
-                    "categoryId": self.categoryId,
-                    "categoryName": self.catTxtField.text!,
-                   "description": self.detailTxtView.text!,
-                   "date":self.date + " " + self.selectedTime,
-                   "time":self.date ,
-                   "priority": self.priortyValue ?? "Medium",
-                   "preReminder":self.preReminderTxtField.text ?? "None",
-                   "repetition": self.RepititionTxtField.text ?? "None",
-                    "colorCode": self.CarColorCode,
-                    "priorityColorCode":self.priortyColor
-                ]) { err in
-                    if let err = err {
-                        Utilities.hide_ProgressHud(view: self.view)
-                        cAlert.ShowToastWithHandler(VC: self, msg: "Error writing document: (\(err)") { sucess in
-                            _ = self.tabBarController?.selectedIndex = 0
-                        }
-
-                    } else {
-                        Utilities.hide_ProgressHud(view: self.view)
-                        cAlert.ShowToastWithHandler(VC: self, msg: "Task created successfully") { sucess in
-                            
-                            if self.fromViewController == "searchTaskViewController" {
-                                self.navigationController?.popViewController(animated: true)
-                                CreateTaskViewController.onCreateTask?(self.catTxtField.text!)
-                                
-                            } else {
-                                _ = self.tabBarController?.selectedIndex = 0
-                            }
-                            self.titleTxtField.text = ""
-                            self.detailTxtView.text = "Description"
-                            self.catTxtField.text = ""
-                            self.dateTxtField.text = ""
-                            self.timeTxtField.text = ""
-                            self.preReminderTxtField.text = ""
-                            self.RepititionTxtField.text = ""
-                        }
-
-                    }
-                }
-
+            let db = Firestore.firestore()
+            let ref = db.collection("tasks").document()
+            self.taskDocumentID = ref.documentID
             if self.selectedTime != "" && self.date != "" {
 
                 let mDate = self.date + " " + self.selectedTime
@@ -442,14 +468,15 @@ class CreateTaskViewController: BaseViewController {
                 if validate() && self.RepititionTxtField.text?.isEmpty == true && self.preReminderTxtField.text?.isEmpty == true {
                     // do simple notification
 //                    self.createNotificationReminder(newDate: newDate!)
-                    self.createNotificationReminder(newDate: newDate!, catId: self.categoryId, taskId: ref.documentID)
+                    self.saveDataOnCreateTask(self.taskDocumentID)
+                    self.createNotificationReminder(newDate: newDate!, catId: self.categoryId, taskId: self.taskDocumentID)
                     
                 } else if validate() && self.preReminderTxtField.text?.isEmpty == false && self.RepititionTxtField.text?.isEmpty == true {
                     
                     self.checkCurrentTime(self.preminderMin) { status in
                         if status {
-                        
-                            self.createPrereminderforNotification(beforeTime: self.preminderMin, newDate: newDate!, taskId: ref.documentID, catId: self.categoryId)
+                            self.saveDataOnCreateTask(self.taskDocumentID)
+                            self.createPrereminderforNotification(beforeTime: self.preminderMin, newDate: newDate!, taskId: self.taskDocumentID, catId: self.categoryId)
                             
                             
                         } else {
@@ -462,7 +489,8 @@ class CreateTaskViewController: BaseViewController {
                     //do something
                      self.checkCurrentTime(self.preminderMin) { status in
                          if status {
-                             self.notifiPreAndRep(myDate: newDate!, beforetim: self.preminderMin, taskId: ref.documentID)
+                             self.saveDataOnCreateTask(self.taskDocumentID)
+                             self.notifiPreAndRep(myDate: newDate!, beforetim: self.preminderMin, taskId: self.taskDocumentID)
                          } else {
                              self.showAlert(title: "Error", message: "Pre Reminder time should be greater than current time")
                          }
@@ -471,11 +499,13 @@ class CreateTaskViewController: BaseViewController {
                     
                      
                 }  else if validate() && self.RepititionTxtField.text?.isEmpty == false && self.preReminderTxtField.text?.isEmpty == true {
-                    self.fireNotification(myDate: newDate!, taskId: ref.documentID)
+                    self.saveDataOnCreateTask(self.taskDocumentID)
+                    self.fireNotification(myDate: newDate!, taskId: self.taskDocumentID)
                 }
 
             }
-//
+            
+        
         }
     }
     
@@ -689,12 +719,6 @@ class CreateTaskViewController: BaseViewController {
     }
     
     
-    
-    
-    
-        
-    
-    
     func scheduleNotification(with trigger: UNNotificationTrigger, content: UNMutableNotificationContent,taskId : String) {
            // Create notification request
            let request = UNNotificationRequest(identifier: taskId, content: content, trigger: trigger)
@@ -777,12 +801,14 @@ extension CreateTaskViewController: UIPickerViewDelegate,UIPickerViewDataSource 
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        
             if self.catFieldSelect {
+                self.categoryText = self.strCategories[row]
                 return self.strCategories[row]
             } else if self.preReminderSelect {
+                self.preReminderText = self.preReminderTime[row]
                 return preReminderTime[row]
             } else  {
+                self.repitionText = self.repitiotn[row]
                 return self.repitiotn[row]
             }
 

@@ -32,8 +32,9 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
     @IBOutlet weak var interfaceSegmented: CustomSegmentedControl!{
         didSet{
             interfaceSegmented.setButtonTitles(buttonTitles: ["Daily","Weekly","Monthly","Yearly"])
+//            interfaceSegmented.selectorBackViewColor = UIColor(named: "")!
             interfaceSegmented.selectorViewColor = UIColor(named: "primary-color")!
-            interfaceSegmented.selectorTextColor = UIColor(named: "TextColor")!
+            interfaceSegmented.selectorTextColor = UIColor(named: "TextColor-2")!
         }
     }
     
@@ -251,6 +252,7 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
         let yearis = String(formattedDateString.suffix(2))
         self.lblDateWithYear.text = "\(monthis)-\(yearis)"
         monthlyDays = self.numberOfDays(inMonth: selectedDate.month, year: selectedDate.year)!
+//        self.tblView.reloadData()
         self.colView.reloadData()
         
 //        let yearis = lblDateWithYear.text?.suffix(<#T##maxLength: Int##Int#>)

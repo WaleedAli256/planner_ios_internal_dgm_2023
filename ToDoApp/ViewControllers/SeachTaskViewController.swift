@@ -22,6 +22,7 @@ class SeachTaskViewController: BaseViewController {
     @IBOutlet weak var btnCrateTask2: UIButton!
     
     var selectedIndex = -1
+    var selectedCategory: TaskCategory!
     var categoryName = ""
     var arrAllTasks = [Task]()
     var filterSearchTasks = [Task]()
@@ -35,7 +36,7 @@ class SeachTaskViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        self.lblcatName.text = self.categoryName
+//        self..text = self.selectedCategory.name
         self.searchTxtField.delegate = self
         //keyboard settings
         IQKeyboardManager.shared.enableAutoToolbar = false
@@ -46,17 +47,21 @@ class SeachTaskViewController: BaseViewController {
         searchTxtField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
 //        Utilities.show_ProgressHud(view: self.view)
     }
+
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        CreateTaskViewController.onCreateTask = { catName in
-            self.categoryName = catName
+        
+        if self.fromViewController == "CategoryVC" {
+            CreateTaskViewController.onCreateTask = { catName in
+                self.selectedCategory.name = catName
+            }
         }
         self.getTaskAgaintCategory()
-        btnCrateTask2.layer.cornerRadius = 25
+        btnCrateTask2.layer.cornerRadius = 10
         self.tabBarController?.tabBar.isHidden = true
     }
-    
+
     func swipeToPop() {
 
 //        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
@@ -74,10 +79,10 @@ class SeachTaskViewController: BaseViewController {
     @IBAction func createNewTask(_ sender: UIButton) {
         //create VC
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let searchTaskVC = storyboard.instantiateViewController(identifier: "CreateTaskViewController") as! CreateTaskViewController
-//        searchTaskVC.mySelectedCategory = categoryName
-        searchTaskVC.fromViewController = "searchTaskViewController"
-        self.navigationController?.pushViewController(searchTaskVC, animated: true)
+        let creatTaskVC = storyboard.instantiateViewController(identifier: "CreateTaskViewController") as! CreateTaskViewController
+        creatTaskVC.selectedCategry = selectedCategory
+        creatTaskVC.fromViewController = fromViewController
+        self.navigationController?.pushViewController(creatTaskVC, animated: true)
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
@@ -92,14 +97,22 @@ class SeachTaskViewController: BaseViewController {
 //                self.lblTaskCount.isHidden = false
 
 //                self.lblTaskCount.text = "Total Tasks: \(self.filterSearchTasks.count)"
+                self.alertLabel.isHidden = true
                 self.btnCrateTask.isHidden = true
                 self.btnCrateTask2.isHidden = false
                 self.searchView.isHidden = false
                 self.tblView.reloadData()
             } else {
                 self.alertLabel.isHidden = false
-                self.lblTaskCount.isHidden = true
-                self.searchView.isHidden = true
+//                self.lblTaskCount.isHidden = true
+                
+                if self.arrAllTasks.count > 0 {
+                    self.alertLabel.isHidden = false
+                    self.searchView.isHidden = false
+                } else {
+                    self.alertLabel.isHidden = false
+                    self.searchView.isHidden = true
+                }
                 self.btnCrateTask.isHidden = false
                 self.btnCrateTask2.isHidden = true
                 self.alertLabel.text = "No task available!"
@@ -115,6 +128,7 @@ class SeachTaskViewController: BaseViewController {
     
     func getTaskAgaintCategory() {
         selectedInde = -1
+        self.arrAllTasks.removeAll()
         if self.fromViewController == "HomeVC" {
 //            self.lblcatName.text = "All Tasks"
             self.setNavBar("All Tasks")
@@ -139,19 +153,22 @@ class SeachTaskViewController: BaseViewController {
                             self.btnCrateTask.isHidden = true
                             self.btnCrateTask2.isHidden = false
                             self.searchView.isHidden = false
-                            self.filterSearchTasks = self.arrAllTasks
-//                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
                             self.tblView.reloadData()
+//                            self.filterSearchTasks = self.arrAllTasks
+//                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
+
                         } else {
+                            
                             self.searchView.isHidden = true
                             self.alertLabel.isHidden = false
-                            self.lblTaskCount.isHidden = true
+//                            self.lblTaskCount.isHidden = true
                             self.btnCrateTask.isHidden = false
                             self.btnCrateTask2.isHidden = true
                             self.alertLabel.text = "No Task Available!"
+                            self.tblView.reloadData()
 //                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
 //                            self.alertLabel.text = "No task available!"
-                            self.tblView.reloadData()
+                            
                     }
                         
                 }
@@ -159,10 +176,10 @@ class SeachTaskViewController: BaseViewController {
         } else {
             
 //            self.lblcatName.text = self.categoryName
-            self.setNavBar("\(self.categoryName)")
+            self.setNavBar("\(self.selectedCategory.name!)")
             self.arrAllTasks.removeAll()
             let db = Firestore.firestore()
-            db.collection("tasks").whereField("userId", isEqualTo: Utilities().getCurrentUser().id ?? "").whereField("categoryName", isEqualTo: self.categoryName)
+            db.collection("tasks").whereField("userId", isEqualTo: Utilities().getCurrentUser().id ?? "").whereField("categoryName", isEqualTo: self.selectedCategory.name)
                 .getDocuments() { (querySnapshot, err) in
                     if let err = err {
                         print("Error getting documents: \(err)")
@@ -179,21 +196,20 @@ class SeachTaskViewController: BaseViewController {
                         Utilities.hide_ProgressHud(view: self.view)
                         self.filterSearchTasks = self.arrAllTasks
                         if self.arrAllTasks.count > 0 {
+                            
                             self.alertLabel.isHidden = true
-//                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
                             self.searchView.isHidden = false
                             self.btnCrateTask2.isHidden = false
                             self.btnCrateTask.isHidden = true
                             self.tblView.reloadData()
+                            
                         } else {
+                            
                             self.searchView.isHidden = true
                             self.alertLabel.isHidden = false
-//                            self.lblTaskCount.isHidden = true
                             self.btnCrateTask.isHidden = false
                             self.btnCrateTask2.isHidden = true
                             self.alertLabel.text = "No Task Available!"
-//                            self.lblTaskCount.text = "Total Tasks: \(self.arrAllTasks.count)"
-//                            self.alertLabel.text = "No task available!"
                             self.tblView.reloadData()
                         }
                         
@@ -202,10 +218,63 @@ class SeachTaskViewController: BaseViewController {
         }
         
     }
+    
+    func deleteTaskAgainstId(taskId:String,completion: @escaping (_ status : Bool) -> Void){
+        let db = Firestore.firestore()
+       var taskIds = [String]()
+        db.collection("tasks").whereField("id", isEqualTo: taskId).getDocuments {(querySnapshot , err) in
+            if let err = err {
+                print("Error removing document: \(err)")
+                completion(false)
+            } else {
+                guard let documents = querySnapshot?.documents else { return }
+                       for document in documents {
+                           taskIds.append(document.documentID)
+                           document.reference.delete()
+                }
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: taskIds)
+//                    self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
+                print("Document successfully removed!")
+                completion(true)
+
+            }
+        }
+
+    }
 
 }
 
 extension SeachTaskViewController: UITableViewDelegate,UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "") { (action, view, completionHandler) in
+            // Handle delete action here
+            let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to delete this task?", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.destructive) {
+                UIAlertAction in
+                self.deleteTaskAgainstId(taskId: self.filterSearchTasks[indexPath.row].id!) { status in
+                  if status {
+                      self.getTaskAgaintCategory()
+                  }
+              }
+        }
+          let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+                UIAlertAction in
+        }
+            // Add the actions
+            alertController.addAction(okAction)
+            alertController.addAction(cancelAction)
+
+          self.present(alertController, animated: true, completion: nil)
+
+            completionHandler(true)
+        }
+        deleteAction.backgroundColor = UIColor(named: "view-color")
+        deleteAction.image = UIImage(named: "delete")
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        return configuration
+    }
+    
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
@@ -217,16 +286,24 @@ extension SeachTaskViewController: UITableViewDelegate,UITableViewDataSource {
         guard let cell = tblView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath) as? TaskCell else {
             return UITableViewCell()
         }
+        
+        
+//        let cellSpacing: CGFloat = 100
+//        // Set the content inset to create spacing between cells
+//        cell.contentView.frame.inset(by: UIEdgeInsets(top: cellSpacing, left: 0, bottom: cellSpacing, right: 0))
+        
+//        cell.contentView.backgroundColor = .red
+        
         let obj = self.filterSearchTasks[indexPath.row]
         
-        cell.btndropdown.tag = indexPath.row
-        cell.deleteBtn.tag = indexPath.row
+//        cell.btndropdown.tag = indexPath.row
+//        cell.deleteBtn.tag = indexPath.row
         
-        if selectedInde == indexPath.row {
-            cell.popupView.isHidden = false
-        } else {
-            cell.popupView.isHidden = true
-        }
+//        if selectedInde == indexPath.row {
+//            cell.popupView.isHidden = false
+//        } else {
+//            cell.popupView.isHidden = true
+//        }
 //        if let color = obj.priorityColorCode {
         if obj.priority == "High" || obj.priority == "high" {
                 cell.priorityView.backgroundColor = UIColor(named: "high-color")
@@ -249,8 +326,8 @@ extension SeachTaskViewController: UITableViewDelegate,UITableViewDataSource {
 //        if let formattedDate = Utilities.changeDateFormat(fromFormat: originalDateFormat, toFormat: desiredDateFormat, dateString: originalDateString!) {
 //            print("Formatted Date: \(formattedDate)")
 //            cell.lblpriority.text = obj.priority
-            cell.delegate = self
-            cell.delegate2 = self
+//            cell.delegate = self
+//            cell.delegate2 = self
             cell.lblTimeDate.text = obj.date
             cell.lbltitle.text = obj.title
             if selectedIndex == indexPath.row {
@@ -310,71 +387,31 @@ extension SeachTaskViewController: UITextFieldDelegate {
     }
 }
 
-extension SeachTaskViewController: TaskCellDelegate,TaskCellDelegate2{
-    func btnDelete(_ btnTag: Int) {
-        
-        if btnTag == selectedInde {
-            selectedInde = -1
-        } else {
-            selectedInde = btnTag
-        }
-        self.tblView.reloadData()
-    
-        // cate id
-        // get cate / skip
-        // all task again that cate id
-        // chak all task is yours / skip
-        // delete all task
-        // than delete cate
-    }
-    func deleteTaskAgainstId(ind:Int,completion: @escaping (_ status : Bool) -> Void){
-        let db = Firestore.firestore()
-       var taskIds = [String]()
-        db.collection("tasks").whereField("id", isEqualTo: self.filterSearchTasks[ind].id!).getDocuments {(querySnapshot , err) in
-            if let err = err {
-                print("Error removing document: \(err)")
-                completion(false)
-            } else {
-                guard let documents = querySnapshot?.documents else { return }
-                       for document in documents {
-                           taskIds.append(document.documentID)
-                           document.reference.delete()
-                }
-                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: taskIds)
-//                    self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
-                print("Document successfully removed!")
-                completion(true)
-
-            }
-        }
-
-    }
-    
-    func btnDeleted(_ btnTag: Int) {
-
-          let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to delete this task?", preferredStyle: .alert)
-          let okAction = UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive) {
-              UIAlertAction in
-            self.deleteTaskAgainstId(ind: btnTag) { status in
-                if status {
-                    self.getTaskAgaintCategory()
-                } 
-            }
-          }
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-              UIAlertAction in
-             
-          }
-
-          // Add the actions
-          alertController.addAction(okAction)
-          alertController.addAction(cancelAction)
-
-        self.present(alertController, animated: true, completion: nil)
-        
-
-
-    }
-    
-
-}
+//extension SeachTaskViewController: TaskCellDelegate,TaskCellDelegate2{
+//    func btnDelete(_ btnTag: Int) {
+//
+//        if btnTag == selectedInde {
+//            selectedInde = -1
+//        } else {
+//            selectedInde = btnTag
+//        }
+//        self.tblView.reloadData()
+//
+//        // cate id
+//        // get cate / skip
+//        // all task again that cate id
+//        // chak all task is yours / skip
+//        // delete all task
+//        // than delete cate
+//    }
+//
+//
+//    func btnDeleted(_ btnTag: Int) {
+//
+//
+//
+//
+//    }
+//
+//
+//}

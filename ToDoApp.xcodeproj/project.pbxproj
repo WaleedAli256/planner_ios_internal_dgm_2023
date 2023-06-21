@@ -259,6 +259,7 @@
 		0410CE0329D56B59000EA4CB /* CollectionViewCells */ = {
 			isa = PBXGroup;
 			children = (
+				04C0A4FC29D43D18005B82DD /* SceneDelegate.swift */,
 				E0E806F829EEB4CB0068FC37 /* CategoryCollectionViewCell.swift */,
 				045C530C29E526CB009B1F45 /* HomeCollectionViewCell.swift */,
 				04D1459B29FFBBC3006F1B79 /* ColorCollectionViewCell.swift */,
@@ -387,7 +388,6 @@
 				0410CE0029D564ED000EA4CB /* TableViewCells */,
 				0410CE0329D56B59000EA4CB /* CollectionViewCells */,
 				04C0A4FA29D43D18005B82DD /* AppDelegate.swift */,
-				04C0A4FC29D43D18005B82DD /* SceneDelegate.swift */,
 				04C0A50029D43D18005B82DD /* Main.storyboard */,
 				04C0A50329D43D1A005B82DD /* Assets.xcassets */,
 				04C0A50529D43D1A005B82DD /* LaunchScreen.storyboard */,
