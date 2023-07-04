@@ -103,6 +103,7 @@ class HomeViewController2: UIViewController {
                 self.tblView.reloadData()
                 self.getCategories(userId: Utilities().getCurrentUser().id ?? "") { Status in
                     if Status {
+                        self.cateAgainstName.removeAll()
                         for temp in self.categories{
                             let filteredArray = self.allTasks.filter({$0.categoryName == temp.name })
                             let newObj = customCategories(cateName: temp.name ?? "", array: filteredArray)
@@ -244,7 +245,7 @@ extension HomeViewController2 : UICollectionViewDelegate,UICollectionViewDataSou
         cell.lblCatName.text = catObj.cateName
         cell.lblTaskCount.text = "\(catObj.array.count)"
         cell.catBgView.backgroundColor = UIColor(named: colCellColorArray[indexPath.row])
-        return cell
+        return cello
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
