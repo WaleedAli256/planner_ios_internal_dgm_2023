@@ -32,10 +32,26 @@ class OnBoardingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        ViewController1.onNextTap = { res in
+            self.onBoardingPageViewController?.scrollToViewController(index: 1)
+        }
+        ViewController2.onNext = { res in
+            self.onBoardingPageViewController?.scrollToViewController(index: 2)
+
+        }
+        
+        
         if let adID = getAdvertisingIdentifier() {
             print("Advertising Identifier: \(adID)")
         } else {
             print("Advertising tracking is disabled.")
+        }
+        
+        if #available(iOS 14.0, *) {
+
+            pageControl.setIndicatorImage(UIImage(named: "icon-page-dots2"), forPage: pageControl.currentPage)
+        } else {
+            // Fallback on earlier versions
         }
 //        self.setupNavBar()
 //        pageControl.numberOfPages = 3
@@ -102,9 +118,28 @@ extension OnBoardingViewController: OnBoardingPageViewControllerDelegate {
                                       didUpdatePageIndex index: Int) {
 //        self.lblOnBoarding.text = self.onBoardingStrings[index]
         UIView.animate(withDuration: 0.5, delay: 0, options: UIView.AnimationOptions.curveEaseIn, animations: {
-//            self.lblOnBoarding.alpha = 1
+            //            self.lblOnBoarding.alpha = 1
         }, completion: nil)
         pageControl.currentPage = index
+//        DispatchQueue.main.sync {
+            for pageIndex in 0..<pageControl.numberOfPages {
+                if pageIndex != pageControl.currentPage {
+                    if #available(iOS 14.0, *) {
+                        pageControl.setIndicatorImage(UIImage(named: "icon-page-dots"), forPage: pageIndex)
+                    } else {
+                        // Fallback on earlier versions
+                    }
+                } else {
+                    if #available(iOS 14.0, *) {
+                        pageControl.setIndicatorImage(UIImage(named: "icon-page-dots2"), forPage: pageControl.currentPage)
+                    } else {
+                        // Fallback on earlier versions
+                    }
+                }
+            }
+//        }
+        
+        
     }
     
     func onBoardingPageViewController(onBoardingPageViewController: OnBoardingPageViewController,

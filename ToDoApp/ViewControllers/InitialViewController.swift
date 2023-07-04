@@ -20,7 +20,7 @@ class InitialViewController: BaseViewController {
     var changeMode: Bool =  false
     var isButtonAdded: Bool = false
     var authorizationButton = ASAuthorizationAppleIDButton()
-    
+    var allTasks: [Task] = []
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -246,13 +246,54 @@ class InitialViewController: BaseViewController {
 //            Utilities.setIntForKey(0, key: "userType")
 //        }
         Utilities.hide_ProgressHud(view: self.view)
-        guard UIApplication.shared.delegate is AppDelegate else {
-            return
-        }
-        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else {
-            return
-        }
-        sceneDelegate.setHomeVC()
+        
+        self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "")
+    
+    }
+    
+    func getAllTasks(userId:String) {
+        self.allTasks.removeAll()
+        let db = Firestore.firestore()
+        db.collection("tasks").whereField("userId", isEqualTo: userId)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                    Utilities.hide_ProgressHud(view: self.view)
+                } else {
+                    Utilities.hide_ProgressHud(view: self.view)
+                    for document in querySnapshot!.documents {
+                        let dicCat = document.data()
+                        let objCat = Task.init(fromDictionary: dicCat)
+                        self.allTasks.append(objCat)
+//                        self.selectedDayTasks = []
+                    }
+                    if self.allTasks.count == 0 {
+                        self.showPopup()
+                    } else {
+                        guard UIApplication.shared.delegate is AppDelegate else {
+                            return
+                        }
+                        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else {
+                            return
+                        }
+                        sceneDelegate.setHomeVC()
+                    }
+                    
+//                    self.getTasks()
+                }
+            }
+    }
+    
+    func showPopup() {
+        //show popup
+        let customPopUpVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AddTaskViewController") as! AddTaskViewController
+            self.addChild(customPopUpVC)
+            customPopUpVC.modalTransitionStyle = .crossDissolve
+            customPopUpVC.view.frame = self.view.frame
+            self.view.addSubview(customPopUpVC.view)
+//            customPopUpVC.modalTransitionStyle = .coverVertical
+            customPopUpVC.modalPresentationStyle = .fullScreen
+            customPopUpVC.didMove(toParent: self)
     }
     
     func checkInternetAvailability() {

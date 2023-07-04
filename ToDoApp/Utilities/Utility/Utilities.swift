@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Foundation
 //import NotificationBannerSwift
 import MBProgressHUD
 import Alamofire
@@ -22,7 +23,7 @@ class Utilities: NSObject {
         gradientLayer.frame = view.bounds
         return gradientLayer
     }
-    
+        
     static func setIsFirstTime(isFirstTime: Bool)
     {
         UserDefaults.standard.setValue(isFirstTime, forKey: Constants.UserDefaults.isFirstTime)
@@ -117,3 +118,11 @@ struct Connectivity {
     }
 }
 
+extension UIView {
+   func roundCorners(corners: UIRectCorner, radius: CGFloat) {
+        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        layer.mask = mask
+    }
+}

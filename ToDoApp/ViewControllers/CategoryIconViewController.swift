@@ -28,6 +28,7 @@ class CategoryIconViewController: BaseViewController {
         self.collview.delegate = self
         self.collview.dataSource = self
         self.btnUpdate.setTitle(fromEditOrUpdat, for: .normal)
+
     }
     
     override func viewWillAppear(_ animated: Bool) {

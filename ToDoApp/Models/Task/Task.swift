@@ -16,6 +16,8 @@ struct Task: Codable{
     var categoryName: String?
     var description: String?
     var time: String?
+    var startTime: String?
+    var endTime: String?
     var date: String?
     var priority: String?
     var preReminder: String?
@@ -46,6 +48,8 @@ struct Task: Codable{
         categoryName = dictionary["categoryName"] as? String
         description = dictionary["description"] as? String
         time = dictionary["time"] as? String
+        startTime = dictionary["startTime"] as? String
+        endTime = dictionary["endTime"] as? String
         date = dictionary["date"] as? String
         priority = dictionary["priority"] as? String
         preReminder = dictionary["preReminder"] as? String
@@ -76,6 +80,12 @@ struct Task: Codable{
         }
         if time != nil{
             dictionary["time"] = time
+        }
+        if startTime != nil{
+            dictionary["startTime"] = time
+        }
+        if endTime != nil{
+            dictionary["endTime"] = time
         }
         if date != nil{
             dictionary["date"] = date

@@ -28,11 +28,10 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
         
         // All-sized banner view
     var allBannerView: GADBannerView!
-    
+    var workItem: DispatchWorkItem?
     @IBOutlet weak var interfaceSegmented: CustomSegmentedControl!{
         didSet{
             interfaceSegmented.setButtonTitles(buttonTitles: ["Daily","Weekly","Monthly","Yearly"])
-//            interfaceSegmented.selectorBackViewColor = UIColor(named: "")!
             interfaceSegmented.selectorViewColor = UIColor(named: "primary-color")!
             interfaceSegmented.selectorTextColor = UIColor(named: "TextColor-2")!
         }
@@ -286,7 +285,7 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
             }
     }
     func scrollMyCollectionView(row : Int){
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { // Change `2.0` to the
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) { // Change `2.0` to the
             var mySelectedIndexPath = IndexPath(row: 0, section: 0)
             mySelectedIndexPath = IndexPath(row: row, section: 0)
             self.colView.scrollToItem(at: mySelectedIndexPath, at: .centeredHorizontally, animated: true)
@@ -303,13 +302,14 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
         if index == 0{
             
         }else if index == 1{ //weekly seleted
-            
             let dayNumber = Calendar.current.component(.weekday, from: todayDate)
             print(dayNumber)
             weeklySelected = dayNumber - 1
-            scrollMyCollectionView(row: weeklySelected)
+            self.scrollMyCollectionView(row: self.weeklySelected)
         }else{
-            scrollMyCollectionView(row: monthlySelected)
+            self.scrollMyCollectionView(row: self.monthlySelected)
+            
+            
         }
         self.colView.reloadData()
         self.filterTasks(filteredDate: todayDate)
@@ -504,11 +504,6 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
         let searchTaskVC = storyboard.instantiateViewController(identifier: "SeachTaskViewController") as! SeachTaskViewController
         searchTaskVC.fromViewController = "HomeVC"
         self.navigationController?.pushViewController(searchTaskVC, animated: true)
-    
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
- //       let addCatVC = storyboard.instantiateViewController(identifier: "AddCategoryViewController") as! AddCategoryViewController
- //       addCatVC.fromEditOrUpdate = "Create Category"
- //       self.navigationController?.pushViewController(addCatVC, animated: true)
     }
     
     private func setupDatePicker() {
@@ -535,7 +530,7 @@ class HomeViewController: UIViewController, CustomSegmentedControlDelegate {
         print(date)
         
         
-//        dateFilter.setTitle(dateFormatter.string(from: sender.date), for: .normal)
+//        dateFilter.setTitle(dateFormatter.string(from: senderse.date), for: .normal)
     }
 }
 
@@ -608,7 +603,9 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-        DispatchQueue.main.async {
+        
+//        workItem?.cancel()
+        DispatchQueue.main.sync {
             self.centerCell = self.colView.cellForItem(at: indexPath) as? HomeCollectionViewCell
             
             self.centerCell?.transformCellToLarge()

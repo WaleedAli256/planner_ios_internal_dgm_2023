@@ -1,15 +1,17 @@
 {
   "images" : [
     {
+      "filename" : "Onboarding 7 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "apps.16506.9007199266251942.cca04df6-35a0-4acd-ac93-31e57d1bd4c7.ea830cce-5026-4451-934e-74a19374233f.png",
+      "filename" : "Onboarding 7 1@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Onboarding 7 1@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

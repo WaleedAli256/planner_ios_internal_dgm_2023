@@ -11,7 +11,7 @@ import AuthenticationServices
 
 class ViewController2: UIViewController {
 
-    
+    static var onNext : ((Bool) -> Void)?
     override func viewDidLoad() {
         super.viewDidLoad()
 //        let appleSignInButton = ASAuthorizationAppleIDButton()
@@ -29,41 +29,16 @@ class ViewController2: UIViewController {
     }
     */
 
-    @IBAction func actionLoginApple(_ sender: UIButton) {
+    @IBAction func nextPageAction(_ sender: UIButton) {
+        ViewController2.onNext?(true)
         
-        let appleIDProvider = ASAuthorizationAppleIDProvider().createRequest()
-        appleIDProvider.requestedScopes = [.fullName, .email]
-            
-            let controller = ASAuthorizationController(authorizationRequests: [appleIDProvider])
-            controller.delegate = self
-            controller.presentationContextProvider = self
-            controller.performRequests()
-        
+    }
+    
+    @IBAction func skipAction(_ sender: UIButton) {
+        onSkipAction()
     }
 
 }
 
 
-extension ViewController2: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
-    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        return self.view.window!
-    }
-    
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
-            // Handle the user's credentials
-            let userID = appleIDCredential.user
-            let fullName = appleIDCredential.fullName
-            let email = appleIDCredential.email
-            
-            print(userID)
-            print(fullName)
-            print(email)
-            // Use the received data to authenticate or create a user session
-        }
-    }
-    
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        // Handle the error
-    }
-}
+

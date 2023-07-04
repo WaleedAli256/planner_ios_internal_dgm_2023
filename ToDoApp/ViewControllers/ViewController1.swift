@@ -8,9 +8,9 @@
 
 import UIKit
 
-@available(iOS 13.0, *)
-class ViewController1: UIViewController {
 
+class ViewController1: UIViewController {
+    static var onNextTap : ((Bool) -> Void)?
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -28,10 +28,15 @@ class ViewController1: UIViewController {
     }
     */
 
-    @IBAction func pushAction(_ sender: UIButton) {
+    @IBAction func nextPageActions(_ sender: UIButton) {
+        ViewController1.onNextTap?(true)
         
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let searchTaskVC = storyboard.instantiateViewController(identifier: "ViewController2") as! ViewController2
-        self.navigationController?.pushViewController(searchTaskVC, animated: true)
+        
+        
+    }
+    
+    @IBAction func skipAction(_ sender: UIButton) {
+        
+        onSkipAction()
     }
 }

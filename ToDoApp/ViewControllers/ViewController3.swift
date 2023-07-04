@@ -19,11 +19,40 @@ class ViewController3: UIViewController {
 
     @IBAction func btnInitVCTap(_ sender: UIButton) {
      
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "InitialNavigationController") as! InitialNavigationController
-        let window = UIApplication.shared.windows.first
-        window?.rootViewController = vc
-        window?.makeKeyAndVisible()
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let vc = storyboard.instantiateViewController(withIdentifier: "InitialNavigationController") as! InitialNavigationController
+//        let window = UIApplication.shared.windows.first
+//        window?.rootViewController = vc
+//        window?.makeKeyAndVisible()
+    }
+    
+    @IBAction func nextInitialPageAction(_ sender: UIButton) {
+        
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let vc = storyboard.instantiateViewController(withIdentifier: "InitialNavigationController") as! InitialNavigationController
+//        let window = UIApplication.shared.windows.first
+//        window?.rootViewController = vc
+//        window?.makeKeyAndVisible()
+        
+//        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else {
+//            return
+//        }
+//        sceneDelegate.setLoginVC()
+        onSkipAction()
+        
+    }
+    
+    @IBAction func skipAction(_ sender: UIButton) {
+        
+        onSkipAction()
     }
 
+}
+
+func onSkipAction() {
+    
+    guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else {
+        return
+    }
+    sceneDelegate.setLoginVC()
 }

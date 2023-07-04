@@ -15,13 +15,15 @@ import GoogleMobileAds
 class CreateTaskViewController: BaseViewController {
     
     static var onCreateTask:((_ catName: String) -> Void)?
-    
+    static var onAddTaskTap:((Bool) -> Void)?
     @IBOutlet weak var titleTxtField: UITextField!
     @IBOutlet weak var detailTxtView: UITextView!
     @IBOutlet weak var catTxtField: DropDown!
 //    @IBOutlet weak var lblCateName: UILabel!
     @IBOutlet weak var dateTxtField: UITextField!
     @IBOutlet weak var timeTxtField: UITextField!
+    @IBOutlet weak var startTimeTxtField: UITextField!
+    @IBOutlet weak var endTimeTxtField: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var topTitleView: UIView!
     @IBOutlet weak var preReminderTxtField: DropDown!
@@ -82,6 +84,8 @@ class CreateTaskViewController: BaseViewController {
         self.RepititionTxtField.inputView = dummyInputView
         self.dateTxtField.inputView = dummyInputView
         self.timeTxtField.inputView = dummyInputView
+        self.startTimeTxtField.inputView = dummyInputView
+        self.endTimeTxtField.inputView = dummyInputView
         self.catTxtField.endEditing(true)
         self.catTxtField.resignFirstResponder()
        
@@ -94,7 +98,8 @@ class CreateTaskViewController: BaseViewController {
         self.RepititionTxtField.delegate = self
         self.dateTxtField.delegate = self
         self.timeTxtField.delegate = self
-        
+        self.startTimeTxtField.delegate = self
+        self.endTimeTxtField.delegate = self
         self.titleTxtField.delegate = self
         detailTxtView.textContainer.lineFragmentPadding = 15
         self.detailTxtView.delegate = self
@@ -126,7 +131,8 @@ class CreateTaskViewController: BaseViewController {
         RepititionTxtField.tintColor = .clear
         dateTxtField.tintColor = .clear
         timeTxtField.tintColor = .clear
-        
+        startTimeTxtField.tintColor = .clear
+        endTimeTxtField.tintColor = .clear
 //        RepititionTxtField.optionArray = self.repitiotn
 //        preReminderTxtField.optionArray = self.preReminderTime
         
@@ -208,6 +214,8 @@ class CreateTaskViewController: BaseViewController {
         
         dateTxtField.inputView = datePicker
         timeTxtField.inputView = datePicker
+        startTimeTxtField.inputView = datePicker
+        endTimeTxtField.inputView = datePicker
     }
     
     func simplePickerView() {
@@ -244,8 +252,10 @@ class CreateTaskViewController: BaseViewController {
     
     func timePickerTap() {
         self.createDatePicker()
-        self.selectionMode = "Time"
+//        self.selectionMode = "Time"
         timeTxtField.inputAccessoryView = toolBar
+        startTimeTxtField.inputAccessoryView = toolBar
+        endTimeTxtField.inputAccessoryView = toolBar
         datePicker.datePickerMode = .time
         let calendar = Calendar.current
         let date = calendar.date(byAdding: .minute, value: 1, to: Date())
@@ -254,6 +264,7 @@ class CreateTaskViewController: BaseViewController {
         datePicker.minimumDate = date
         
     }
+
     
     @objc func btnDoneAction(_ sender: UIButton)
     {
@@ -268,6 +279,22 @@ class CreateTaskViewController: BaseViewController {
             self.date = formatter.string(from: self.datePicker.date)
             self.dateTxtField.text = self.date
          
+        } else if self.selectionMode == "startTime" {
+            self.view.endEditing(true)
+            let formatter = DateFormatter()
+            formatter.dateFormat = "h:mm a"
+//            self.txtTitle.text = (formatter.string(from: self.datePicker.date))
+//            self.timeSelected = true
+            self.startTimeTxtField.text =  formatter.string(from: self.datePicker.date)
+            
+            
+        } else if self.selectionMode == "endTime" {
+            self.view.endEditing(true)
+            let formatter = DateFormatter()
+            formatter.dateFormat = "h:mm a"
+//            self.txtTitle.text = (formatter.string(from: self.datePicker.date))
+//            self.timeSelected = true
+            self.endTimeTxtField.text =  formatter.string(from: self.datePicker.date)
         }
         if(self.selectionMode == "Time")
         {
@@ -408,7 +435,9 @@ class CreateTaskViewController: BaseViewController {
             "categoryName": self.catTxtField.text!,
            "description": self.detailTxtView.text!,
            "date":self.date + " " + self.selectedTime,
-           "time":self.date ,
+           "time":self.date,
+           "startTime":self.startTimeTxtField.text ?? "",
+           "endTime":self.endTimeTxtField.text ?? "",
            "priority": self.priortyValue ?? "Medium",
            "preReminder":self.preReminderTxtField.text ?? "None",
            "repetition": self.RepititionTxtField.text ?? "None",
@@ -429,6 +458,9 @@ class CreateTaskViewController: BaseViewController {
                         self.navigationController?.popViewController(animated: true)
                         CreateTaskViewController.onCreateTask?(self.catTxtField.text!)
                         
+                    } else if self.fromViewController == "Add Task View"{
+                        self.navigationController?.popViewController(animated: true)
+                        CreateTaskViewController.onAddTaskTap?(true)
                     } else {
                         _ = self.tabBarController?.selectedIndex = 0
                     }
@@ -886,10 +918,18 @@ extension CreateTaskViewController: UITextFieldDelegate
 //            self.txtFieldDate.text = ""
             self.datePickerTap()
         }
-        else if textField == self.timeTxtField {
+        else if textField == self.timeTxtField  {
 //            self.txtFieldTime.text = ""
             self.timePickerTap()
+            self.selectionMode = "Time"
+        } else if textField == self.startTimeTxtField {
+            self.timePickerTap()
+            self.selectionMode = "startTime"
+        } else if textField == self.endTimeTxtField {
+            self.timePickerTap()
+            self.selectionMode = "endTime"
         }
+        
         
     }
     

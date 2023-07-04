@@ -19,6 +19,7 @@ class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
     var clickCount = 0
     var selectedTabIndices = [Int]()
     var intertitialAdd: GADInterstitialAd?
+    var taskCount = 0
     var addIds = ["ca-app-pub-8414160375988475/4551648","ca-app-pub-8414160375988475/4360076824","ca-app-pub-8414160375988475/6799850985"]
     var addIndex = 0
     var addRun : Bool = false
@@ -93,7 +94,10 @@ class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
         self.tabBarController?.tabBar.isHidden = false
+        
+        
     }
+        
     
     func getAdvertisingIdentifier() -> String? {
         guard ASIdentifierManager.shared().isAdvertisingTrackingEnabled else {

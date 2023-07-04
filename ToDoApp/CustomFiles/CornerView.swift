@@ -9,6 +9,35 @@ import UIKit
 
 @IBDesignable class CornerView: UIView {
     
+//    @IBInspectable var shadowColor: UIColor = UIColor.clear {
+//
+//        didSet {
+//            layer.shadowColor = shadowColor.cgColor
+//        }
+//    }
+//
+//    @IBInspectable var shadowOffset: CGSize = CGSize.zero {
+//
+//        didSet {
+//            layer.shadowOffset = shadowOffset
+//        }
+//    }
+//
+//    @IBInspectable var shadowOpacity: Float = 0.5 {
+//
+//        didSet {
+//            layer.shadowOpacity = shadowOpacity
+//        }
+//    }
+//
+//
+//    @IBInspectable var shadowRadius: CGFloat = 5.0 {
+//
+//        didSet {
+//            layer.shadowRadius = shadowRadius
+//        }
+//    }
+    
     @IBInspectable var leftTopRadius : CGFloat = 0{
         didSet{
             self.applyMask()
