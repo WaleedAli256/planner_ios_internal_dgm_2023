@@ -19,10 +19,9 @@ class CreateTaskViewController: BaseViewController {
     @IBOutlet weak var titleTxtField: UITextField!
     @IBOutlet weak var detailTxtView: UITextView!
     @IBOutlet weak var catTxtField: DropDown!
-//    @IBOutlet weak var lblCateName: UILabel!
+//    @IBOutlet weak var lblCateName: UILabel! 
     @IBOutlet weak var dateTxtField: UITextField!
     @IBOutlet weak var timeTxtField: UITextField!
-    @IBOutlet weak var startTimeTxtField: UITextField!
     @IBOutlet weak var endTimeTxtField: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var topTitleView: UIView!
@@ -84,7 +83,6 @@ class CreateTaskViewController: BaseViewController {
         self.RepititionTxtField.inputView = dummyInputView
         self.dateTxtField.inputView = dummyInputView
         self.timeTxtField.inputView = dummyInputView
-        self.startTimeTxtField.inputView = dummyInputView
         self.endTimeTxtField.inputView = dummyInputView
         self.catTxtField.endEditing(true)
         self.catTxtField.resignFirstResponder()
@@ -98,7 +96,6 @@ class CreateTaskViewController: BaseViewController {
         self.RepititionTxtField.delegate = self
         self.dateTxtField.delegate = self
         self.timeTxtField.delegate = self
-        self.startTimeTxtField.delegate = self
         self.endTimeTxtField.delegate = self
         self.titleTxtField.delegate = self
         detailTxtView.textContainer.lineFragmentPadding = 15
@@ -131,7 +128,6 @@ class CreateTaskViewController: BaseViewController {
         RepititionTxtField.tintColor = .clear
         dateTxtField.tintColor = .clear
         timeTxtField.tintColor = .clear
-        startTimeTxtField.tintColor = .clear
         endTimeTxtField.tintColor = .clear
 //        RepititionTxtField.optionArray = self.repitiotn
 //        preReminderTxtField.optionArray = self.preReminderTime
@@ -185,7 +181,7 @@ class CreateTaskViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if self.selectedCategry != nil || self.fromViewController == "HomeVC"{
+        if self.selectedCategry != nil || self.fromViewController == "HomeVC" || self.fromViewController == "Add Task View"{
             self.topTitleView.isHidden = true
             self.setNavBar("Create New Task")
         } else {
@@ -214,7 +210,6 @@ class CreateTaskViewController: BaseViewController {
         
         dateTxtField.inputView = datePicker
         timeTxtField.inputView = datePicker
-        startTimeTxtField.inputView = datePicker
         endTimeTxtField.inputView = datePicker
     }
     
@@ -254,7 +249,6 @@ class CreateTaskViewController: BaseViewController {
         self.createDatePicker()
 //        self.selectionMode = "Time"
         timeTxtField.inputAccessoryView = toolBar
-        startTimeTxtField.inputAccessoryView = toolBar
         endTimeTxtField.inputAccessoryView = toolBar
         datePicker.datePickerMode = .time
         let calendar = Calendar.current
@@ -279,15 +273,6 @@ class CreateTaskViewController: BaseViewController {
             self.date = formatter.string(from: self.datePicker.date)
             self.dateTxtField.text = self.date
          
-        } else if self.selectionMode == "startTime" {
-            self.view.endEditing(true)
-            let formatter = DateFormatter()
-            formatter.dateFormat = "h:mm a"
-//            self.txtTitle.text = (formatter.string(from: self.datePicker.date))
-//            self.timeSelected = true
-            self.startTimeTxtField.text =  formatter.string(from: self.datePicker.date)
-            
-            
         } else if self.selectionMode == "endTime" {
             self.view.endEditing(true)
             let formatter = DateFormatter()
@@ -436,7 +421,6 @@ class CreateTaskViewController: BaseViewController {
            "description": self.detailTxtView.text!,
            "date":self.date + " " + self.selectedTime,
            "time":self.date,
-           "startTime":self.startTimeTxtField.text ?? "",
            "endTime":self.endTimeTxtField.text ?? "",
            "priority": self.priortyValue ?? "Medium",
            "preReminder":self.preReminderTxtField.text ?? "None",
@@ -922,9 +906,6 @@ extension CreateTaskViewController: UITextFieldDelegate
 //            self.txtFieldTime.text = ""
             self.timePickerTap()
             self.selectionMode = "Time"
-        } else if textField == self.startTimeTxtField {
-            self.timePickerTap()
-            self.selectionMode = "startTime"
         } else if textField == self.endTimeTxtField {
             self.timePickerTap()
             self.selectionMode = "endTime"

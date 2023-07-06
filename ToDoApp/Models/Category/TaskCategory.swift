@@ -15,6 +15,7 @@ struct TaskCategory {
     var taskCount: String?
     var id: String?
     var colorCode: String?
+    var isFavourite:Bool?
     
     init(fromDictionary dictionary: [String:Any]){
         id = dictionary["id"] as? String
@@ -24,9 +25,10 @@ struct TaskCategory {
         taskCount = dictionary["taskCount"] as? String
         colorCode = dictionary["colorCode"] as? String
         description = dictionary["description"] as? String
+        isFavourite = dictionary["isFavourite"] as? Bool
     }
     
-    init(image: Int? = nil, userId:  String? = nil, description:  String? = nil, name:  String? = nil, taskCount:  String? = nil, id:  String? = nil, colorCode:  String? = nil) {
+    init(image: Int? = nil, userId:  String? = nil, description:  String? = nil, name:  String? = nil, taskCount:  String? = nil, id:  String? = nil, colorCode:  String? = nil, isFavourite:Bool = false) {
         self.name = name
         self.image = image
         self.userId = userId
@@ -34,5 +36,6 @@ struct TaskCategory {
         self.taskCount = taskCount
         self.id = id
         self.colorCode = colorCode
+        self.isFavourite = isFavourite
     }
 }

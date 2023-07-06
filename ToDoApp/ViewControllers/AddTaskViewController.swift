@@ -7,13 +7,14 @@
 
 import UIKit
 
-class AddTaskViewController: UIViewController {
+class AddTaskViewController: BaseViewController {
     
-//    static var onAddTaskTap:((Bool) -> Void)?
+    static var onAddTask:((Bool) -> Void)?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+ 
+        self.navigationController?.navigationBar.isHidden = true
         CreateTaskViewController.onAddTaskTap = { res in
             self.removeFromParent()
             guard UIApplication.shared.delegate is AppDelegate else {
@@ -26,9 +27,21 @@ class AddTaskViewController: UIViewController {
             
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
+    }
+    
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//
+//        self.navigationController?.navigationBar.isHidden = false
+//    }
 
     @IBAction func addTaskAction(_ sender: UIButton) {
-//        AddTaskViewController.onAddTaskTap?(true)
+//        AddTaskViewController.onAddTask?(true)
+        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let creatTaskVC = storyboard.instantiateViewController(identifier: "CreateTaskViewController") as! CreateTaskViewController
         creatTaskVC.fromViewController = "Add Task View"

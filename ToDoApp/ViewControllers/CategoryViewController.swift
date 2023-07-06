@@ -8,7 +8,8 @@
 import UIKit
 import Firebase
 import FirebaseFirestore
-
+import BEMCheckBox
+var catFavouritCount = 0
 class CategoryViewController: BaseViewController {
     
     @IBOutlet weak var profilPic: UIImageView!
@@ -20,8 +21,16 @@ class CategoryViewController: BaseViewController {
     var actionIndex: Int!
     var selectedIndex = -1
     var selectedInde: Int = -1
+    var favCategories: [TaskCategory] = []
+    var updatedCellHeight: CGFloat = 0.0
+    var cellHeight: CGFloat = 148.0
+    var checkBoxHide: Bool = true
     override func viewDidLoad() { 
         super.viewDidLoad()
+        
+        
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+                catColView.addGestureRecognizer(longPressGesture)
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
         profilPic.addGestureRecognizer(tapGesture)
@@ -32,11 +41,13 @@ class CategoryViewController: BaseViewController {
         self.catColView.delegate = self
         self.catColView.dataSource = self
 //        Utilities.show_ProgressHud(view: self.view)
+    
 
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        checkBoxHide = true
         self.navigationController?.navigationBar.isHidden = true
         self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
         self.setData()
@@ -58,11 +69,14 @@ class CategoryViewController: BaseViewController {
                 } else {
                     Utilities.hide_ProgressHud(view: self.view)
                     self.categories.removeAll()
+//                    self.favCategories.removeAll()
                     for document in querySnapshot!.documents {
                         let dicCat = document.data()
                         let objCat = TaskCategory.init(fromDictionary: dicCat)
                         self.categories.append(objCat)
                     }
+                    let filteredFavCat = self.categories.filter({$0.isFavourite == true })
+                    catFavouritCount = filteredFavCat.count
                     self.selectedInde = -1
                     self.catColView.reloadData()
                 }
@@ -133,8 +147,6 @@ class CategoryViewController: BaseViewController {
                              taskIds.append(document.documentID)
                              document.reference.delete()
                   }
-                  
-                  
                   UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: taskIds)
                   self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
                   print("Document successfully removed!")
@@ -156,6 +168,63 @@ class CategoryViewController: BaseViewController {
 
       self.present(alertController, animated: true, completion: nil)
         
+    }
+    
+    @IBAction func checkBoxAction(_ sender: BEMCheckBox) {
+        
+        if catFavouritCount >= 6 && sender.on == true {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                self.showAlert(title: "Limit Exceeded", message: "You can only add up to six categories.")
+            }
+           
+        } else {
+            var category = self.categories[sender.tag]
+            if sender.on {
+                category.isFavourite = true
+                self.catAddToFavouritFirebase(category.isFavourite!, category.id!) { Status in
+                    if Status {
+                    catFavouritCount += 1
+                    self.showAlert(title: "Category Added", message: "The category has been added to your favorites.")
+                        
+                    }
+                }
+                
+            } else {
+                category.isFavourite = false
+                self.catAddToFavouritFirebase(category.isFavourite!, category.id!) { Status in
+                    if Status {
+                        catFavouritCount -= 1
+                        self.showAlert(title: "Category Removed", message: "The category has been removed from your favorites.")
+                        
+                    }
+                }
+                
+            }
+            
+          
+        }
+       
+        self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
+        self.catColView.reloadData()
+
+    }
+    
+    func catAddToFavouritFirebase(_ isFavourit: Bool, _ catId: String,completion: @escaping(_ Status: Bool) -> Void) {
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("category").document(catId)
+        ref.setData([
+            "isFavourite": isFavourit
+        ], merge: true) { err in
+            if let err = err {
+                cAlert.ShowToastWithHandler(VC: self, msg: "Error writing document: (\(err)") { sucess in
+                }
+                completion(false)
+            } else {
+                print("successful")
+                completion(true)
+        }
+    }
     }
 
     
@@ -202,7 +271,35 @@ class CategoryViewController: BaseViewController {
         }
 
     }
-}
+    
+    @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
+           if gestureRecognizer.state == .began {
+               // Get the collection view
+               checkBoxHide = !checkBoxHide
+//               for case let cell as CategoryCollectionViewCell in catColView.visibleCells {
+//                   cell.checkBox.isHidden = !cell.checkBox.isHidden
+//                   cell.stackInnerView.isHidden = !cell.stackInnerView.isHidden
+//
+//                   // Adjust cell height based on checkbox visibility
+//                   if cell.checkBox.isHidden {
+//                       cellHeight = 163 // Replace 50 with your original cell height
+//                   } else {
+//                       cellHeight = 190 // Replace 72 with your desired expanded cell height
+//                   }
+//                   UIView.animate(withDuration: 0.3) {
+//                       self.view.layoutIfNeeded()
+//                   }
+//
+//               }
+               self.catColView.reloadData()
+           }
+        
+       }
+       
+       // ...
+   }
+
+
 
 extension CategoryViewController: UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     
@@ -215,15 +312,33 @@ extension CategoryViewController: UICollectionViewDelegate,UICollectionViewDataS
         guard let cell = catColView.dequeueReusableCell(withReuseIdentifier: "CategoryCollectionViewCell", for: indexPath) as? CategoryCollectionViewCell else {
             return UICollectionViewCell()
         }
-    
         let cat = self.categories[indexPath.row]
         cell.btndropdown.tag = indexPath.row
-        
+        cell.checkBox.tag = indexPath.row
         if selectedInde == indexPath.row {
             cell.popupView.isHidden = false
         } else {
             cell.popupView.isHidden = true
         }
+//        if checkBoxHide == true {
+        cell.checkBox.isHidden = checkBoxHide
+        cell.stackInnerView.isHidden = checkBoxHide
+        if cat.isFavourite == true {
+            cell.checkBox.on = true
+        } else {
+            cell.checkBox.on = false
+        }
+//        if cell.checkBox.isHidden == true {
+//            cellHeight = 163
+//        } else {
+//            cellHeight = 190
+//        }
+//        }
+        
+        // Hide the checkbox initially
+        
+       
+        cell.checkBox.boxType = .square
         cell.delegate = self
         cell.deleteBtn.tag = indexPath.row
         cell.editBtn.tag = indexPath.row
@@ -267,14 +382,18 @@ extension CategoryViewController: UICollectionViewDelegate,UICollectionViewDataS
         
         let frameCV = catColView.frame//размер collectionView
         let cellWidth = (frameCV.width / CGFloat(2)) - 10 // countOfCells == 2
-        let cellHeight = cellWidth
+
+        if self.checkBoxHide == false {
+            self.cellHeight = 190
+        } else {
+            self.cellHeight = 150
+        }
         
         if cellWidth < 190 {
             return CGSize(width: cellWidth, height: cellHeight)
         }else{
             return CGSize(width: 190, height: 190)
         }
-        
     }
 }
 
@@ -287,7 +406,6 @@ extension CategoryViewController: PopupViewControllerDelegate {
 extension CategoryViewController: CategoryCollectionViewCellDelegate{
     
     func editOrDelete(_ actionType: String, _ actionIndex: Int, _ cellIndex: IndexPath) {
-        
         self.cellRow = cellIndex.row
         self.actionTyp = actionType
         self.actionIndex = actionIndex

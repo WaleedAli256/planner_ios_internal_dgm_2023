@@ -6,13 +6,15 @@
 //
 
 import UIKit
-
+import BEMCheckBox
 protocol CategoryCollectionViewCellDelegate: AnyObject {
     func editOrDelete(_ actionType: String, _ actionIndex: Int, _ cellIndex: IndexPath)
 }
 
 class CategoryCollectionViewCell: UICollectionViewCell, UITableViewDelegate {
-    
+    static var addCatFavourit:((_ ischeck:Bool , _ cellInde: IndexPath) -> Void)?
+    @IBOutlet weak var checkBox: BEMCheckBox!
+    @IBOutlet weak var stackInnerView: UIView!
     @IBOutlet weak var catImage: UIImageView!
     @IBOutlet weak var catName: UILabel!
     @IBOutlet weak var catDesc: UILabel!
@@ -21,6 +23,8 @@ class CategoryCollectionViewCell: UICollectionViewCell, UITableViewDelegate {
     @IBOutlet weak var btndropdown: UIButton!
     @IBOutlet weak var editBtn: UIButton!
     @IBOutlet weak var deleteBtn: UIButton!
+    @IBOutlet weak var heightConstraint: NSLayoutConstraint!
+    
     var actionIndex = 0
     var actionType = ""
     var titles = ["Edit","Delete"]
@@ -28,10 +32,18 @@ class CategoryCollectionViewCell: UICollectionViewCell, UITableViewDelegate {
     let dropDown = MakeDropDown()
     var dropDownRowHeight: CGFloat = 40
     var indexPath: IndexPath?
+    var isCheck:Bool = false
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+    }
     
     override class func awakeFromNib() {
         super.awakeFromNib()
+        
+
     }
+    
     
 }
 

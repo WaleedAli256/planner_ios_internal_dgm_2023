@@ -603,6 +603,7 @@ PODS:
   - AppAuth/Core (1.6.0)
   - AppAuth/ExternalUserAgent (1.6.0):
     - AppAuth/Core
+  - BEMCheckBox (1.4.1)
   - BoringSSL-GRPC (0.0.24):
     - BoringSSL-GRPC/Implementation (= 0.0.24)
     - BoringSSL-GRPC/Interface (= 0.0.24)
@@ -801,6 +802,7 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
+  - BEMCheckBox
   - Firebase/Core
   - Firebase/Database
   - Firebase/Firestore
@@ -820,6 +822,7 @@ SPEC REPOS:
     - abseil
     - Alamofire
     - AppAuth
+    - BEMCheckBox
     - BoringSSL-GRPC
     - Firebase
     - FirebaseAnalytics
@@ -856,6 +859,7 @@ SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
   Alamofire: 4e95d97098eacb88856099c4fc79b526a299e48c
   AppAuth: 8fca6b5563a5baef2c04bee27538025e4ceb2add
+  BEMCheckBox: 5ba6e37ade3d3657b36caecc35c8b75c6c2b1a4e
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
   Firebase: 3d6637234ab163e31852834617b4fe1df3b7af6d
   FirebaseAnalytics: 6f7430030cb6b22fe1db2e3bed782e999b76dc00
@@ -888,6 +892,6 @@ SPEC CHECKSUMS:
   SDWebImage: 1c39de67663e5eebb2f41324d5d580eeea12dd4c
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
 
-PODFILE CHECKSUM: 6990f324c1e68bfbf6d907dbc374b417a5a2dbfd
+PODFILE CHECKSUM: 91fffb5e0d2dbfa25d7d83e5857afd18fbaf1ea8
 
 COCOAPODS: 1.11.3

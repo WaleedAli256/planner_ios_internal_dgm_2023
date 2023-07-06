@@ -31,7 +31,10 @@ class HomeViewController2: UIViewController {
     var heightIncreased: Bool = false
     var selectedIndex = -1
     var allTasks: [Task] = []
+    var upcomingTaskArray: [Task] = []
+    var historyTaskArray: [Task] = []
     var categories: [TaskCategory] = []
+    var favCategories: [TaskCategory] = []
     var cateAgainstName = [customCategories]()
     struct customCategories {
         var cateName = String()
@@ -40,7 +43,6 @@ class HomeViewController2: UIViewController {
     
     var colCellColorArray = ["cat-color-1","cat-color-2","cat-color-3","cat-color-4","cat-color-5","cat-color-6"]
     var tbleCellColors = ["task-cell-color-1","task-cell-color-2","task-cell-color-3"]
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,69 +62,77 @@ class HomeViewController2: UIViewController {
         bottomView.addGestureRecognizer(panGestureRecognizer)
         self.colView.dataSource = self
         self.colView.delegate = self
-        self.bottomViewHeight.constant =  300
+        self.bottomViewHeight.constant =  400
         self.tapButtons(btnRecent, [btnHistory,btnUpcoming,btnThisMonth])
         
-    
+        
     }
-    
-
     
     @objc private func handlePan(_ gestureRecognizer: UIPanGestureRecognizer) {
         let translation = gestureRecognizer.translation(in: view)
-    
-        if isExpanded {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.isExpanded = false
-            }
-            UIView.animate(withDuration: 1.0, delay: 0, options: .transitionFlipFromTop) {
-                self.bottomViewHeight.constant = 300
-            } completion: { Bool in
-             
-            }
 
-            
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.isExpanded = true
+        switch gestureRecognizer.state {
+        case .changed:
+            if translation.y < 0 && !isExpanded {
+                isExpanded = true
+                UIView.animate(withDuration: 1.0, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.2, options: .curveEaseInOut) {
+                    self.bottomViewHeight.constant = 600
+                    self.view.layoutIfNeeded()
+                }
+            } else if translation.y > 0 && isExpanded {
+                isExpanded = false
+                UIView.animate(withDuration: 1.0, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.2, options: .curveEaseInOut) {
+                    self.bottomViewHeight.constant = 300
+                    self.view.layoutIfNeeded()
+                }
             }
-            
-            UIView.animate(withDuration: 1.75) {
-                self.bottomViewHeight.constant = 600
-            }
-//            self.bottomViewHeight.constant = 600
+        default:
+            break
         }
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        if btnRecent.tag == 1 {
+            self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "") { Status in
+                if Status {
+                    self.tblView.reloadData()
+                }
+            }
+        } else if btnUpcoming.tag == 1 {
+            self.upcomingTasks()
+        } else if btnHistory.tag == 1 {
+            self.historyTask()
+        } else if btnThisMonth.tag == 1 {
+            self.monthlyTask()
+        }
+//
         self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "") { Status in
             if Status {
-                self.lblTotalTaskNumbr.text = "01 / \(self.allTasks.count)"
-                self.tblView.reloadData()
+//                self.tblView.reloadData()
                 self.getCategories(userId: Utilities().getCurrentUser().id ?? "") { Status in
                     if Status {
                         self.cateAgainstName.removeAll()
-                        for temp in self.categories{
+                        for temp in self.favCategories {
                             let filteredArray = self.allTasks.filter({$0.categoryName == temp.name })
                             let newObj = customCategories(cateName: temp.name ?? "", array: filteredArray)
                             self.cateAgainstName.append(newObj)
                         }
+                            self.lblTotalTaskNumbr.text = "01 / \(self.allTasks.count)"
                             let cellHeight: CGFloat = 55.0
                             let numberOfCells = self.cateAgainstName.count
                             let numberOfRows = (numberOfCells + 1) / 2
                             let totalHeight = cellHeight * CGFloat(numberOfRows)
-                            self.colViewHeight.constant = totalHeight + 32
-                
+                            self.colViewHeight.constant = totalHeight + 20
                             self.colView.reloadData()
                     }
                 }
 
             }
+
         }
        
-        
     }
     
     @IBAction func searchBtnAction(_ sender: UIButton) {
@@ -134,19 +144,159 @@ class HomeViewController2: UIViewController {
 
     @IBAction func recentAction(_ sender: UIButton) {
         self.tapButtons(btnRecent, [btnHistory,btnUpcoming,btnThisMonth])
+        self.btnRecent.tag = 1
+        self.btnHistory.tag = 0
+        self.btnUpcoming.tag = 0
+        self.btnThisMonth.tag = 0
+        self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "") { Status in
+            if Status {
+                self.tblView.reloadData()
+            }
+        }
+        
     }
     
     @IBAction func upcomingAction(_ sender: UIButton) {
         self.tapButtons(btnUpcoming, [btnHistory,btnRecent,btnThisMonth])
+        
+        self.btnRecent.tag = 0
+        self.btnHistory.tag = 0
+        self.btnUpcoming.tag = 1
+        self.btnThisMonth.tag = 0
+        self.upcomingTasks()
+     
+    }
+    
+    func upcomingTasks() {
+        
+        var calendar = Calendar.current
+        let currentDate = Date().localDate()
+    
+        guard let currentWeekInterval = calendar.dateInterval(of: .weekOfYear, for: currentDate) else {
+            return
+        }
+        
+        let currentWeekStartDate = currentWeekInterval.start
+        let currentWeekEndDate = currentWeekInterval.end
+        let currentMyDate = self.convertDateToString("MM/dd/yyyy h:mm a")
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        dateFormatter.locale = Locale.current//(identifier: "fr")
+        let currentDateString = dateFormatter.string(from: currentWeekStartDate)
+        let EndDateString = dateFormatter.string(from: currentWeekEndDate)
+        
+        self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "") { Status in
+            if Status {
+                let currentWeekTasks = self.allTasks.filter { task in
+                    return currentDateString <= task.date! && task.date! <= EndDateString && currentMyDate <= task.date!
+                }
+                
+                print(currentWeekTasks.count)
+                self.allTasks.removeAll()
+                self.allTasks = currentWeekTasks
+                self.tblView.reloadData()
+            }
+        }
+        
     }
     
     @IBAction func historyAction(_ sender: UIButton) {
         self.tapButtons(btnHistory, [btnUpcoming,btnRecent,btnThisMonth])
+        self.btnRecent.tag = 0
+        self.btnHistory.tag = 1
+        self.btnUpcoming.tag = 0
+        self.btnThisMonth.tag = 0
+        self.historyTask()
+    }
+    
+    func historyTask() {
+        
+        self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "") { Status in
+            if Status {
+                
+                let myCurrentDate = self.convertDateToString("MM/dd/yyyy h:mm a")
+                print(myCurrentDate)
+                let passedTasks = self.allTasks.filter { task in
+                    return task.date! < myCurrentDate
+                }
+                self.allTasks.removeAll()
+                self.allTasks = passedTasks
+                self.tblView.reloadData()
+            }
+        }
+        
     }
     
     @IBAction func thisMonthAction(_ sender: UIButton) {
         self.tapButtons(btnThisMonth, [btnHistory,btnRecent,btnUpcoming])
+        self.btnRecent.tag = 0
+        self.btnHistory.tag = 0
+        self.btnUpcoming.tag = 0
+        self.btnThisMonth.tag = 1
+        self.monthlyTask()
     }
+    
+    func monthlyTask() {
+        
+        var calendar = Calendar.current
+        let currentDate = Date()
+    
+        guard let currentWeekInterval = calendar.dateInterval(of: .month, for: currentDate) else {
+            return
+        }
+        let currentWeekStartDate = currentWeekInterval.start
+        let currentWeekEndDate = currentWeekInterval.end
+        let dat = self.convertDateToString2("MM/dd/yyyy h:mm a", currentWeekStartDate)
+        let dat2 = self.convertDateToString2("MM/dd/yyyy h:mm a", currentWeekEndDate)
+        let dat3 = self.convertDateToString2("MM/dd/yyyy h:mm a", currentDate)
+        
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
+//        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+//        dateFormatter.locale = Locale.current//(identifier: "fr")
+//        let currentDateString = dateFormatter.string(from: currentWeekStartDate)
+//        let EndDateString = dateFormatter.string(from: currentWeekEndDate)
+        
+        self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "") { Status in
+            if Status {
+                let currentWeekTasks = self.allTasks.filter { task in
+                    return dat <= task.date! && task.date! <= dat2 && dat3 <= task.date!
+                }
+                print(currentWeekTasks.count)
+                self.allTasks.removeAll()
+                self.allTasks = currentWeekTasks
+                self.tblView.reloadData()
+            }
+        }
+    }
+    
+    func convertDateToString(_ formateType: String) -> String {
+        
+        let currentDate = Date()
+        let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
+            dateFormatter.timeZone = TimeZone.current
+        let currentDateString = dateFormatter.string(from: currentDate)
+//        print(currentDateString)
+        return currentDateString
+    }
+    
+    func convertDateToString2(_ formateType: String,_ myDate: Date) -> String {
+        
+//        let currentDate = Date()
+        let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
+            dateFormatter.timeZone = TimeZone.current
+        let currentDateString = dateFormatter.string(from: myDate)
+//        print(currentDateString)
+        return currentDateString
+    }
+    
+    
+    
+   
     
     @IBAction func seeAllAction(_ sender: UIButton) {
         _ = self.tabBarController?.selectedIndex = 1
@@ -180,6 +330,7 @@ class HomeViewController2: UIViewController {
                     print("Error getting documents: \(err)")
                     completion(false)
                 } else {
+                    self.allTasks.removeAll()
                     for document in querySnapshot!.documents {
                         let dicCat = document.data()
                         let objCat = Task.init(fromDictionary: dicCat)
@@ -205,6 +356,8 @@ class HomeViewController2: UIViewController {
                         let objCat = TaskCategory.init(fromDictionary: dicCat)
                         self.categories.append(objCat)
                     }
+                    let filteredFavCat = self.categories.filter({$0.isFavourite == true })
+                    self.favCategories = filteredFavCat
                     completion(true)
                 }
             }
@@ -245,7 +398,7 @@ extension HomeViewController2 : UICollectionViewDelegate,UICollectionViewDataSou
         cell.lblCatName.text = catObj.cateName
         cell.lblTaskCount.text = "\(catObj.array.count)"
         cell.catBgView.backgroundColor = UIColor(named: colCellColorArray[indexPath.row])
-        return cello
+        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -317,9 +470,11 @@ extension HomeViewController2: UITableViewDelegate,UITableViewDataSource {
             cell.lblDetail.isHidden = true
             cell.lblDetail.text = ""
         }
-        
-        cell.taskViewBgColor.backgroundColor = UIColor(named: tbleCellColors[indexPath.row])
-        if self.tbleCellColors[indexPath.row] == "task-cell-color-2" {
+    
+        let colorIndex = indexPath.row % tbleCellColors.count
+        cell.taskViewBgColor.backgroundColor = UIColor(named: tbleCellColors[colorIndex])
+//        cell.taskViewBgColor.backgroundColor = UIColor(named: tbleCellColors[indexPath.row])
+        if self.tbleCellColors[colorIndex] == "task-cell-color-2" {
             cell.lbltitle.textColor = .white
             cell.lblCatName.textColor = .white
             cell.lblDetail.textColor = .white
@@ -346,7 +501,8 @@ extension HomeViewController2: UITableViewDelegate,UITableViewDataSource {
         cell.lblCatName.text = taskObje.categoryName
         cell.lbltitle.text = taskObje.title
         cell.lblTimeRange.text = (taskObje.startTime ?? "no time") + " - " + (taskObje.endTime ?? "no time")
-        self.labelAttributedString(cell.lblDueTime)
+        cell.lblDueTime.text = taskObje.date
+//        self.labelAttributedString(cell.lblDueTime)
         cell.selectionStyle = .none
         return cell
     }

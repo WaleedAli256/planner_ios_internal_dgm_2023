@@ -26,6 +26,10 @@ class InitialViewController: BaseViewController {
 
         Utilities.setIsFirstTime(isFirstTime: false)
         btnSkip.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        
+//        AddTaskViewController.onAddTask = { res in
+//           
+//        }
     }
     
     @objc func buttonTapped() {
@@ -287,13 +291,29 @@ class InitialViewController: BaseViewController {
     func showPopup() {
         //show popup
         let customPopUpVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AddTaskViewController") as! AddTaskViewController
-            self.addChild(customPopUpVC)
-            customPopUpVC.modalTransitionStyle = .crossDissolve
-            customPopUpVC.view.frame = self.view.frame
-            self.view.addSubview(customPopUpVC.view)
+            let navigationController = UINavigationController(rootViewController: customPopUpVC)
+            self.addChild(navigationController)
+        navigationController.modalTransitionStyle = .crossDissolve
+        navigationController.view.frame = self.view.frame
+            self.view.addSubview(navigationController.view)
 //            customPopUpVC.modalTransitionStyle = .coverVertical
-            customPopUpVC.modalPresentationStyle = .fullScreen
-            customPopUpVC.didMove(toParent: self)
+        navigationController.modalPresentationStyle = .fullScreen
+        navigationController.didMove(toParent: self)
+        
+        
+//        
+//        let customPopUpVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AddTaskViewController") as! AddTaskViewController
+//
+//        // Embed the customPopUpVC in a UINavigationController
+//        let navigationController = UINavigationController(rootViewController: customPopUpVC)
+//
+//        self.addChild(navigationController)
+//        navigationController.modalTransitionStyle = .crossDissolve
+//        navigationController.view.frame = self.view.frame
+//        self.view.addSubview(navigationController.view)
+//        navigationController.modalPresentationStyle = .fullScreen
+//        navigationController.didMove(toParent: self)
+
     }
     
     func checkInternetAvailability() {
@@ -309,12 +329,12 @@ class InitialViewController: BaseViewController {
 func createDefaultsCategories(userId:String) {
     
     var categories = [TaskCategory]()
-    let first = TaskCategory(image: 1, userId: userId, description: "Keep yourself hydrated all time!", name: "Water Intake", taskCount: "0", id: "", colorCode: "#5486E9") 
-    let sec = TaskCategory(image: 2, userId: userId, description: "Wake up on the time So you never late!", name: "Sleeping Schedule", taskCount: "0", id: "", colorCode: "#F1A800")
-    let third = TaskCategory(image: 3, userId: userId, description: "Never miss an Event to wish to your loved ones", name: "Event Reminder", taskCount: "0", id: "", colorCode: "#FFB185")
-    let fourth = TaskCategory(image: 4, userId: userId, description: "Schedule your Exercise to stay healthy", name: "Exercise Schedule", taskCount: "0", id: "", colorCode: "#E784D1")
-    let fifth = TaskCategory(image: 5, userId: userId, description: "Keep yourself hydrated all time!", name: "Food Intake", taskCount: "0", id: "", colorCode: "#76DC80")
-    let sixth = TaskCategory(image: 6, userId: userId, description: "Wake up on the time So you never late!", name: "Personal Care", taskCount: "0", id: "", colorCode: "#51BBA2")
+    let first = TaskCategory(image: 1, userId: userId, description: "Keep yourself hydrated all time!", name: "Water Intake", taskCount: "0", id: "", colorCode: "#5486E9", isFavourite: false)
+    let sec = TaskCategory(image: 2, userId: userId, description: "Wake up on the time So you never late!", name: "Sleeping Schedule", taskCount: "0", id: "", colorCode: "#F1A800",isFavourite: false)
+    let third = TaskCategory(image: 3, userId: userId, description: "Never miss an Event to wish to your loved ones", name: "Event Reminder", taskCount: "0", id: "", colorCode: "#FFB185",isFavourite: false)
+    let fourth = TaskCategory(image: 4, userId: userId, description: "Schedule your Exercise to stay healthy", name: "Exercise Schedule", taskCount: "0", id: "", colorCode: "#E784D1",isFavourite: false)
+    let fifth = TaskCategory(image: 5, userId: userId, description: "Keep yourself hydrated all time!", name: "Food Intake", taskCount: "0", id: "", colorCode: "#76DC80", isFavourite: false)
+    let sixth = TaskCategory(image: 6, userId: userId, description: "Wake up on the time So you never late!", name: "Personal Care", taskCount: "0", id: "", colorCode: "#51BBA2", isFavourite: false)
     categories.append(first)
     categories.append(sec)
     categories.append(third)
@@ -332,7 +352,8 @@ func createDefaultsCategories(userId:String) {
             "name": cat.name ?? "",
             "taskCount": cat.taskCount ?? "",
             "id": ref.documentID,
-            "colorCode": cat.colorCode ?? ""
+            "colorCode": cat.colorCode ?? "",
+            "isFavourite": cat.isFavourite ?? ""
         ]) { err in
             if let err = err {
                 print("Error writing document: \(err)")

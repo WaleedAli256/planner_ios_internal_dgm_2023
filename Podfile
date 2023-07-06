@@ -20,4 +20,5 @@ pod 'NotificationBannerSwift'
 pod 'MBProgressHUD'
 pod 'MonthYearPicker'
 pod 'Google-Mobile-Ads-SDK'
+pod 'BEMCheckBox'
 end

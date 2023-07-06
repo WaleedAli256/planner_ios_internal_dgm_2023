@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="img-bg-1" translatesAutoresizingMaskIntoConstraints="NO" id="uz8-yc-obo">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="img-new-bg" translatesAutoresizingMaskIntoConstraints="NO" id="uz8-yc-obo">
                                 <rect key="frame" x="34" y="69" width="346" height="542"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Quickly see your upcoming events, tasks,conference calls, weather, and more." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yGt-O9-v0r">
@@ -47,7 +47,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="img-bg-1" width="339.5" height="542"/>
+        <image name="img-new-bg" width="339.5" height="542"/>
         <namedColor name="cell-color-1">
             <color red="0.32899999618530273" green="0.52499997615814209" blue="0.91399997472763062" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

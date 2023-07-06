@@ -138,7 +138,8 @@ class AddCategoryViewController: BaseViewController {
                                 "description": self.txtViewDescrip.text!,
                                 "colorCode": self.hexColorCode,
                                 "image": self.imageIconNumber ?? 1,
-                                "taskCount": "0"] as [String : Any]
+                                "taskCount": "0",
+                                "isFavourite": false] as [String : Any]
                     ref.setData(dic) { err in
                         if let err = err {
                             Utilities.hide_ProgressHud(view: self.view)
