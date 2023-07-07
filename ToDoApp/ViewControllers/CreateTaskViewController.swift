@@ -262,7 +262,7 @@ class CreateTaskViewController: BaseViewController {
     
     @objc func btnDoneAction(_ sender: UIButton)
     {
-    
+
         if(self.selectionMode == "Date")
         {
             self.view.endEditing(true)
@@ -760,17 +760,11 @@ class CreateTaskViewController: BaseViewController {
         dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         dateFormatter.locale = Locale.current//(identifier: "fr")
         let selectedDateTime = dateFormatter.date(from: compDate)
-        
-        
-        
         let now = Date().localDate()
         let nowDatestr = dateFormatter.string(from: now)
         let nowDate = dateFormatter.date(from: nowDatestr)!
-        
-
         let birthday: Date = selectedDateTime!
         let calendar = Calendar.current
-
         let ageComponents = calendar.dateComponents([.minute], from: nowDate, to: birthday)
         let age = ageComponents.minute!
         print(age)

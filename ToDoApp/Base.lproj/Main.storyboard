@@ -4070,7 +4070,7 @@
                                         <subviews>
                                             <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fdI-C2-wyV" customClass="CustomButton" customModule="ToDoApp" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="97.666666666666671" height="30"/>
-                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <state key="normal" title="Recent">
                                                     <color key="titleColor" name="AccentColor"/>
@@ -4092,7 +4092,7 @@
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g8U-MQ-4Wr" customClass="CustomButton" customModule="ToDoApp" customModuleProvider="target">
                                                 <rect key="frame" x="97.666666666666686" y="0.0" width="97.333333333333314" height="30"/>
-                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <state key="normal" title="Upcoming">
                                                     <color key="titleColor" name="AccentColor"/>
@@ -4123,7 +4123,7 @@
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8jt-ow-QcR" customClass="CustomButton" customModule="ToDoApp" customModuleProvider="target">
                                                 <rect key="frame" x="195" y="0.0" width="97.666666666666686" height="30"/>
-                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <state key="normal" title="History">
                                                     <color key="titleColor" name="AccentColor"/>
@@ -4157,7 +4157,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="30" id="sXo-gE-vLD"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <state key="normal" title="This Month">
                                                     <color key="titleColor" name="AccentColor"/>
@@ -4460,6 +4460,8 @@
                         <outlet property="btnUpcoming" destination="g8U-MQ-4Wr" id="01m-s2-VGb"/>
                         <outlet property="colView" destination="Gtt-wG-dwt" id="t3I-PA-vtC"/>
                         <outlet property="colViewHeight" destination="Gz2-eZ-WpS" id="aeO-qp-Bga"/>
+                        <outlet property="lblAllTodayTasks" destination="b2K-lv-QcM" id="AOi-tg-G6P"/>
+                        <outlet property="lblName" destination="plH-Yp-cd2" id="g8m-ef-KvG"/>
                         <outlet property="lblTotalTaskNumbr" destination="bcG-cm-zIu" id="Ghs-Ob-6FE"/>
                         <outlet property="stackInnerView" destination="mqI-pU-7ru" id="RnE-7U-6Mv"/>
                         <outlet property="tblView" destination="i7Q-7m-Heu" id="Fw1-p4-f9A"/>

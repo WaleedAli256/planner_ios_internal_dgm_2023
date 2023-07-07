@@ -60,6 +60,7 @@ class CategoryViewController: BaseViewController {
     
     func getCategories (userId:String) {
         selectedInde = -1
+
         let db = Firestore.firestore()
         db.collection("category").whereField("userId", isEqualTo: userId)
             .getDocuments() { (querySnapshot, err) in

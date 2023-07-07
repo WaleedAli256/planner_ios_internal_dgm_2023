@@ -14,7 +14,7 @@ import StoreKit
 class HomeViewController2: UIViewController {
     
     @IBOutlet weak var lblName: UILabel!
-    @IBOutlet weak var lblTaskToday: UILabel!
+    @IBOutlet weak var lblAllTodayTasks: UILabel!
     @IBOutlet weak var btnRecent: CustomButton!
     @IBOutlet weak var btnUpcoming: CustomButton!
     @IBOutlet weak var btnHistory: CustomButton!
@@ -26,7 +26,7 @@ class HomeViewController2: UIViewController {
     @IBOutlet weak var lblTotalTaskNumbr: UILabel!
     @IBOutlet weak var bottomViewHeight: NSLayoutConstraint!
     @IBOutlet weak var colViewHeight: NSLayoutConstraint!
-    
+    var filterTodayTask:[Task] = []
     var isExpanded: Bool = false
     var heightIncreased: Bool = false
     var selectedIndex = -1
@@ -36,6 +36,7 @@ class HomeViewController2: UIViewController {
     var categories: [TaskCategory] = []
     var favCategories: [TaskCategory] = []
     var cateAgainstName = [customCategories]()
+    
     struct customCategories {
         var cateName = String()
         var array = [Task]()
@@ -46,7 +47,7 @@ class HomeViewController2: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+//        self.timeDueAndAgo("07/06/2023 5:50 PM")
         Utilities.setStringForKey(Constants.UserDefaults.currentUserExit, key: "NoUserExist")
         Utilities.setIsFirstTime(isFirstTime: false)
         Utilities.setStringForKey("false", key: "logout")
@@ -93,7 +94,7 @@ class HomeViewController2: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        
         if btnRecent.tag == 1 {
             self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "") { Status in
                 if Status {
@@ -111,6 +112,22 @@ class HomeViewController2: UIViewController {
         self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "") { Status in
             if Status {
 //                self.tblView.reloadData()
+                //only today task
+                self.filterTodayTask.removeAll()
+                self.filterTodayTask = self.allTasks
+                let myTodayDat = self.convertDateToStr("MM/dd/yyyy")
+                let todayTasks = self.filterTodayTask.filter { task in
+                    return myTodayDat == task.time!
+                }
+                let singleDigitNumber = todayTasks.count
+                let formattedNumber = String(format: "%02d", singleDigitNumber)
+                print(formattedNumber)
+                if formattedNumber.count == 0 {
+                    self.lblAllTodayTasks.text = "You’ve 0 Tasks Today"
+                } else {
+                    self.lblAllTodayTasks.text = "You’ve \(formattedNumber) Tasks Today"
+                }
+                
                 self.getCategories(userId: Utilities().getCurrentUser().id ?? "") { Status in
                     if Status {
                         self.cateAgainstName.removeAll()
@@ -119,7 +136,14 @@ class HomeViewController2: UIViewController {
                             let newObj = customCategories(cateName: temp.name ?? "", array: filteredArray)
                             self.cateAgainstName.append(newObj)
                         }
-                            self.lblTotalTaskNumbr.text = "01 / \(self.allTasks.count)"
+                        
+                        if formattedNumber.count == 0 {
+                            self.lblTotalTaskNumbr.text = "0/ \(self.allTasks.count)"
+                        } else {
+                            self.lblTotalTaskNumbr.text = "\(formattedNumber) / \(self.allTasks.count)"
+                        }
+                        
+                            
                             let cellHeight: CGFloat = 55.0
                             let numberOfCells = self.cateAgainstName.count
                             let numberOfRows = (numberOfCells + 1) / 2
@@ -272,6 +296,16 @@ class HomeViewController2: UIViewController {
         }
     }
     
+    func convertDateToStr(_ formateType: String) -> String {
+        
+        let currentDate = Date()
+        let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = formateType
+            dateFormatter.timeZone = TimeZone.current
+        let currentDateString = dateFormatter.string(from: currentDate)
+        return currentDateString
+    }
+    
     func convertDateToString(_ formateType: String) -> String {
         
         let currentDate = Date()
@@ -370,6 +404,83 @@ class HomeViewController2: UIViewController {
 //        self.colView.reloadData()
     }
     
+    func timeDueAndAgo(_ taskDate: String, completion: @escaping (_ status : Bool, _ str : String?) -> Void) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = TimeZone.current
+        
+        guard let myTaskDate = dateFormatter.date(from: taskDate) else {
+            print("Invalid taskDate format")
+            completion(false,nil)
+            return
+        }
+        
+        let now = Date()
+        
+        let calendar = Calendar.current
+        let ageComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute,.second], from: myTaskDate, to: now)
+        
+        var str = ""
+        
+        if let years = ageComponents.year, years > 0 {
+            str = "\(years) year\(years > 1 ? "s" : "") "
+        }else if let months = ageComponents.month, months > 0 {
+            str.append("\(months) month\(months > 1 ? "s" : "") ")
+        }else if let days = ageComponents.day, days > 0 {
+            str.append("\(days) day\(days > 1 ? "s" : "") ")
+        }else if let hours = ageComponents.hour, hours > 0 {
+            str.append("\(hours) hour\(hours > 1 ? "s" : "") ")
+        }else if let minutes = ageComponents.minute, minutes > 0 {
+            str.append("\(minutes) minute\(minutes > 1 ? "s" : "") ")
+        }
+        
+        if str == ""{
+//            completion(false,str)
+        }else{
+            if str == "Just Now"{
+                completion(true,str)
+                return
+            }else{
+                str = "\(str) Ago"
+                completion(true,str)
+                return
+            }
+            
+        }
+        
+        
+         str = ""
+        
+        if let years = ageComponents.year, years < 0 {
+            str = "\(-years) year\(-years > 1 ? "s" : "") "
+        }else if let months = ageComponents.month, months < 0 {
+            str.append("\(-months) month\(-months > 1 ? "s" : "") ")
+        }else if let days = ageComponents.day, days < 0 {
+            str.append("\(-days) day\(-days > 1 ? "s" : "") ")
+        }else if let hours = ageComponents.hour, hours < 0 {
+            str.append("\(-hours) hour\(-hours > 1 ? "s" : "") ")
+        }else if let minutes = ageComponents.minute, minutes < 0 {
+            str.append("\(-minutes) minute\(-minutes > 1 ? "s" : "") ")
+        }
+        
+        if str == ""{
+            completion(false,str)
+            return
+        }else{
+            if str == "Just Now"{
+                completion(true,str)
+                return
+            }else{
+                str = "Due in \(str)"
+                completion(true,str)
+                return
+            }
+            
+        }
+        
+    }
+
     func getTaskAgainstCatNam() {
         
         
@@ -405,7 +516,7 @@ extension HomeViewController2 : UICollectionViewDelegate,UICollectionViewDataSou
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let searchTaskVC = storyboard.instantiateViewController(identifier: "SeachTaskViewController") as! SeachTaskViewController
-        searchTaskVC.selectedCategory = self.categories[indexPath.row]
+        searchTaskVC.selectedCategory = self.favCategories[indexPath.row]
         searchTaskVC.fromViewController = "CategoryVC"
         searchTaskVC.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(searchTaskVC, animated: true)
@@ -500,8 +611,22 @@ extension HomeViewController2: UITableViewDelegate,UITableViewDataSource {
         }
         cell.lblCatName.text = taskObje.categoryName
         cell.lbltitle.text = taskObje.title
-        cell.lblTimeRange.text = (taskObje.startTime ?? "no time") + " - " + (taskObje.endTime ?? "no time")
-        cell.lblDueTime.text = taskObje.date
+        cell.lblTimeRange.text = (taskObje.date ?? "")
+        
+        if taskObje.endTime ?? "" != ""{
+            cell.lblTimeRange.text?.append(" - \(taskObje.endTime ?? "")")
+        }
+//        + " - " + (taskObje.endTime ?? "no time")
+        
+        
+//        cell.lblDueTime.text = timeDueAndAgo(taskObje.date ?? "")//taskObje.date
+        timeDueAndAgo(taskObje.date ?? "") { status, str in
+            if status{
+                cell.lblDueTime.text = str
+            }else{
+                cell.lblDueTime.text = ""
+            }
+        }
 //        self.labelAttributedString(cell.lblDueTime)
         cell.selectionStyle = .none
         return cell
@@ -577,7 +702,7 @@ class CustomButton: UIButton {
 }
 
 
-import UIKit
+//import UIKit
 
 //class BottomView: UIView {
 //
