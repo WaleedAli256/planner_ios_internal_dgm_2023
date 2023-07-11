@@ -15,6 +15,7 @@ class CategoryCollectionViewCell: UICollectionViewCell, UITableViewDelegate {
     static var addCatFavourit:((_ ischeck:Bool , _ cellInde: IndexPath) -> Void)?
     @IBOutlet weak var checkBox: BEMCheckBox!
     @IBOutlet weak var stackInnerView: UIView!
+    @IBOutlet weak var btnFavourit: UIButton!
     @IBOutlet weak var catImage: UIImageView!
     @IBOutlet weak var catName: UILabel!
     @IBOutlet weak var catDesc: UILabel!
@@ -23,7 +24,8 @@ class CategoryCollectionViewCell: UICollectionViewCell, UITableViewDelegate {
     @IBOutlet weak var btndropdown: UIButton!
     @IBOutlet weak var editBtn: UIButton!
     @IBOutlet weak var deleteBtn: UIButton!
-    @IBOutlet weak var heightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var imgFavourit: UIImageView!
+//    @IBOutlet weak var heightConstraint: NSLayoutConstraint!
     
     var actionIndex = 0
     var actionType = ""

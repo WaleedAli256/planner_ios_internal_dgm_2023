@@ -32,6 +32,8 @@
 			</array>
 		</dict>
 	</dict>
+	<key>UILaunchScreen</key>
+	<false/>
 	<key>com.apple.developer.applesignin</key>
 	<array>
 		<string>Default</string>

@@ -21,6 +21,7 @@ class HomeViewController2: UIViewController {
     @IBOutlet weak var btnThisMonth: CustomButton!
     @IBOutlet weak var colView: UICollectionView!
     @IBOutlet weak var stackInnerView: UIView!
+    @IBOutlet weak var bottomeInnerTopView: UIView!
     @IBOutlet weak var bottomView: UIView!
     @IBOutlet weak var tblView: UITableView!
     @IBOutlet weak var lblTotalTaskNumbr: UILabel!
@@ -37,6 +38,10 @@ class HomeViewController2: UIViewController {
     var favCategories: [TaskCategory] = []
     var cateAgainstName = [customCategories]()
     
+    var bottomViewMinHeight = 0.0
+    var bottomViewMaxHeight = 0.0
+    var changeVal = false
+    var myY = 0.0
     struct customCategories {
         var cateName = String()
         var array = [Task]()
@@ -70,34 +75,101 @@ class HomeViewController2: UIViewController {
     }
     
     @objc private func handlePan(_ gestureRecognizer: UIPanGestureRecognizer) {
+        self.bottomViewMaxHeight = (UIScreen.main.bounds.height - 125 - topsafearea)
         let translation = gestureRecognizer.translation(in: view)
-
+        
+        var newHeight = bottomViewHeight.constant
+        print("state \(gestureRecognizer.state)")
         switch gestureRecognizer.state {
         case .changed:
-            if translation.y < 0 && !isExpanded {
-                isExpanded = true
-                UIView.animate(withDuration: 1.0, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.2, options: .curveEaseInOut) {
-                    self.bottomViewHeight.constant = 600
-                    self.view.layoutIfNeeded()
+            print(translation.y)
+           
+            if translation.y < 0 && translation.y > -300{
+    //                if changeVal == false{
+    //                    changeVal = true
+    //                    myY = translation.y
+    //                }
+
+                    newHeight += -translation.y
+                    newHeight = newHeight + myY
+                    if ((newHeight) < bottomViewMaxHeight){
+                        bottomViewHeight.constant = newHeight
+                    }
+                    myY = translation.y
                 }
-            } else if translation.y > 0 && isExpanded {
-                isExpanded = false
-                UIView.animate(withDuration: 1.0, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.2, options: .curveEaseInOut) {
-                    self.bottomViewHeight.constant = 300
-                    self.view.layoutIfNeeded()
+                if translation.y > 0 {
+    //                if changeVal == false{
+    //                    changeVal = true
+    //                    myY = translation.y
+    //                }
+
+                    newHeight -= translation.y
+                    newHeight = newHeight + myY
+                    if ((newHeight) > bottomViewMinHeight){
+                        bottomViewHeight.constant = newHeight
+                    }
+                    myY = translation.y
                 }
+
+    //            if newHeight > 200{
+    //                //            print(newHeight)
+    //                //            newHeight = (newHeight)
+    //                bottomViewHeight.constant = newHeight
+    //            }
+                view.layoutIfNeeded()
+                break
+
+            case .ended , .cancelled :
+                 myY = 0.0
+                if translation.y < 0 && !isExpanded {
+                    isExpanded = true
+                    UIView.animate(withDuration: 1.0, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.2, options: .curveEaseInOut) {
+                        self.bottomViewHeight.constant = self.bottomViewMaxHeight
+                        self.view.layoutIfNeeded()
+                    }
+                } else if translation.y > 0 && isExpanded {
+                    isExpanded = false
+                    UIView.animate(withDuration: 1.0, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.2, options: .curveEaseInOut) {
+                        self.bottomViewHeight.constant = self.bottomViewMinHeight
+                        self.view.layoutIfNeeded()
+                    }
+                }
+                break
+            default:
+                break
             }
-        default:
-            break
         }
-    }
+
+
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+    
+        let now = Date()
+        let calendar = Calendar.current
+        let hour = calendar.component(.hour, from: now)
+
+        var greeting = ""
+
+        if hour < 12 {
+            greeting = "Good Morning"
+        } else if hour < 17 {
+            greeting = "Good Afternoon"
+        } else {
+            greeting = "Good Evening"
+        }
+        self.lblName.text = "\(greeting),\(Utilities().getCurrentUser().name ?? "")!"
         if btnRecent.tag == 1 {
             self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "") { Status in
                 if Status {
+                    let singleDigitNumber = self.allTasks.count
+                    let formattedNumber = String(format: "%02d", singleDigitNumber)
+                    print(formattedNumber)
+                    if formattedNumber.count == 0 {
+                        self.lblTotalTaskNumbr.text = "0/ \(self.allTasks.count)"
+                    } else {
+                        self.lblTotalTaskNumbr.text = "\(formattedNumber) / \(self.allTasks.count)"
+                    }
                     self.tblView.reloadData()
                 }
             }
@@ -122,12 +194,20 @@ class HomeViewController2: UIViewController {
                 let singleDigitNumber = todayTasks.count
                 let formattedNumber = String(format: "%02d", singleDigitNumber)
                 print(formattedNumber)
-                if formattedNumber.count == 0 {
+                if singleDigitNumber == 00 {
                     self.lblAllTodayTasks.text = "You’ve 0 Tasks Today"
                 } else {
                     self.lblAllTodayTasks.text = "You’ve \(formattedNumber) Tasks Today"
                 }
-                
+               
+//                if self.btnRecent.tag == 1 {
+//                    if formattedNumber.count == 0 {
+//                        self.lblTotalTaskNumbr.text = "0/ \(self.allTasks.count)"
+//                    } else {
+//                        self.lblTotalTaskNumbr.text = "\(formattedNumber) / \(self.allTasks.count)"
+//                    }
+//                }
+//
                 self.getCategories(userId: Utilities().getCurrentUser().id ?? "") { Status in
                     if Status {
                         self.cateAgainstName.removeAll()
@@ -136,19 +216,15 @@ class HomeViewController2: UIViewController {
                             let newObj = customCategories(cateName: temp.name ?? "", array: filteredArray)
                             self.cateAgainstName.append(newObj)
                         }
-                        
-                        if formattedNumber.count == 0 {
-                            self.lblTotalTaskNumbr.text = "0/ \(self.allTasks.count)"
-                        } else {
-                            self.lblTotalTaskNumbr.text = "\(formattedNumber) / \(self.allTasks.count)"
-                        }
-                        
                             
                             let cellHeight: CGFloat = 55.0
                             let numberOfCells = self.cateAgainstName.count
                             let numberOfRows = (numberOfCells + 1) / 2
                             let totalHeight = cellHeight * CGFloat(numberOfRows)
                             self.colViewHeight.constant = totalHeight + 20
+                            self.colViewHeight.constant = (totalHeight + 40)
+                            self.bottomViewMinHeight = UIScreen.main.bounds.height - (210 + totalHeight + 40)
+                            self.bottomViewHeight.constant = self.bottomViewMinHeight
                             self.colView.reloadData()
                     }
                 }
@@ -174,6 +250,14 @@ class HomeViewController2: UIViewController {
         self.btnThisMonth.tag = 0
         self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "") { Status in
             if Status {
+                let singleDigitNumber = self.allTasks.count
+                let formattedNumber = String(format: "%02d", singleDigitNumber)
+                print(formattedNumber)
+                if formattedNumber.count == 0 {
+                    self.lblTotalTaskNumbr.text = "0/ \(self.allTasks.count)"
+                } else {
+                    self.lblTotalTaskNumbr.text = "\(formattedNumber) / \(self.allTasks.count)"
+                }
                 self.tblView.reloadData()
             }
         }
@@ -220,6 +304,9 @@ class HomeViewController2: UIViewController {
                 print(currentWeekTasks.count)
                 self.allTasks.removeAll()
                 self.allTasks = currentWeekTasks
+                
+                self.numberformatter(currentWeekTasks)
+                
                 self.tblView.reloadData()
             }
         }
@@ -247,6 +334,7 @@ class HomeViewController2: UIViewController {
                 }
                 self.allTasks.removeAll()
                 self.allTasks = passedTasks
+                self.numberformatter(passedTasks)
                 self.tblView.reloadData()
             }
         }
@@ -291,8 +379,22 @@ class HomeViewController2: UIViewController {
                 print(currentWeekTasks.count)
                 self.allTasks.removeAll()
                 self.allTasks = currentWeekTasks
+                self.numberformatter(currentWeekTasks)
                 self.tblView.reloadData()
             }
+        }
+    }
+    
+    func numberformatter(_ taskArrayCount: [Task] ) {
+        
+        let singleDigitNumber = taskArrayCount.count
+        let formattedNumber = String(format: "%02d", singleDigitNumber)
+        print(formattedNumber)
+        
+        if taskArrayCount.count == 0 {
+            self.lblTotalTaskNumbr.text = "\(taskArrayCount.count)"
+        } else {
+            self.lblTotalTaskNumbr.text = "\(formattedNumber)"
         }
     }
     
@@ -328,7 +430,19 @@ class HomeViewController2: UIViewController {
         return currentDateString
     }
     
-    
+    func convertDateStrIntoTimeFormate(_ taskDate: String) -> String{
+        
+        let dateString = taskDate
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
+        if let date = dateFormatter.date(from: dateString) {
+            dateFormatter.dateFormat = "h:mm a"
+            let formattedTime = dateFormatter.string(from: date)
+            return formattedTime
+        } else {
+            return "Invalide TIme"
+        }
+    }
     
    
     
@@ -367,13 +481,45 @@ class HomeViewController2: UIViewController {
                     self.allTasks.removeAll()
                     for document in querySnapshot!.documents {
                         let dicCat = document.data()
-                        let objCat = Task.init(fromDictionary: dicCat)
+                        var objCat = Task.init(fromDictionary: dicCat)
+                        self.timeDueAndAgo(objCat.date ?? "") { status, str in
+                            if status{
+                                objCat.dueOrAgoTime = str
+                            }else{
+                                objCat.dueOrAgoTime = ""
+                            }
+                        }
                         self.allTasks.append(objCat)
+                    
                     }
+                    self.getSortTasksByDate(tasks: self.allTasks) { Status, sortedTasks in
+                    self.allTasks = sortedTasks!
+                }
                     completion(true)
                    
                 }
             }
+    }
+    
+    func getSortTasksByDate(tasks: [Task], completion: @escaping(_ Status: Bool,_ sortedTasks : [Task]?) -> Void) {
+        let sortedTasks = tasks.sorted { (task1, task2) -> Bool in
+            guard let date1 = task1.date, let date2 = task2.date else {
+                completion(false,nil)
+                return false
+            }
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MM/dd/yyyy h:mm a" // Adjust the date format according to your needs
+            
+            if let parsedDate1 = dateFormatter.date(from: date1), let parsedDate2 = dateFormatter.date(from: date2) {
+                return parsedDate1 > parsedDate2
+            }
+            completion(false,nil)
+            return false
+        }
+        
+        completion(true,sortedTasks)
+        return
     }
     
     func getCategories (userId:String, completion: @escaping(_ Status: Bool) -> Void) {
@@ -395,6 +541,8 @@ class HomeViewController2: UIViewController {
                     completion(true)
                 }
             }
+        
+    
         
 //        for temp in self.categories{
 //            let filteredArray = self.allTasks.filter({$0.categoryName == temp.name })
@@ -433,6 +581,8 @@ class HomeViewController2: UIViewController {
             str.append("\(hours) hour\(hours > 1 ? "s" : "") ")
         }else if let minutes = ageComponents.minute, minutes > 0 {
             str.append("\(minutes) minute\(minutes > 1 ? "s" : "") ")
+        }else if let seconds = ageComponents.second, seconds > 0 {
+            str.append("\(seconds) second\(seconds > 1 ? "s" : "") ")
         }
         
         if str == ""{
@@ -449,7 +599,6 @@ class HomeViewController2: UIViewController {
             
         }
         
-        
          str = ""
         
         if let years = ageComponents.year, years < 0 {
@@ -462,10 +611,14 @@ class HomeViewController2: UIViewController {
             str.append("\(-hours) hour\(-hours > 1 ? "s" : "") ")
         }else if let minutes = ageComponents.minute, minutes < 0 {
             str.append("\(-minutes) minute\(-minutes > 1 ? "s" : "") ")
+        }else if let seconds = ageComponents.second, seconds < 0 {
+            str.append("\(-seconds) minute\(-seconds > 1 ? "s" : "") ")
+        }else if let second = ageComponents.second, second < 0 {
+            str.append("\(-second) second\(-second > 1 ? "s" : "") ")
         }
         
         if str == ""{
-            completion(false,str)
+            completion(true,"Just Now")
             return
         }else{
             if str == "Just Now"{
@@ -480,11 +633,30 @@ class HomeViewController2: UIViewController {
         }
         
     }
+    
+    func deleteTaskAgainstId(taskId:String,completion: @escaping (_ status : Bool) -> Void){
+        let db = Firestore.firestore()
+       var taskIds = [String]()
+        db.collection("tasks").whereField("id", isEqualTo: taskId).getDocuments {(querySnapshot , err) in
+            if let err = err {
+                print("Error removing document: \(err)")
+                completion(false)
+            } else {
+                guard let documents = querySnapshot?.documents else { return }
+                       for document in documents {
+                           taskIds.append(document.documentID)
+                           document.reference.delete()
+                }
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: taskIds)
+//                    self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
+                print("Document successfully removed!")
+                completion(true)
 
-    func getTaskAgainstCatNam() {
-        
-        
+            }
+        }
+
     }
+
 }
 
 extension HomeViewController2 : UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -544,11 +716,17 @@ extension HomeViewController2: UITableViewDelegate,UITableViewDataSource {
             let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to delete this task?", preferredStyle: .alert)
             let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.destructive) {
                 UIAlertAction in
-//                self.deleteTaskAgainstId(taskId: self.filterSearchTasks[indexPath.row].id!) { status in
-//                  if status {
+                self.deleteTaskAgainstId(taskId: self.allTasks[indexPath.row].id!) { status in
+                  if status {
+//                      self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "") { Status in
+//                          if Status {
+//                              self.tblView.reloadData()
+//                              self.colView.reloadData()
+//                          }
+//                      }
 //                      self.getTaskAgaintCategory()
-//                  }
-//              }
+                  }
+              }
         }
           let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
                 UIAlertAction in
@@ -611,22 +789,25 @@ extension HomeViewController2: UITableViewDelegate,UITableViewDataSource {
         }
         cell.lblCatName.text = taskObje.categoryName
         cell.lbltitle.text = taskObje.title
-        cell.lblTimeRange.text = (taskObje.date ?? "")
+        
+//        let dateString = taskObje.date
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
+//        if let date = dateFormatter.date(from: dateString!) {
+//            dateFormatter.dateFormat = "h:mm a"
+//            let formattedTime = dateFormatter.string(from: date)
+//            cell.lblTimeRange.text = (formattedTime ?? "")
+//        } else {
+//            print("Invalid date string")
+//        }
+        let formatedDateIs = self.convertDateStrIntoTimeFormate(taskObje.date!)
+        cell.lblTimeRange.text = formatedDateIs
         
         if taskObje.endTime ?? "" != ""{
             cell.lblTimeRange.text?.append(" - \(taskObje.endTime ?? "")")
         }
-//        + " - " + (taskObje.endTime ?? "no time")
+        cell.lblDueTime.text = taskObje.dueOrAgoTime
         
-        
-//        cell.lblDueTime.text = timeDueAndAgo(taskObje.date ?? "")//taskObje.date
-        timeDueAndAgo(taskObje.date ?? "") { status, str in
-            if status{
-                cell.lblDueTime.text = str
-            }else{
-                cell.lblDueTime.text = ""
-            }
-        }
 //        self.labelAttributedString(cell.lblDueTime)
         cell.selectionStyle = .none
         return cell

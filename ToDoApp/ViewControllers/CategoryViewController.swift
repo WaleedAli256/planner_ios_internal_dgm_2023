@@ -10,10 +10,12 @@ import Firebase
 import FirebaseFirestore
 import BEMCheckBox
 var catFavouritCount = 0
+
 class CategoryViewController: BaseViewController {
     
     @IBOutlet weak var profilPic: UIImageView!
     @IBOutlet weak var catColView: UICollectionView!
+    
     
     var categories: [TaskCategory] = []
     var cellRow: Int!
@@ -22,15 +24,17 @@ class CategoryViewController: BaseViewController {
     var selectedIndex = -1
     var selectedInde: Int = -1
     var favCategories: [TaskCategory] = []
-    var updatedCellHeight: CGFloat = 0.0
-    var cellHeight: CGFloat = 148.0
-    var checkBoxHide: Bool = true
+//    var updatedCellHeight: CGFloat = 0.0
+//    var cellHeight: CGFloat = 148.0
+    var checkBoxHide = false
+    var colCellColorArray = ["cat-color-1","cat-color-2","cat-color-3","cat-color-4","cat-color-5","cat-color-6"]
+    
     override func viewDidLoad() { 
         super.viewDidLoad()
         
         
-        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
-                catColView.addGestureRecognizer(longPressGesture)
+//        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+//                catColView.addGestureRecognizer(longPressGesture)
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
         profilPic.addGestureRecognizer(tapGesture)
@@ -47,7 +51,7 @@ class CategoryViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        checkBoxHide = true
+//        checkBoxHide = true
         self.navigationController?.navigationBar.isHidden = true
         self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
         self.setData()
@@ -171,44 +175,83 @@ class CategoryViewController: BaseViewController {
         
     }
     
-    @IBAction func checkBoxAction(_ sender: BEMCheckBox) {
+    @IBAction func favouritAction(_ sender: UIButton) {
         
-        if catFavouritCount >= 6 && sender.on == true {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                self.showAlert(title: "Limit Exceeded", message: "You can only add up to six categories.")
-            }
-           
-        } else {
-            var category = self.categories[sender.tag]
-            if sender.on {
-                category.isFavourite = true
-                self.catAddToFavouritFirebase(category.isFavourite!, category.id!) { Status in
-                    if Status {
-                    catFavouritCount += 1
-                    self.showAlert(title: "Category Added", message: "The category has been added to your favorites.")
-                        
-                    }
-                }
-                
-            } else {
-                category.isFavourite = false
-                self.catAddToFavouritFirebase(category.isFavourite!, category.id!) { Status in
-                    if Status {
-                        catFavouritCount -= 1
-                        self.showAlert(title: "Category Removed", message: "The category has been removed from your favorites.")
-                        
-                    }
-                }
-                
-            }
-            
-          
-        }
-       
-        self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
-        self.catColView.reloadData()
 
-    }
+            var category = self.categories[sender.tag]
+            if category.isFavourite == true {
+                catFavouritCount -= 1
+                self.categories[sender.tag].isFavourite = false
+                self.catColView.reloadData()
+                self.catAddToFavouritFirebase(false, category.id!) { Status in
+                    if Status {
+                    self.showAlert(title: "Category Removed", message: "The category has been removed from your favorites.")
+
+                    }
+                }
+            }else{
+                if catFavouritCount >= 6 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                        self.showAlert(title: "Limit Exceeded", message: "You can only add up to six categories.")
+                    }
+
+                }else{
+                    catFavouritCount += 1
+                    self.categories[sender.tag].isFavourite = true
+                    self.catColView.reloadData()
+                    self.catAddToFavouritFirebase(true, category.id!) { Status in
+                        if Status {
+                        self.showAlert(title: "Category Added", message: "The category has been added to your favorites.")
+
+                        }
+                    }
+                    
+                    
+                }
+                
+            }
+        }
+      
+    
+    
+//    @IBAction func checkBoxAction(_ sender: BEMCheckBox) {
+//
+//        if catFavouritCount >= 6 && sender.on == true {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+//                self.showAlert(title: "Limit Exceeded", message: "You can only add up to six categories.")
+//            }
+//
+//        } else {
+//            var category = self.categories[sender.tag]
+//            if sender.on {
+//                category.isFavourite = true
+//                self.catAddToFavouritFirebase(category.isFavourite!, category.id!) { Status in
+//                    if Status {
+//                    catFavouritCount += 1
+//                    self.showAlert(title: "Category Added", message: "The category has been added to your favorites.")
+//
+//                    }
+//                }
+//
+//            } else {
+//                category.isFavourite = false
+//                self.catAddToFavouritFirebase(category.isFavourite!, category.id!) { Status in
+//                    if Status {
+//                        catFavouritCount -= 1
+//                        self.showAlert(title: "Category Removed", message: "The category has been removed from your favorites.")
+//
+//                    }
+//                }
+//
+//            }
+//
+//
+//        }
+//
+//        self.getCategories(userId: Utilities().getCurrentUser().id ?? "")
+//        self.catColView.reloadData()
+//
+//    }
     
     func catAddToFavouritFirebase(_ isFavourit: Bool, _ catId: String,completion: @escaping(_ Status: Bool) -> Void) {
         
@@ -315,20 +358,21 @@ extension CategoryViewController: UICollectionViewDelegate,UICollectionViewDataS
         }
         let cat = self.categories[indexPath.row]
         cell.btndropdown.tag = indexPath.row
-        cell.checkBox.tag = indexPath.row
+        cell.btnFavourit.tag = indexPath.row
+//        cell.checkBox.tag = indexPath.row
         if selectedInde == indexPath.row {
             cell.popupView.isHidden = false
         } else {
             cell.popupView.isHidden = true
         }
 //        if checkBoxHide == true {
-        cell.checkBox.isHidden = checkBoxHide
-        cell.stackInnerView.isHidden = checkBoxHide
-        if cat.isFavourite == true {
-            cell.checkBox.on = true
-        } else {
-            cell.checkBox.on = false
-        }
+//        cell.checkBox.isHidden = checkBoxHide
+//        cell.stackInnerView.isHidden = checkBoxHide
+//        if cat.isFavourite == true {
+//            cell.checkBox.on = true
+//        } else {
+//            cell.checkBox.on = false
+//        }
 //        if cell.checkBox.isHidden == true {
 //            cellHeight = 163
 //        } else {
@@ -337,13 +381,21 @@ extension CategoryViewController: UICollectionViewDelegate,UICollectionViewDataS
 //        }
         
         // Hide the checkbox initially
-        
+        if (cat.isFavourite ?? false){
+            cell.imgFavourit.image = UIImage(named: "icon-selected-star")
+        }else{
+            cell.imgFavourit.image = UIImage(named: "icon-star")
+        }
        
-        cell.checkBox.boxType = .square
+//        cell.checkBox.boxType = .square
         cell.delegate = self
         cell.deleteBtn.tag = indexPath.row
         cell.editBtn.tag = indexPath.row
-        cell.catBGView.backgroundColor = UIColor(hexString: cat.colorCode ?? "")
+        
+        let colorIndex = indexPath.row % colCellColorArray.count
+        cell.catBGView.backgroundColor = UIColor(named: colCellColorArray[colorIndex])
+        
+//        cell.catBGView.backgroundColor = UIColor(hexString: cat.colorCode ?? "")
         cell.catDesc.text = cat.description ?? ""
         cell.catName.text = cat.name ?? ""
 //        cell.catImage.image = UIImage(named: cat.image ?? "")
@@ -351,7 +403,7 @@ extension CategoryViewController: UICollectionViewDelegate,UICollectionViewDataS
         if num < 0{
             num = num * -1
         }
-        cell.catImage.image = UIImage(named: "cat-icon-\(num)")?.withTintColor(.white)
+        cell.catImage.image = UIImage(named: "cat-icon-\(num)")?.withTintColor(UIColor(named: "TextColor")!)
         return cell
     }
     
@@ -383,17 +435,17 @@ extension CategoryViewController: UICollectionViewDelegate,UICollectionViewDataS
         
         let frameCV = catColView.frame//размер collectionView
         let cellWidth = (frameCV.width / CGFloat(2)) - 10 // countOfCells == 2
-
-        if self.checkBoxHide == false {
-            self.cellHeight = 190
-        } else {
-            self.cellHeight = 150
-        }
+        let cellHeight = cellWidth + 35
+//        if self.checkBoxHide == false {
+//            self.cellHeight = 210
+//        } else {
+//            self.cellHeight = 180
+//        }
         
-        if cellWidth < 190 {
+        if cellWidth < 210 {
             return CGSize(width: cellWidth, height: cellHeight)
         }else{
-            return CGSize(width: 190, height: 190)
+            return CGSize(width: 210, height: 210)
         }
     }
 }

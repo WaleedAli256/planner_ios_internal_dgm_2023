@@ -45,8 +45,8 @@ class AddCategoryViewController: BaseViewController {
         self.txtViewDescrip.autocorrectionType = .no
         self.txtCatName.autocorrectionType = .no
         
-        self.colview.delegate = self
-        self.colview.dataSource = self
+//        self.colview.delegate = self
+//        self.colview.dataSource = self
         self.txtCatName.delegate = self
         self.txtViewDescrip.delegate = self
         self.txtViewDescrip.textContainer.lineFragmentPadding = 15
@@ -76,7 +76,7 @@ class AddCategoryViewController: BaseViewController {
         self.txtCatName.text = categoryObj.name
         self.txtViewDescrip.text = categoryObj.description
         self.imageIconNumber = categoryObj.image
-        self.hexColorCode = categoryObj.colorCode!
+//        self.hexColorCode = categoryObj.colorCode!
     }
     
     private func validate() -> Bool
@@ -87,13 +87,13 @@ class AddCategoryViewController: BaseViewController {
             return false
         }
         
-        if fromEditOrUpdate == "Create Category" {
-            if(self.hexColorCode == "")
-            {
-                self.showAlert(title: "Alert", message:"Please select the color")
-                return false
-            }
-        }
+//        if fromEditOrUpdate == "Create Category" {
+//            if(self.hexColorCode == "")
+//            {
+//                self.showAlert(title: "Alert", message:"Please select the color")
+//                return false
+//            }
+//        }
         
         if(self.txtCatName.text!.count == 0)
         {
@@ -224,50 +224,50 @@ class AddCategoryViewController: BaseViewController {
 }
 
 
-extension AddCategoryViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+//extension AddCategoryViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.colorsArray.count
-    }
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        return self.colorsArray.count
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//
+//        guard let cell = colview.dequeueReusableCell(withReuseIdentifier: "ColorCollectionViewCell", for: indexPath) as? ColorCollectionViewCell else {
+//            return UICollectionViewCell()
+//        }
+//
+//        if selectedIndex == indexPath.row {
+//            self.sizeOfCellChange = true
+//        }else{
+//            self.sizeOfCellChange = false
+//        }
+//        cell.colorView.backgroundColor = UIColor(hexString: self.colorsArray[indexPath.row])
+//        return cell
+//    }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        guard let cell = colview.dequeueReusableCell(withReuseIdentifier: "ColorCollectionViewCell", for: indexPath) as? ColorCollectionViewCell else {
-            return UICollectionViewCell()
-        }
-        
-        if selectedIndex == indexPath.row {
-            self.sizeOfCellChange = true
-        }else{
-            self.sizeOfCellChange = false
-        }
-        cell.colorView.backgroundColor = UIColor(hexString: self.colorsArray[indexPath.row])
-        return cell
-    }
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        self.hexColorCode = self.colorsArray[indexPath.row]
+//        if selectedIndex == indexPath.row{
+//            selectedIndex = -1
+//        }else{
+//            self.selectedIndex = indexPath.row
+//        }
+//
+//        self.colview.reloadData()
+//    }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.hexColorCode = self.colorsArray[indexPath.row]
-        if selectedIndex == indexPath.row{
-            selectedIndex = -1
-        }else{
-            self.selectedIndex = indexPath.row
-        }
-        
-        self.colview.reloadData()
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        let defaultSize = CGSize(width: 30, height: 30)
-        if indexPath.row ==  self.selectedIndex {
-            return CGSize(width: 35, height: 35)
-            
-        }
-        return defaultSize
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//
+//        let defaultSize = CGSize(width: 30, height: 30)
+//        if indexPath.row ==  self.selectedIndex {
+//            return CGSize(width: 35, height: 35)
+//
+//        }
+//        return defaultSize
+//    }
 
     
-}
+//}
 
 extension AddCategoryViewController: UITextFieldDelegate {
     

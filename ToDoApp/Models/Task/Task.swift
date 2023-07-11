@@ -24,6 +24,7 @@ struct Task: Codable{
     var repetition: String?
     var colorCode: String?
     var priorityColorCode: String?
+    var dueOrAgoTime: String?
 
 
     
@@ -55,6 +56,8 @@ struct Task: Codable{
         preReminder = dictionary["preReminder"] as? String
         repetition = dictionary["repetition"] as? String
         colorCode = dictionary["colorCode"] as? String
+        dueOrAgoTime = dictionary["dueOrAgoTime"] as? String
+        
     }
     
     func toDictionary() -> [String:Any]
@@ -105,6 +108,10 @@ struct Task: Codable{
         if colorCode != nil{
             dictionary["colorCode"] = colorCode
         }
+        if dueOrAgoTime != nil{
+            dictionary["dueOrAgoTime"] = dueOrAgoTime
+        }
+        
         return dictionary
     }
 }
