@@ -372,6 +372,10 @@ extension SettingViewController: UITableViewDelegate,UITableViewDataSource {
 //            self.requestAppReview()
             SKStoreReviewController.requestReview()
             
+//            let isDarkMode = traitCollection.userInterfaceStyle == .dark
+//                let newInterfaceStyle: UIUserInterfaceStyle = isDarkMode ? .light : .dark
+//                UIApplication.shared.keyWindow?.overrideUserInterfaceStyle = newInterfaceStyle
+            
         } else if indexPath.row == 1 {
             self.shareMyApp()
         } else if indexPath.row == 2 {

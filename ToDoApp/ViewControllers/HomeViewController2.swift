@@ -49,7 +49,7 @@ class HomeViewController2: UIViewController {
     
     var colCellColorArray = ["cat-color-1","cat-color-2","cat-color-3","cat-color-4","cat-color-5","cat-color-6"]
     var tbleCellColors = ["task-cell-color-1","task-cell-color-2","task-cell-color-3"]
-    
+    var changeHeight = true
     override func viewDidLoad() {
         super.viewDidLoad()
 //        self.timeDueAndAgo("07/06/2023 5:50 PM")
@@ -65,10 +65,12 @@ class HomeViewController2: UIViewController {
 //       \
         
 //        bottomView.addGestureRecognizer(gestureRecognizer)
-        bottomView.addGestureRecognizer(panGestureRecognizer)
+        bottomeInnerTopView.addGestureRecognizer(panGestureRecognizer)
         self.colView.dataSource = self
         self.colView.delegate = self
+          
         self.bottomViewHeight.constant =  400
+
         self.tapButtons(btnRecent, [btnHistory,btnUpcoming,btnThisMonth])
         
         
@@ -224,7 +226,10 @@ class HomeViewController2: UIViewController {
                             self.colViewHeight.constant = totalHeight + 20
                             self.colViewHeight.constant = (totalHeight + 40)
                             self.bottomViewMinHeight = UIScreen.main.bounds.height - (210 + totalHeight + 40)
+                        if self.changeHeight{
+                            self.changeHeight = false
                             self.bottomViewHeight.constant = self.bottomViewMinHeight
+                        }
                             self.colView.reloadData()
                     }
                 }
@@ -234,7 +239,9 @@ class HomeViewController2: UIViewController {
         }
        
     }
-    
+    override func viewWillDisappear(_ animated: Bool) {
+        changeHeight = true
+    }
     @IBAction func searchBtnAction(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let searchTaskVC = storyboard.instantiateViewController(identifier: "SeachTaskViewController") as! SeachTaskViewController
@@ -709,41 +716,46 @@ extension HomeViewController2: UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.allTasks.count
     }
-    
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: "") { (action, view, completionHandler) in
-            // Handle delete action here
-            let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to delete this task?", preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.destructive) {
-                UIAlertAction in
-                self.deleteTaskAgainstId(taskId: self.allTasks[indexPath.row].id!) { status in
-                  if status {
-//                      self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "") { Status in
-//                          if Status {
-//                              self.tblView.reloadData()
-//                              self.colView.reloadData()
-//                          }
-//                      }
-//                      self.getTaskAgaintCategory()
-                  }
-              }
-        }
-          let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-                UIAlertAction in
-        }
-            // Add the actions
-            alertController.addAction(okAction)
-            alertController.addAction(cancelAction)
-
-          self.present(alertController, animated: true, completion: nil)
-            completionHandler(true)
-        }
-        
-        deleteAction.backgroundColor = .white
-        deleteAction.image = UIImage(named: "delete")
-        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
-        return configuration
-    }
+    // swipe to delete home table view cell--
+//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+//        let deleteAction = UIContextualAction(style: .destructive, title: "") { (action, view, completionHandler) in
+//            // Handle delete action here
+//            let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to delete this task?", preferredStyle: .alert)
+//            let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.destructive) {
+//                UIAlertAction in
+//                self.deleteTaskAgainstId(taskId: self.allTasks[indexPath.row].id!) { status in
+//                  if status {
+//                      self.viewWillAppear(true)
+////                      self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "") { Status in
+////                          if Status {
+////                              self.tblView.reloadData()
+////                              self.getCategories(userId: Utilities().getCurrentUser().id ?? "") { Status in
+////                                  if Status {
+////                                      self.colView.reloadData()
+////                                  }
+////                              }
+////                          }
+////                      }
+////                      self.getTaskAgaintCategory()
+//                  }
+//              }
+//        }
+//          let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+//                UIAlertAction in
+//        }
+//            // Add the actions
+//            alertController.addAction(okAction)
+//            alertController.addAction(cancelAction)
+//
+//          self.present(alertController, animated: true, completion: nil)
+//            completionHandler(true)
+//        }
+//
+//        deleteAction.backgroundColor = UIColor(named: "bottom-bg-color")
+//        deleteAction.image = UIImage(named: "delete")
+//        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+//        return configuration
+//    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         

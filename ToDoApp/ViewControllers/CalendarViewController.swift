@@ -277,8 +277,8 @@ extension CalendarViewController : UITableViewDelegate,UITableViewDataSource{
 
             self.present(alertController, animated: true, completion: nil)
         }
-        deleteAction.backgroundColor = UIColor(named: "bg-color")
-        deleteAction.image = UIImage(named: "icon-delete")
+        deleteAction.backgroundColor = UIColor(named: "view-color")
+        deleteAction.image = UIImage(named: "delete")
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
         return configuration
     }
