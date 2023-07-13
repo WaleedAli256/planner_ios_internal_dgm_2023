@@ -9,7 +9,7 @@ import UIKit
 import GoogleMobileAds
 import StoreKit
 import AdSupport
-import AppTrackingTransparency
+//import AppTrackingTransparency
 
 class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
     
@@ -27,14 +27,7 @@ class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if #available(iOS 14, *) {
-            self.requestTrackingPermission()
-        } else {
-            // Fallback on earlier versions
-        }
-        
-    
+
         if #available(iOS 15.0, *) {
             let appearance = UITabBarAppearance()
             appearance.backgroundColor = .systemBackground
@@ -66,29 +59,6 @@ class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
 
     }
     
-   
-
-    @available(iOS 14, *)
-    func requestTrackingPermission() {
-        if #available(iOS 14, *) {
-            ATTrackingManager.requestTrackingAuthorization { status in
-                // Handle the user's response to the tracking authorization request
-                if status == .authorized {
-                    // User granted permission, proceed to get the Advertising Identifier
-                    if let advertisingId = self.getAdvertisingIdentifier() {
-                        print("Advertising Identifier: \(advertisingId)")
-                    } else {
-                        print("Unable to retrieve Advertising Identifier.")
-                    }
-                } else {
-                    // User denied permission, handle accordingly
-                    print("User denied permission for tracking.")
-                }
-            }
-        } else {
-            // Fallback on earlier versions
-        }
-    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
