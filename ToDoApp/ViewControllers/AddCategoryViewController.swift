@@ -19,6 +19,7 @@ class AddCategoryViewController: BaseViewController {
     @IBOutlet weak var btnCrUpCat: UIButton!
     @IBOutlet weak var txtCatName: UITextField!
     @IBOutlet weak var txtViewDescrip: UITextView!
+    var allCategories = [TaskCategory]()
     var hexColorCode = ""
     var imageIconNumber: Int?
     var fromEditOrUpdate: String!
@@ -105,6 +106,14 @@ class AddCategoryViewController: BaseViewController {
             self.showAlert(title: "Alert", message:"Please enter category description")
             return false
         }
+        if allCategories.count > 0{
+            let filteredFavCat = self.allCategories.filter({($0.name ?? "").lowercased() == txtCatName.text!.lowercased() })
+            if filteredFavCat.count > 0{
+                self.showAlert(title: "Alert", message:"This Category name already exists, please choose another one")
+                return false
+            }
+        }
+        
         return true
     }
     @IBAction func CreateCateGoryActon(_ sender: UIButton) {
@@ -360,7 +369,7 @@ extension AddCategoryViewController: CategoryIconViewControllerDelegate {
         if self.fromEditOrUpdate == "Update Category" {
             categoryObj.image = iconName
         } else {
-            self.lblUploadIcon.text = "Icon uploaded"
+            self.lblUploadIcon.text = "Icon Selected"
             self.imageIconNumber = iconName
             self.uploadIcon.image = UIImage(named: "cat-icon-\(iconName)")?.withTintColor(.white)
         }

@@ -113,6 +113,7 @@ class CategoryViewController: BaseViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let addCatVC = storyboard.instantiateViewController(identifier: "AddCategoryViewController") as! AddCategoryViewController
         addCatVC.fromEditOrUpdate = "Create Category"
+        addCatVC.allCategories = self.categories
         self.navigationController?.pushViewController(addCatVC, animated: true)
     }
     
@@ -288,7 +289,7 @@ class CategoryViewController: BaseViewController {
     }
     
     func setData(){
-        if Utilities.getIntForKey("isAnonmusUser") == "0" {
+        if Utilities().getCurrentUser().userType == "0" {
             
             // Create a URL object for the profile picture
             let imgUrl = Utilities().getCurrentUser().image_url ?? ""

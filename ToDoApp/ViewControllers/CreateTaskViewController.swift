@@ -44,6 +44,8 @@ class CreateTaskViewController: BaseViewController {
     private var selectionMode = ""
     private var selectedTime = ""
     private var date = ""
+    var startTime:Date?
+    var endTime:Date?
     private var priortyValue : String?
     fileprivate let maxLen = 250
     fileprivate let maxLen2 = 50
@@ -180,7 +182,7 @@ class CreateTaskViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+//        self.tabBarController?.tabBar.backgroundColor = .red
         if self.selectedCategry != nil || self.fromViewController == "HomeVC" || self.fromViewController == "Add Task View"{
             self.topTitleView.isHidden = true
             self.setNavBar("Create New Task")
@@ -279,7 +281,9 @@ class CreateTaskViewController: BaseViewController {
             formatter.dateFormat = "h:mm a"
 //            self.txtTitle.text = (formatter.string(from: self.datePicker.date))
 //            self.timeSelected = true
+            
             self.endTimeTxtField.text =  formatter.string(from: self.datePicker.date)
+            self.endTime = formatter.date(from: self.endTimeTxtField.text!)
         }
         if(self.selectionMode == "Time")
         {
@@ -290,6 +294,7 @@ class CreateTaskViewController: BaseViewController {
 //            self.timeSelected = true
             self.selectedTime = formatter.string(from: self.datePicker.date)
             self.timeTxtField.text =  self.selectedTime
+            self.startTime = formatter.date(from:  self.timeTxtField.text!)
         } else {
             if self.catFieldSelect {
                 if self.CarColorCode == "" {
@@ -309,6 +314,20 @@ class CreateTaskViewController: BaseViewController {
             self.self.view.endEditing(true)
         }
 //        self.imgBlur.isHidden = true
+    }
+    
+    func isEndTimeValid(startTime: Date, endTime: Date) -> Bool {
+        let calendar = Calendar.current
+
+        // Compare the start and end times
+        let comparisonResult = calendar.compare(startTime, to: endTime, toGranularity: .minute)
+
+        // Check if the end time is greater than the start time
+        if comparisonResult == .orderedAscending {
+            return true
+        } else {
+            return false
+        }
     }
     
     @IBAction func priortyAction(_ sender: UIButton) {
@@ -368,6 +387,7 @@ class CreateTaskViewController: BaseViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let addCatVC = storyboard.instantiateViewController(identifier: "AddCategoryViewController") as! AddCategoryViewController
 //        searchTaskVC.mySelectedCategory = categoryName
+        addCatVC.allCategories = categories
         addCatVC.fromEditOrUpdate = "Create Category"
 //        addCatVC.fromViewController = "searchTaskViewController"
         self.navigationController?.pushViewController(addCatVC, animated: true)
@@ -380,28 +400,34 @@ class CreateTaskViewController: BaseViewController {
     {
         if(self.titleTxtField.text?.count ?? 0 < 1 || self.titleTxtField.text == "Title")
         {
-            self.showAlert(title: "Error", message: "Please enter title")
+            self.showAlert(title: "Alert", message: "Please enter title")
             return false
         }
         if(self.detailTxtView.text?.count ?? 0 < 1 || self.detailTxtView.text == "Description")
         {
-            self.showAlert(title: "Error", message:"Please enter description")
+            self.showAlert(title: "Alert", message:"Please enter description")
             return false
         }
         if(self.catTxtField.text?.count ?? 0 < 1)
         {
-            self.showAlert(title: "Error", message:"Please enter Category")
+            self.showAlert(title: "Alert", message:"Please enter Category")
             return false
         }
         if(dateTxtField.text!.count < 1)
         {
-            self.showAlert(title: "Error", message:"Please select date")
+            self.showAlert(title: "Alert", message:"Please select date")
             return false
         }
         
         if(timeTxtField.text!.count < 1)
         {
-            self.showAlert(title: "Error", message:"Please select time")
+            self.showAlert(title: "Alert", message:"Please select time")
+            return false
+        }
+        
+        let valideTime = self.isEndTimeValid(startTime: self.startTime!, endTime: self.endTime!)
+        if valideTime == false {
+            self.showAlert(title: "Alert", message:"End time must be greater than your choose time")
             return false
         }
         

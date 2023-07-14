@@ -27,6 +27,7 @@ class HomeViewController2: UIViewController {
     @IBOutlet weak var lblTotalTaskNumbr: UILabel!
     @IBOutlet weak var bottomViewHeight: NSLayoutConstraint!
     @IBOutlet weak var colViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var myStackView: UIStackView!
     var filterTodayTask:[Task] = []
     var isExpanded: Bool = false
     var heightIncreased: Bool = false
@@ -70,8 +71,6 @@ class HomeViewController2: UIViewController {
         self.colView.delegate = self
           
         self.bottomViewHeight.constant =  400
-
-        self.tapButtons(btnRecent, [btnHistory,btnUpcoming,btnThisMonth])
         
         
     }
@@ -141,12 +140,20 @@ class HomeViewController2: UIViewController {
                 break
             }
         }
-
-
+var shouldSetButtons = true
+    override func viewDidAppear(_ animated: Bool) {
+        if shouldSetButtons{
+        self.tapButtons(btnRecent, [btnHistory,btnUpcoming,btnThisMonth])
+            shouldSetButtons = false
+        }
+//        self.myStackView.reloadInputViews()
+//        self.myStackView.sizeToFit()
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-    
+//        self.myStackView.reloadInputViews()
+//        self.myStackView.sizeToFit()
         let now = Date()
         let calendar = Calendar.current
         let hour = calendar.component(.hour, from: now)
@@ -165,13 +172,26 @@ class HomeViewController2: UIViewController {
             self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "") { Status in
                 if Status {
                     let singleDigitNumber = self.allTasks.count
-                    let formattedNumber = String(format: "%02d", singleDigitNumber)
-                    print(formattedNumber)
-                    if formattedNumber.count == 0 {
-                        self.lblTotalTaskNumbr.text = "0/ \(self.allTasks.count)"
-                    } else {
-                        self.lblTotalTaskNumbr.text = "\(formattedNumber) / \(self.allTasks.count)"
+//                    var todayTaskStr = ""
+//                    if singleDigitNumber < 9 && singleDigitNumber != 0{
+//                        let formattedNumber = String(format: "%02d", singleDigitNumber)
+//                        todayTaskStr = formattedNumber
+//                        print(formattedNumber)
+//                    }else{
+//
+//                    }
+                    
+//                    let formattedNumber = String(format: "%02d", singleDigitNumber)
+//                    if formattedNumber.count == 0 {
+//                        self.lblTotalTaskNumbr.text = "0/ \(self.allTasks.count)"
+//                    } else {
+//                        self.lblTotalTaskNumbr.text = "\(formattedNumber) / \(self.allTasks.count)"
+//                    }
+                    var formattedNumber = "\(self.allTasks.count)"
+                    if self.allTasks.count < 9 && self.allTasks.count > 0{
+                        formattedNumber = String(format: "%02d", self.allTasks.count)
                     }
+                    self.lblTotalTaskNumbr.text = formattedNumber
                     self.tblView.reloadData()
                 }
             }
@@ -257,14 +277,11 @@ class HomeViewController2: UIViewController {
         self.btnThisMonth.tag = 0
         self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "") { Status in
             if Status {
-                let singleDigitNumber = self.allTasks.count
-                let formattedNumber = String(format: "%02d", singleDigitNumber)
-                print(formattedNumber)
-                if formattedNumber.count == 0 {
-                    self.lblTotalTaskNumbr.text = "0/ \(self.allTasks.count)"
-                } else {
-                    self.lblTotalTaskNumbr.text = "\(formattedNumber) / \(self.allTasks.count)"
+                var formattedNumber = "\(self.allTasks.count)"
+                if self.allTasks.count < 9 && self.allTasks.count > 0{
+                    formattedNumber = String(format: "%02d", self.allTasks.count)
                 }
+                self.lblTotalTaskNumbr.text = formattedNumber
                 self.tblView.reloadData()
             }
         }
@@ -283,29 +300,28 @@ class HomeViewController2: UIViewController {
     }
     
     func upcomingTasks() {
-        
-        var calendar = Calendar.current
+        let calendar = Calendar.current
         let currentDate = Date().localDate()
-    
-        guard let currentWeekInterval = calendar.dateInterval(of: .weekOfYear, for: currentDate) else {
-            return
-        }
-        
-        let currentWeekStartDate = currentWeekInterval.start
-        let currentWeekEndDate = currentWeekInterval.end
-        let currentMyDate = self.convertDateToString("MM/dd/yyyy h:mm a")
+        var currentWeekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: currentDate))!
+//        currentWeekStart = calendar.date(byAdding: .day, value: 1, to: currentWeekStart)!
+        currentWeekStart = calendar.date(byAdding: .hour, value: 5, to: currentWeekStart)!
+        var currentWeekEnd = calendar.date(byAdding: .day, value: 7, to: currentWeekStart)!
+        currentWeekEnd = calendar.date(byAdding: .minute, value: -1, to: currentWeekEnd)!
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
         dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        dateFormatter.locale = Locale.current//(identifier: "fr")
-        let currentDateString = dateFormatter.string(from: currentWeekStartDate)
-        let EndDateString = dateFormatter.string(from: currentWeekEndDate)
+        dateFormatter.locale = Locale.current
+        
+        let currentWeekStartDateString = dateFormatter.string(from: currentWeekStart)
+        let currentWeekEndDateString = dateFormatter.string(from: currentWeekEnd)
+        
+        let currentMyDate = self.convertDateToString("MM/dd/yyyy h:mm a")
         
         self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "") { Status in
             if Status {
                 let currentWeekTasks = self.allTasks.filter { task in
-                    return currentDateString <= task.date! && task.date! <= EndDateString && currentMyDate <= task.date!
+                    return currentWeekStartDateString <= task.date! && task.date! <= currentWeekEndDateString && currentMyDate <= task.date!
                 }
                 
                 print(currentWeekTasks.count)
@@ -317,8 +333,45 @@ class HomeViewController2: UIViewController {
                 self.tblView.reloadData()
             }
         }
-        
     }
+    
+//    func upcomingTasks() {
+//
+//        var calendar = Calendar.current
+//        let currentDate = Date().localDate()
+//
+//        guard let currentWeekInterval = calendar.dateInterval(of: .weekOfYear, for: currentDate) else {
+//            return
+//        }
+//
+//        let currentWeekStartDate = currentWeekInterval.start
+//        let currentWeekEndDate = currentWeekInterval.end
+//        let currentMyDate = self.convertDateToString("MM/dd/yyyy h:mm a")
+//
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "MM/dd/yyyy h:mm a"
+//        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+//        dateFormatter.locale = Locale.current//(identifier: "fr")
+//        let currentDateString = dateFormatter.string(from: currentWeekStartDate)
+//        let EndDateString = dateFormatter.string(from: currentWeekEndDate)
+//
+//        self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "") { Status in
+//            if Status {
+//                let currentWeekTasks = self.allTasks.filter { task in
+//                    return currentDateString <= task.date! && task.date! <= EndDateString && currentMyDate <= task.date!
+//                }
+//
+//                print(currentWeekTasks.count)
+//                self.allTasks.removeAll()
+//                self.allTasks = currentWeekTasks
+//
+//                self.numberformatter(currentWeekTasks)
+//
+//                self.tblView.reloadData()
+//            }
+//        }
+//
+//    }
     
     @IBAction func historyAction(_ sender: UIButton) {
         self.tapButtons(btnHistory, [btnUpcoming,btnRecent,btnThisMonth])
@@ -394,15 +447,26 @@ class HomeViewController2: UIViewController {
     
     func numberformatter(_ taskArrayCount: [Task] ) {
         
-        let singleDigitNumber = taskArrayCount.count
-        let formattedNumber = String(format: "%02d", singleDigitNumber)
-        print(formattedNumber)
+//        let singleDigitNumber = taskArrayCount.count
+//        let formattedNumber = String(format: "%02d", singleDigitNumber)
+//        print(formattedNumber)
         
-        if taskArrayCount.count == 0 {
-            self.lblTotalTaskNumbr.text = "\(taskArrayCount.count)"
+//        if taskArrayCount.count < 9 && taskArrayCount > 0 {
+//            self.lblTotalTaskNumbr.text = "\(taskArrayCount.count)"
+//        } else {
+//            self.lblTotalTaskNumbr.text = "\(formattedNumber)"
+//        }
+        
+//        var formattedNumber = "\(taskArrayCount.count)"
+        if taskArrayCount.count < 9 && taskArrayCount.count > 0{
+            self.lblTotalTaskNumbr.text = String(format: "%02d", taskArrayCount.count)
         } else {
-            self.lblTotalTaskNumbr.text = "\(formattedNumber)"
+            self.lblTotalTaskNumbr.text = "\(taskArrayCount.count)"
         }
+//        self.lblTotalTaskNumbr.text = formattedNumber
+        
+        
+        
     }
     
     func convertDateToStr(_ formateType: String) -> String {

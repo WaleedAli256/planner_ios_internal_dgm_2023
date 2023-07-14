@@ -9,7 +9,7 @@ import UIKit
 import GoogleMobileAds
 import StoreKit
 import AdSupport
-//import AppTrackingTransparency
+
 
 class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
     
@@ -27,13 +27,23 @@ class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
 
         if #available(iOS 15.0, *) {
             let appearance = UITabBarAppearance()
             appearance.backgroundColor = .systemBackground
+            
+//            tabBarController?.tabBar.barTintColor = .red
+
+            appearance.configureWithOpaqueBackground()
             tabBarController?.tabBar.standardAppearance = appearance
             tabBarController?.tabBar.scrollEdgeAppearance = appearance
+            
+//            let tabBarAppearance = UITabBarAppearance()
+//            tabBarAppearance.configureWithOpaqueBackground()
+//            UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
         } else {
+            
             // Fallback on earlier versions
         }
         
@@ -59,6 +69,9 @@ class TabBarViewController: UITabBarController,UITabBarControllerDelegate {
 
     }
     
+   
+
+
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

@@ -19,6 +19,7 @@ class CategoryIconViewController: BaseViewController {
     var delegate: CategoryIconViewControllerDelegate?
     var iconName: String = ""
     var fromEditOrUpdat: String!
+    
     var catIconNames = ["cat-icon-1","cat-icon-2","cat-icon-3","cat-icon-4","cat-icon-5","cat-icon-6","cat-icon-7","cat-icon-8","cat-icon-9","cat-icon-10","cat-icon-11","cat-icon-12","cat-icon-13","cat-icon-14","cat-icon-15","cat-icon-16","cat-icon-17","cat-icon-18","cat-icon-19","cat-icon-20","cat-icon-21","cat-icon-22","cat-icon-23","cat-icon-24","cat-icon-25","cat-icon-26","cat-icon-27","cat-icon-28","cat-icon-29","cat-icon-30","cat-icon-31","cat-icon-32","cat-icon-33","cat-icon-34","cat-icon-35","cat-icon-36"]
     
     
@@ -27,7 +28,7 @@ class CategoryIconViewController: BaseViewController {
         self.setNavBar("Select Icon")
         self.collview.delegate = self
         self.collview.dataSource = self
-        self.btnUpdate.setTitle(fromEditOrUpdat, for: .normal)
+//        self.btnUpdate.setTitle(fromEditOrUpdat, for: .normal)
 
     }
     

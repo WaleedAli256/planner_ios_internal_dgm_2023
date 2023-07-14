@@ -98,8 +98,8 @@ class SettingViewController: BaseViewController {
         } else {
             lblName.text = "Guest User"
             lblemail.text = ""
-            tblImages.append("icon-login-gogle")
-            self.labelText.append("Continue with Google")
+            tblImages.append("icon-prof-2")
+            self.labelText.append("Connect your account")
             self.profpic.image = UIImage(named: "icon-profile")
         }
         self.tblView.reloadData()
@@ -382,7 +382,11 @@ extension SettingViewController: UITableViewDelegate,UITableViewDataSource {
             self.openPrivacyPolicy()
         } else if indexPath.row == 3 {
             if labelText[indexPath.row] != "Sign Out"{
-                loginGoogleAction()
+//                loginGoogleAction()
+                guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else {
+                    return
+                }
+                sceneDelegate.setLoginVC()
             }else{
                 userLogout()
             }

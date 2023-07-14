@@ -184,7 +184,7 @@ class InitialViewController: BaseViewController {
                             if let err = err {
                                 print("Error adding document: \(err)")
                             } else {
-                                self.userLoginParams(userUID, "Annomous user", "email", "iOS", "1", "profilePicUrl")
+                                self.userLoginParams(userUID, "Anonymous user", "email", "iOS", "1", "profilePicUrl")
                             }
                         }
                     }
@@ -193,7 +193,7 @@ class InitialViewController: BaseViewController {
                         // This  is a new user
                         self.db.collection("users").document(userUID).setData([
                             "id": userUID,
-                            "name": "Annomous User",
+                            "name": "Anonymous User",
                             "email": "email",
                             "deviceType" : "iOS",
                             "userType" : "1",
@@ -204,7 +204,7 @@ class InitialViewController: BaseViewController {
                                 print("Error adding document: \(err)")
                             } else {
                                 createDefaultsCategories(userId: userUID)
-                                self.userLoginParams(userUID, "Annomous user", "Annoumous user email is not exist", "iOS", "1", "profilePicUrl")
+                                self.userLoginParams(userUID, "Anonymous user", "Annoumous user email is not exist", "iOS", "1", "profilePicUrl")
                                 
                             }
                         }
@@ -415,7 +415,7 @@ extension InitialViewController: ASAuthorizationControllerDelegate, ASAuthorizat
                                     if let err = err {
                                         print("Error adding document: \(err)")
                                     } else {
-                                        self.userLoginParams(user.uid , displayName, user.email!, "iOS", "0", profilePic)
+                                        self.userLoginParams(user.uid , displayName, user.email!, "iOS", "2", profilePic)
                                     }
                                 }
 
@@ -437,7 +437,7 @@ extension InitialViewController: ASAuthorizationControllerDelegate, ASAuthorizat
                                         print("Error adding document: \(err)")
                                     } else {
                                         createDefaultsCategories(userId: user.uid)
-                                        self.userLoginParams(user.uid , displayName, user.email!, "iOS", "0", profilePic)
+                                        self.userLoginParams(user.uid , displayName, user.email!, "iOS", "2", profilePic)
 
                                     }
                                 }
