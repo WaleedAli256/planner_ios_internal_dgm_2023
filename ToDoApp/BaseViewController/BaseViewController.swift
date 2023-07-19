@@ -38,8 +38,8 @@ class BaseViewController: UIViewController {
         navigationItem.rightBarButtonItem = rightBarButton
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.title = navTitle
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(named: "low-text-color")!]
-        self.navigationController?.navigationBar.tintColor = UIColor(named: "low-text-color")
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(named: "TextColor")!]
+        self.navigationController?.navigationBar.tintColor = UIColor(named: "TextColor")
         self.navigationController?.navigationBar.topItem?.backButtonTitle = ""
     }
     
@@ -53,8 +53,8 @@ class BaseViewController: UIViewController {
         
         self.navigationController?.navigationBar.isHidden = false
         self.navigationItem.title = navTitle
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(named: "low-text-color")!,NSAttributedString.Key.font:UIFont.systemFont(ofSize: 18.0, weight: .medium)]
-        self.navigationController?.navigationBar.tintColor = UIColor(named: "low-text-color")
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(named: "TextColor")!,NSAttributedString.Key.font:UIFont.systemFont(ofSize: 18.0, weight: .medium)]
+        self.navigationController?.navigationBar.tintColor = UIColor(named: "TextColor")
         self.navigationController?.navigationBar.topItem?.backButtonTitle = ""
     }
     

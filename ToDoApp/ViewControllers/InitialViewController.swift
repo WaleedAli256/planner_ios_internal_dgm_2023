@@ -78,76 +78,97 @@ class InitialViewController: BaseViewController {
         //        cAlert.ShowToast(VC: self, msg: "This functionality will work when app would be uploaded on testflight")
     }
     
-    
     @IBAction func loginGoogleAction(_ sender: UIButton) {
-        ////
+        
+        
+        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
         self.btnSkip.tag = 0
         self.checkInternetAvailability()
         Utilities.show_ProgressHud(view: self.view)
-        
-        let signInConfig = GIDConfiguration.init(clientID: "359735858810-66jv9p5seorp32jkt1g3r3m4qtu5ogl0.apps.googleusercontent.com")
-        GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: self) { user, error in
+        // Create Google Sign In configuration object.
+        let config = GIDConfiguration(clientID: "359735858810-66jv9p5seorp32jkt1g3r3m4qtu5ogl0.apps.googleusercontent.com")
+//        GIDSignIn.sharedInstance.configuration = config
+
+        // Start the sign in flow!
+        GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { user, error in
             guard error == nil else {
                 Utilities.hide_ProgressHud(view: self.view)
                 self.showAlert(title: "Login with Google", message: "\(error?.localizedDescription ?? "Unable to signin at this moment")")
                 return
                 
             }
+        
             guard let user = user else {
                 Utilities.hide_ProgressHud(view: self.view)
                 self.showAlert(title: "Login with Google", message: "\(error?.localizedDescription ?? "Unable to signin at this moment")")
                 return
                 
             }
-            let userId = user.userID
-            let emailAddress = user.profile?.email
-            let fullName = user.profile?.name
-            let profilePicUrl = user.profile?.imageURL(withDimension: 320)?.absoluteString
-            // If sign in succeeded, display the app's main content View.
+
+            let authentication = user.authentication
+            guard let idToken = authentication.idToken else {
+                Utilities.hide_ProgressHud(view: self.view)
+                   return
+               }
             
-            //Check if the user already exists
-            let ref = self.db.collection("users").document(userId ?? "")
-            ref.getDocument(completion: {(document,err) in
-                if let document = document, document.exists {
-                    //User already exists in our database
-                    self.db.collection("users").document(userId ?? "").setData([
-                        "id":userId ?? "",
-                        "name": fullName ?? "",
-                        "email": emailAddress ?? "",
-                        "imageUrl": profilePicUrl ?? "",
-                        "deviceType" : "iOS",
-                        "userType" : "0",
-                    ], merge: true) { err in
-                        if let err = err {
-                            print("Error adding document: \(err)")
-                        } else {
-                            self.userLoginParams(userId ?? "", fullName ?? "", emailAddress ?? "", "iOS", "0", profilePicUrl ?? "")
+            let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                             accessToken: authentication.accessToken)
+
+//            activityIndicator.startAnimating()
+//            view.isUserInteractionEnabled = false
+            Auth.auth().signIn(with: credential) { result, error in
+              
+//                let user = result?.user
+                let userId = user.userID
+                let emailAddress = user.profile?.email
+                let fullName = user.profile?.name
+                let profilePicUrl = user.profile?.imageURL(withDimension: 320)?.absoluteString
+                // If sign in succeeded, display the app's main content View.
+                
+                //Check if the user already exists
+                let ref = self.db.collection("users").document(userId ?? "")
+                ref.getDocument(completion: {(document,err) in
+                    if let document = document, document.exists {
+                        //User already exists in our database
+                        self.db.collection("users").document(userId ?? "").setData([
+                            "id":userId ?? "",
+                            "name": fullName ?? "",
+                            "email": emailAddress ?? "",
+                            "imageUrl": profilePicUrl ?? "",
+                            "deviceType" : "iOS",
+                            "userType" : "0",
+                        ], merge: true) { err in
+                            if let err = err {
+                                print("Error adding document: \(err)")
+                            } else {
+                                self.userLoginParams(userId ?? "", fullName ?? "", emailAddress ?? "", "iOS", "0", profilePicUrl ?? "")
+                            }
                         }
                     }
-                }
-                else
-                {
-                    // This  is a new user
-                    self.db.collection("users").document(userId ?? "").setData([
-                        "id":userId ?? "",
-                        "name": fullName ?? "",
-                        "email": emailAddress ?? "",
-                        "imageUrl": profilePicUrl ?? "",
-                        "deviceType" : "iOS",
-                        "userType" : "0",
-                    ]) { err in
-                        if let err = err {
-                            print("Error adding document: \(err)")
-                        } else {
-                            createDefaultsCategories(userId: userId ?? "")
-                            self.userLoginParams(userId ?? "", fullName ?? "", emailAddress ?? "", "iOS", "0", profilePicUrl ?? "")
-                            
+                    else
+                    {
+                        // This  is a new user
+                        self.db.collection("users").document(userId ?? "").setData([
+                            "id":userId ?? "",
+                            "name": fullName ?? "",
+                            "email": emailAddress ?? "",
+                            "imageUrl": profilePicUrl ?? "",
+                            "deviceType" : "iOS",
+                            "userType" : "0",
+                        ]) { err in
+                            if let err = err {
+                                print("Error adding document: \(err)")
+                            } else {
+                                createDefaultsCategories(userId: userId ?? "")
+                                self.userLoginParams(userId ?? "", fullName ?? "", emailAddress ?? "", "iOS", "0", profilePicUrl ?? "")
+                                
+                            }
                         }
                     }
-                }
-            })
+                })
+            }
         }
-        //
+
     }
     
     
@@ -164,7 +185,15 @@ class InitialViewController: BaseViewController {
         var userUID = ""
         let db = Firestore.firestore()
         Auth.auth().signInAnonymously { authResult, error in
-            userUID = (authResult?.user.uid)!
+            
+            let myUId = Utilities.getStringForKey("uid") ?? ""
+            
+            if myUId != "" {
+                userUID = myUId
+            } else {
+                Utilities.setStringForKey("\(authResult?.user.uid ?? "")", key: "uid")
+                userUID = (authResult?.user.uid ?? "")
+            }
             let ref = db.collection("users").document(userUID)
             if let error = error {
                 self.showAlert(title: "Error", message: error.localizedDescription)
@@ -250,7 +279,6 @@ class InitialViewController: BaseViewController {
 //            Utilities.setIntForKey(0, key: "userType")
 //        }
         Utilities.hide_ProgressHud(view: self.view)
-        
         self.getAllTasks(userId: Utilities().getCurrentUser().id ?? "")
     
     }
@@ -384,15 +412,17 @@ extension InitialViewController: ASAuthorizationControllerDelegate, ASAuthorizat
             if let appleIDCredential = authorization.credential as?  ASAuthorizationAppleIDCredential {
 //            let userIdentifier = appleIDCredential.user
             let fullName = appleIDCredential.fullName?.familyName
-                
-                let credential = OAuthProvider.credential(withProviderID: "apple.com",
+            let credential = OAuthProvider.credential(withProviderID: "apple.com",
                                                           idToken: idTokenString,
                                                           rawNonce: nonce)
                 Auth.auth().signIn(with: credential) { (authResult, error) in
+                    
+    
                     if (error != nil) {
                         print(error?.localizedDescription ?? "")
                         return
                     } else {
+                        
                         guard let user = authResult?.user else { return }
                         let email = user.email ?? ""
                         let displayName = fullName ?? "Apple user"

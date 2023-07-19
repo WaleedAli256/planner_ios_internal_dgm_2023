@@ -38,9 +38,9 @@ class AddCategoryViewController: BaseViewController {
 //        self.navigationController?.navigationBar.topItem?.backButtonTitle = "category"
         
         if txtViewDescrip.text! == "Description"{
-            txtViewDescrip.textColor = UIColor(named: "LightDarkTextColor")
+            txtViewDescrip.textColor = UIColor(named: "text-view-placeholder")
         }else{
-            txtViewDescrip.textColor = UIColor(named: "textColor")
+            txtViewDescrip.textColor = UIColor(named: "TextColor")
         }
         self.txtViewDescrip.keyboardToolbar.isHidden = true
         self.txtViewDescrip.autocorrectionType = .no
@@ -61,6 +61,7 @@ class AddCategoryViewController: BaseViewController {
         super.viewWillAppear(animated)
         if self.fromEditOrUpdate == "Update Category" {
             self.populateView()
+            txtViewDescrip.textColor = UIColor(named: "TextColor")
         }
         self.tabBarController?.tabBar.isHidden = true
     }
@@ -311,7 +312,7 @@ extension AddCategoryViewController: UITextViewDelegate {
         {
             if(textView.text == "Description")
             {
-                textView.textColor = UIColor(named: "LightDarkTextColor")
+                textView.textColor = UIColor(named: "TextColor")
                 textView.text = ""
             }
         }
@@ -322,7 +323,7 @@ extension AddCategoryViewController: UITextViewDelegate {
         {
             if(textView.text == "")
             {
-                textView.textColor = UIColor(named: "LightDarkTextColor")
+                textView.textColor = UIColor(named: "text-view-placeholder")
                 textView.text = "Description"
             } else {
                 txtViewDescrip.resignFirstResponder()

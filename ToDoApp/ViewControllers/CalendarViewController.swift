@@ -250,7 +250,7 @@ extension CalendarViewController : UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") {
+        let deleteAction = UIContextualAction(style: .destructive, title: "") {
             (action, view, completionHandler) in
             
             let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to delete this task?", preferredStyle: .alert)

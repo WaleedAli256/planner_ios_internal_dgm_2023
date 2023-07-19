@@ -665,7 +665,7 @@
                                 <rect key="frame" x="0.0" y="44" width="390" height="717"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ctf-98-fQh">
-                                        <rect key="frame" x="0.0" y="0.0" width="390" height="640"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="390" height="705"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V7J-I1-UhA">
                                                 <rect key="frame" x="0.0" y="0.0" width="390" height="200"/>
@@ -690,7 +690,7 @@
                                                             <constraint firstAttribute="height" constant="20" id="5JY-SK-wMP"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
-                                                        <color key="textColor" name="low-text-color"/>
+                                                        <color key="textColor" name="TextColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="adeelbutt716@gmail.com" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BwU-Ci-6Qn">
@@ -699,7 +699,7 @@
                                                             <constraint firstAttribute="height" constant="22" id="mUv-3a-cVb"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <color key="textColor" name="low-text-color"/>
+                                                        <color key="textColor" name="TextColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
@@ -719,11 +719,11 @@
                                                     <constraint firstItem="Y0k-lc-RPV" firstAttribute="top" secondItem="1NR-3c-tSf" secondAttribute="bottom" constant="18.999999999999929" id="w8n-Ym-Yrl"/>
                                                 </constraints>
                                             </view>
-                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="96" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="wXc-lX-fCo">
-                                                <rect key="frame" x="0.0" y="200" width="390" height="440"/>
+                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="96" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="wXc-lX-fCo">
+                                                <rect key="frame" x="0.0" y="200" width="390" height="505"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="440" id="hj1-lz-OQl"/>
+                                                    <constraint firstAttribute="height" constant="505" id="hj1-lz-OQl"/>
                                                 </constraints>
                                                 <prototypes>
                                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="SettingsCell" id="97Y-VQ-hbK" customClass="SettingsCell" customModule="ToDoApp" customModuleProvider="target">
@@ -758,7 +758,7 @@
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="About" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qge-TX-Srd">
                                                                                     <rect key="frame" x="85" y="30.333333333333336" width="255" height="20.333333333333336"/>
                                                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
-                                                                                    <color key="textColor" name="low-text-color"/>
+                                                                                    <color key="textColor" name="TextColor"/>
                                                                                     <nil key="highlightedColor"/>
                                                                                 </label>
                                                                             </subviews>
@@ -850,6 +850,7 @@
                         <outlet property="lblName" destination="Iaf-bs-a3A" id="S8w-Z3-4ia"/>
                         <outlet property="lblemail" destination="BwU-Ci-6Qn" id="ufo-Lz-fgl"/>
                         <outlet property="profpic" destination="Y0k-lc-RPV" id="LB0-xQ-Kw0"/>
+                        <outlet property="tblHeight" destination="hj1-lz-OQl" id="YtY-27-07x"/>
                         <outlet property="tblView" destination="wXc-lX-fCo" id="zFR-Cf-Liv"/>
                     </connections>
                 </viewController>
@@ -1227,7 +1228,7 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create New Task" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Le-9G-k39">
                                                         <rect key="frame" x="125.66666666666667" y="20" width="138.66666666666663" height="21.666666666666671"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
-                                                        <color key="textColor" name="low-text-color"/>
+                                                        <color key="textColor" name="TextColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-profile" translatesAutoresizingMaskIntoConstraints="NO" id="Uun-pM-2TE">
@@ -1262,7 +1263,7 @@
                                                         <subviews>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Title" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NiD-8N-nGN">
                                                                 <rect key="frame" x="15" y="0.0" width="310" height="50"/>
-                                                                <color key="textColor" red="0.37647058823529411" green="0.43137254901960786" blue="0.52941176470588236" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <color key="textColor" name="TextColor"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits" returnKeyType="next"/>
                                                                 <userDefinedRuntimeAttributes>
@@ -1321,7 +1322,7 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add Detail" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mVn-5p-t1s">
                                                         <rect key="frame" x="24.999999999999993" y="0.0" width="78.333333333333314" height="19.333333333333332"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
-                                                        <color key="textColor" name="low-text-color"/>
+                                                        <color key="textColor" name="TextColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="68d-Qh-OPQ" customClass="CustomView" customModule="ToDoApp" customModuleProvider="target">
@@ -1329,7 +1330,7 @@
                                                         <subviews>
                                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" text="Description" translatesAutoresizingMaskIntoConstraints="NO" id="GSv-yX-kqm">
                                                                 <rect key="frame" x="5" y="10" width="325" height="150.66666666666666"/>
-                                                                <color key="textColor" name="text-View-color"/>
+                                                                <color key="textColor" name="TextColor"/>
                                                                 <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" keyboardType="emailAddress" returnKeyType="done"/>
                                                             </textView>
@@ -1374,10 +1375,10 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hja-dV-2Gj">
                                                 <rect key="frame" x="0.0" y="394" width="390" height="107"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select Categories" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qIQ-px-gsc">
-                                                        <rect key="frame" x="25" y="0.0" width="134.33333333333334" height="19.333333333333332"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select Category" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qIQ-px-gsc">
+                                                        <rect key="frame" x="25.000000000000007" y="0.0" width="121.66666666666669" height="19.333333333333332"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
-                                                        <color key="textColor" name="low-text-color"/>
+                                                        <color key="textColor" name="TextColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qub-5v-HRE" customClass="CustomView" customModule="ToDoApp" customModuleProvider="target">
@@ -1387,9 +1388,9 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="340" height="50"/>
                                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                             </button>
-                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Categories" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Bjw-75-Z8n">
+                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Categories" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Bjw-75-Z8n">
                                                                 <rect key="frame" x="15" y="0.0" width="325" height="50"/>
-                                                                <color key="textColor" name="text-View-color"/>
+                                                                <color key="textColor" name="TextColor"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits"/>
                                                                 <userDefinedRuntimeAttributes>
@@ -1434,7 +1435,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BjN-gF-NzU" customClass="CustomView" customModule="ToDoApp" customModuleProvider="target">
-                                                        <rect key="frame" x="169.33333333333334" y="-2.6666666666666856" width="40" height="25"/>
+                                                        <rect key="frame" x="156.66666666666666" y="-2.6666666666666856" width="40" height="25"/>
                                                         <subviews>
                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-plus" translatesAutoresizingMaskIntoConstraints="NO" id="2fb-MI-Msl">
                                                                 <rect key="frame" x="3" y="3" width="34" height="19"/>
@@ -1486,7 +1487,7 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qa6-42-Gvf">
                                                         <rect key="frame" x="25" y="0.0" width="97" height="19.333333333333332"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
-                                                        <color key="textColor" name="low-text-color"/>
+                                                        <color key="textColor" name="TextColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vh5-lP-gWr" customClass="CustomView" customModule="ToDoApp" customModuleProvider="target">
@@ -1501,8 +1502,8 @@
                                                             </imageView>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Select Date" textAlignment="natural" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="paP-wh-19T">
                                                                 <rect key="frame" x="15" y="0.0" width="325" height="50"/>
-                                                                <color key="textColor" name="text-View-color"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" name="TextColor"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits"/>
                                                             </textField>
                                                         </subviews>
@@ -1557,7 +1558,7 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZTJ-6W-l8I">
                                                         <rect key="frame" x="25" y="0.0" width="99" height="19.333333333333332"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
-                                                        <color key="textColor" name="low-text-color"/>
+                                                        <color key="textColor" name="TextColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PpK-uG-aGv" customClass="CustomView" customModule="ToDoApp" customModuleProvider="target">
@@ -1572,7 +1573,7 @@
                                                             </imageView>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Select Time" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UZi-nl-QR6">
                                                                 <rect key="frame" x="15" y="0.0" width="325" height="50"/>
-                                                                <color key="textColor" name="text-View-color"/>
+                                                                <color key="textColor" name="TextColor"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits"/>
                                                             </textField>
@@ -1628,7 +1629,7 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="End Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HjM-FC-Yx1">
                                                         <rect key="frame" x="25" y="0.0" width="70.333333333333329" height="19.333333333333332"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
-                                                        <color key="textColor" name="low-text-color"/>
+                                                        <color key="textColor" name="TextColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qWl-Rf-Y7B" customClass="CustomView" customModule="ToDoApp" customModuleProvider="target">
@@ -1643,7 +1644,7 @@
                                                             </imageView>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Select Time" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oLj-51-bwR">
                                                                 <rect key="frame" x="15" y="0.0" width="325" height="50"/>
-                                                                <color key="textColor" name="text-View-color"/>
+                                                                <color key="textColor" name="TextColor"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits"/>
                                                             </textField>
@@ -1699,7 +1700,7 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose Priority" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wv1-e2-RPu">
                                                         <rect key="frame" x="25" y="0.0" width="117" height="19.333333333333332"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
-                                                        <color key="textColor" name="low-text-color"/>
+                                                        <color key="textColor" name="TextColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="z5L-eE-Fup">
@@ -1777,7 +1778,7 @@
                                                                         </connections>
                                                                     </button>
                                                                 </subviews>
-                                                                <color key="backgroundColor" red="0.098039215686274508" green="0.46274509803921571" blue="0.82352941176470584" alpha="0.22" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <color key="backgroundColor" name="medium-color"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="bottom" secondItem="Dmi-GX-KHj" secondAttribute="bottom" id="E54-jY-QJt"/>
                                                                     <constraint firstItem="GOV-7T-Etm" firstAttribute="top" secondItem="BEi-1J-IQ6" secondAttribute="top" id="E6e-sL-ycQ"/>
@@ -1860,7 +1861,7 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Set Pre reminder" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Ky-TG-Mw4">
                                                         <rect key="frame" x="24.999999999999993" y="0.0" width="127.33333333333331" height="19.333333333333332"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
-                                                        <color key="textColor" name="low-text-color"/>
+                                                        <color key="textColor" name="TextColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(Optional)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YeT-G1-fZE">
@@ -1878,7 +1879,7 @@
                                                         <subviews>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Select Pre Reminder" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uLe-23-fvM">
                                                                 <rect key="frame" x="15" y="0.0" width="325" height="50"/>
-                                                                <color key="textColor" name="text-View-color"/>
+                                                                <color key="textColor" name="TextColor"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits"/>
                                                             </textField>
@@ -1944,7 +1945,7 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select Repetition" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9SX-Xk-ag5">
                                                         <rect key="frame" x="25" y="0.0" width="129.33333333333334" height="19.333333333333332"/>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
-                                                        <color key="textColor" name="low-text-color"/>
+                                                        <color key="textColor" name="TextColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7zv-fi-uvZ" customClass="CustomView" customModule="ToDoApp" customModuleProvider="target">
@@ -1952,7 +1953,7 @@
                                                         <subviews>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Select Repitition" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ULp-4y-nLo">
                                                                 <rect key="frame" x="15" y="0.0" width="325" height="50"/>
-                                                                <color key="textColor" name="text-View-color"/>
+                                                                <color key="textColor" name="TextColor"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits"/>
                                                             </textField>
@@ -3217,12 +3218,12 @@
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Category Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G7z-pN-hLN">
                                                                 <rect key="frame" x="15.999999999999993" y="9.9999999999999982" width="122.33333333333331" height="20.333333333333329"/>
                                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
-                                                                <color key="textColor" name="low-text-color"/>
+                                                                <color key="textColor" name="TextColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Category Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2cD-Af-AdM">
                                                                 <rect key="frame" x="16" y="33.333333333333343" width="299" height="34.666666666666657"/>
-                                                                <color key="textColor" name="low-text-color"/>
+                                                                <color key="textColor" name="TextColor"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                                 <textInputTraits key="textInputTraits" returnKeyType="next"/>
                                                             </textField>
@@ -3302,13 +3303,13 @@
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Category description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i4u-ok-ep8">
                                                                 <rect key="frame" x="16" y="9.9999999999999982" width="299" height="20.333333333333329"/>
                                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
-                                                                <color key="textColor" name="low-text-color"/>
+                                                                <color key="textColor" name="TextColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Description" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="5u7-pV-KDR">
                                                                 <rect key="frame" x="3" y="33.333333333333321" width="312" height="108.66666666666669"/>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <color key="textColor" name="low-text-color"/>
+                                                                <color key="textColor" name="TextColor"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
                                                                 <connections>
@@ -3674,7 +3675,7 @@
                                     <constraint firstAttribute="width" constant="197" id="dj2-M7-hWw"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="32"/>
-                                <color key="textColor" name="low-text-color"/>
+                                <color key="textColor" name="TextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create your tasks and get the reminder" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qB9-kG-KmU">
@@ -3683,7 +3684,7 @@
                                     <constraint firstAttribute="width" constant="261" id="US2-PR-fPN"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <color key="textColor" name="low-text-color"/>
+                                <color key="textColor" name="TextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Shd-4s-PBV">
@@ -4045,13 +4046,13 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Good Morning,Abdullah" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="plH-Yp-cd2">
                                         <rect key="frame" x="25" y="15" width="169.33333333333334" height="18"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
-                                        <color key="textColor" name="low-text-color"/>
+                                        <color key="textColor" name="TextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You’ve Tasks Today" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b2K-lv-QcM">
                                         <rect key="frame" x="25" y="38" width="177.66666666666666" height="24"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
-                                        <color key="textColor" name="low-text-color"/>
+                                        <color key="textColor" name="TextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sQH-pn-lxT">
@@ -5716,7 +5717,7 @@ anything without stress</string>
             <color red="1" green="0.15700000524520874" blue="0.15700000524520874" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="img-bg">
-            <color red="0.0" green="0.0" blue="0.0" alpha="0.20000000298023224" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="1" blue="1" alpha="0.40000000596046448" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="light-grey">
             <color red="0.74900001287460327" green="0.74900001287460327" blue="0.74900001287460327" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -10,6 +10,7 @@ import iOSDropDown
 import Firebase
 import FirebaseFirestore
 import GoogleMobileAds
+import Alamofire
 
 
 class CreateTaskViewController: BaseViewController {
@@ -62,7 +63,7 @@ class CreateTaskViewController: BaseViewController {
     var categoryText = ""
     var repitionText = ""
     var repitiotn = ["Only one time","Daily","Once in a week","Once in a month"]
-    
+    var selectedPickerViewRow = -1
     var preReminderSelect: Bool = false
     var catFieldSelect: Bool = false
     var repetitionSelect: Bool = false
@@ -72,11 +73,7 @@ class CreateTaskViewController: BaseViewController {
         self.navigationController?.navigationBar.isHidden = true
         self.myPickerView.delegate = self
         self.myPickerView.dataSource = self
-        if detailTxtView.text! == "Description"{
-            detailTxtView.textColor = UIColor(named: "LightDarkTextColor")
-        }else{
-            detailTxtView.textColor = UIColor(named: "textColor")
-        }
+       
     
         let dummyInputView = UIView(frame: CGRect.zero)
         self.catTxtField.inputView = dummyInputView
@@ -91,7 +88,7 @@ class CreateTaskViewController: BaseViewController {
        
         
         self.medView.layer.borderColor = UIColor(named: "medium-text-color")?.cgColor
-        self.medView.layer.borderWidth = 0.8
+        self.medView.layer.borderWidth = 1.5
     
         self.catTxtField.delegate = self
         self.preReminderTxtField.delegate = self
@@ -182,6 +179,13 @@ class CreateTaskViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if detailTxtView.text! == "Description"{
+            detailTxtView.textColor = UIColor(named: "text-view-placeholder")
+        }else{
+            detailTxtView.textColor = UIColor(named: "TextColor")
+        }
+        
 //        self.tabBarController?.tabBar.backgroundColor = .red
         if self.selectedCategry != nil || self.fromViewController == "HomeVC" || self.fromViewController == "Add Task View"{
             self.topTitleView.isHidden = true
@@ -189,7 +193,6 @@ class CreateTaskViewController: BaseViewController {
         } else {
             self.topTitleView.isHidden = false
         }
-        
         self.catTxtField.text = selectedCategry?.name ?? ""
         self.CarColorCode = selectedCategry?.colorCode ?? ""
         self.scrollView.scrollsToTop = true
@@ -215,7 +218,7 @@ class CreateTaskViewController: BaseViewController {
         endTimeTxtField.inputView = datePicker
     }
     
-    func simplePickerView() {
+    func simplePickerView(ind : Int) {
         self.selectionMode = "pickerView"
         self.catTxtField.inputAccessoryView = toolBar
         self.catTxtField.inputView = self.myPickerView
@@ -229,11 +232,21 @@ class CreateTaskViewController: BaseViewController {
         self.toolBar.sizeToFit()
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(btnDoneAction))
         self.toolBar.setItems([doneButton], animated: true)
-        
-        let selectedRow = 2 // Index of the row you want to select
-        let selectedComponent = 0 // Index of the component you want to select the row in
-        myPickerView.selectRow(selectedRow, inComponent: selectedComponent, animated: false)
+//        let selectedRow = 2 // Index of the row you want to select
+//        let selectedComponent = 0
+//        if self.selectedPickerViewRow == -1 {
+//            // Index of the component you want to select the row in
+//            myPickerView.selectRow(selectedRow, inComponent: selectedComponent, animated: false)
+//        } else {
+//            myPickerView.selectRow(selectedPickerViewRow, inComponent: selectedComponent, animated: false)
+//        }
+       
         self.myPickerView.reloadAllComponents()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            // Put your code which should be executed with a delay here
+            self.myPickerView.selectRow(ind, inComponent: 0, animated: true)
+        }
+        
 
     }
     
@@ -298,7 +311,7 @@ class CreateTaskViewController: BaseViewController {
         } else {
             if self.catFieldSelect {
                 if self.CarColorCode == "" {
-                    self.CarColorCode = self.categories[2].colorCode!
+//                    self.CarColorCode = self.categories[2].colorCode!
                 }
                 self.catTxtField.text = self.categoryText
             } else if self.preReminderSelect {
@@ -335,14 +348,19 @@ class CreateTaskViewController: BaseViewController {
     }
     
     @IBAction func openPickerAction(_ sender: UIButton) {
-        self.myPickerView.selectedRow(inComponent: 2)
-        self.simplePickerView()
+//        self.myPickerView.selectedRow(inComponent: 2)
+//        if(self.catTxtField.text!.count < 1) {
+//            self.myPickerView.selectedRow(inComponent: 2)
+//        } else {
+//
+//        }
+//        self.simplePickerView()
     }
     
     @IBAction func highPriortyAction(_ sender: UIButton) {
         
         self.highView.layer.borderColor = UIColor(named: "high-text-color")?.cgColor
-        self.highView.layer.borderWidth = 0.8
+        self.highView.layer.borderWidth = 1.5
         self.medView.layer.borderColor = UIColor(named: "medium-color")?.cgColor
         self.medView.layer.borderWidth = 0.0
         self.lowView.layer.borderColor = UIColor(named: "low-colorP")?.cgColor
@@ -357,7 +375,7 @@ class CreateTaskViewController: BaseViewController {
         self.highView.layer.borderColor = UIColor(named: "high-color")?.cgColor
         self.highView.layer.borderWidth = 0.0
         self.medView.layer.borderColor = UIColor(named: "medium-text-color")?.cgColor
-        self.medView.layer.borderWidth = 0.8
+        self.medView.layer.borderWidth = 1.5
         self.lowView.layer.borderColor = UIColor(named: "low-colorP")?.cgColor
         self.lowView.layer.borderWidth = 0.0
         self.priortyColor = "medium-text-color"
@@ -371,18 +389,15 @@ class CreateTaskViewController: BaseViewController {
         self.medView.layer.borderColor = UIColor(named: "medium-color")?.cgColor
         self.medView.layer.borderWidth = 0.0
         self.lowView.layer.borderColor = UIColor(named: "low-text-color-1")?.cgColor
-        self.lowView.layer.borderWidth = 1.0
+        self.lowView.layer.borderWidth = 1.6
         self.priortyColor = "low-text-color-1"
         self.priortyValue = "Low"
     }
 
-    
     @IBAction func createTaskAction(_ sender: UIButton) {
-        
         self.createTask()
-        
-        
     }
+    
     @IBAction func CreateCateGoryActon(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let addCatVC = storyboard.instantiateViewController(identifier: "AddCategoryViewController") as! AddCategoryViewController
@@ -400,35 +415,38 @@ class CreateTaskViewController: BaseViewController {
     {
         if(self.titleTxtField.text?.count ?? 0 < 1 || self.titleTxtField.text == "Title")
         {
-            self.showAlert(title: "Alert", message: "Please enter title")
+            self.showAlert(title: "Alert", message: "Please enter Title")
             return false
         }
         if(self.detailTxtView.text?.count ?? 0 < 1 || self.detailTxtView.text == "Description")
         {
-            self.showAlert(title: "Alert", message:"Please enter description")
+            self.showAlert(title: "Alert", message:"Please add Detail")
             return false
         }
         if(self.catTxtField.text?.count ?? 0 < 1)
         {
-            self.showAlert(title: "Alert", message:"Please enter Category")
+            self.showAlert(title: "Alert", message:"Please select Category")
             return false
         }
         if(dateTxtField.text!.count < 1)
         {
-            self.showAlert(title: "Alert", message:"Please select date")
+            self.showAlert(title: "Alert", message:"Please choose Date")
             return false
         }
         
         if(timeTxtField.text!.count < 1)
         {
-            self.showAlert(title: "Alert", message:"Please select time")
+            self.showAlert(title: "Alert", message:"Please choose Time")
             return false
         }
         
-        let valideTime = self.isEndTimeValid(startTime: self.startTime!, endTime: self.endTime!)
-        if valideTime == false {
-            self.showAlert(title: "Alert", message:"End time must be greater than your choose time")
-            return false
+        if endTimeTxtField.text?.count != 0 {
+            
+            let valideTime = self.isEndTimeValid(startTime: self.startTime!, endTime: self.endTime!)
+            if valideTime == false {
+                self.showAlert(title: "Alert", message:"End time must be greater than your choose time")
+                return false
+            }
         }
         
         return true
@@ -522,7 +540,7 @@ class CreateTaskViewController: BaseViewController {
                             
                             
                         } else {
-                            self.showAlert(title: "Error", message: "Pre Reminder time should be greater than current time")
+                            self.showAlert(title: "Error", message: "Pre reminder time should be greater than current time")
                         }
                     }
                    
@@ -573,6 +591,15 @@ class CreateTaskViewController: BaseViewController {
                         for cat in self.categories {
                             self.strCategories.append(cat.name!)
                         }
+//                        if self.selectedCategry != nil {
+//                            if let index = self.categories.firstIndex(where: { $0.name == self.selectedCategry?.name}) {
+//                                print("Index of 'Orange' using index(of:): \(index)")
+//                                self.selectedPickerViewRow = index
+//                            } else {
+//                                print("'Orange' not found in the array")
+//                            }
+//                        }
+                        
 //                        self.catTxtField.optionArray = self.strCategories
                         Utilities.hide_ProgressHud(view: self.view)
                     }
@@ -856,6 +883,7 @@ extension CreateTaskViewController: UIPickerViewDelegate,UIPickerViewDataSource 
             self.catTxtField.text = self.strCategories[row]
             self.categoryId = self.categories[row].id!
             self.CarColorCode = self.categories[row].colorCode ?? ""
+            self.selectedPickerViewRow = row
         } else if self.preReminderSelect {
             self.preReminderTxtField.text = self.preReminderTime[row]
             if row == 0 {
@@ -871,6 +899,7 @@ extension CreateTaskViewController: UIPickerViewDelegate,UIPickerViewDataSource 
             }else if row == 5{
                 self.preminderMin = 3600
             }
+            self.selectedPickerViewRow = row
         } else  {
             if row == 0{
                 self.caseNumber = 0
@@ -886,6 +915,7 @@ extension CreateTaskViewController: UIPickerViewDelegate,UIPickerViewDataSource 
                 self.caseNumber = 3
                 self.frequency = NotificationFrequency.monthly
             }
+            self.selectedPickerViewRow = row
             self.RepititionTxtField.text = self.repitiotn[row]
         }
         
@@ -902,20 +932,68 @@ extension CreateTaskViewController: UITextFieldDelegate
             self.preReminderSelect = false
             self.catFieldSelect = false
             self.repetitionSelect = true
-            self.simplePickerView()
+            var ind = 0
+            if textField.text! != ""{
+            for temp in self.repitiotn{
+                if temp == textField.text!{
+                    break
+                }
+                ind += 1
+            }
+            }else{
+                ind = 2
+            }
+//            self.repitiotn
+//            self.myPickerView.selectedRow(inComponent: self.selectedPickerViewRow)
+            self.simplePickerView(ind: ind)
         }
         else if textField == self.preReminderTxtField {
             self.preReminderSelect = true
             self.catFieldSelect = false
             self.repetitionSelect = false
-            self.simplePickerView()
+            
+            var ind = 0
+            if textField.text! != ""{
+            for temp in self.preReminderTime{
+                if temp == textField.text!{
+                    
+                    break
+                }
+                ind += 1
+            }
+            }else{
+                ind = 2
+            }
+//            self.repitiotn
+//            self.myPickerView.selectedRow(inComponent: self.selectedPickerViewRow)
+            self.simplePickerView(ind: ind)
         }
          if textField == self.catTxtField {
             //picker view
              self.catFieldSelect = true
              self.preReminderSelect = false
              self.repetitionSelect = false
-             self.simplePickerView()
+             
+//             let category = self.selectedCategry?.name
+//             if  let index = self.categories.firstIndex(of: category) {
+//                myPickerView.selectRow(index, inComponent: 0, animated: false)
+//            }
+             
+             var ind = 0
+             if textField.text! != ""{
+             for temp in self.categories{
+                 if temp.name == textField.text!{
+                     
+                     break
+                 }
+                 ind += 1
+             }
+             }else{
+                 ind = self.categories.count/2
+             }
+ //            self.repitiotn
+ //            self.myPickerView.selectedRow(inComponent: self.selectedPickerViewRow)
+             self.simplePickerView(ind: ind)
     
         }
          else if textField == self.dateTxtField {
@@ -985,7 +1063,7 @@ extension CreateTaskViewController: UITextViewDelegate
         {
             if(textView.text == "Description")
             {
-                textView.textColor = UIColor(named: "LightDarkTextColor")
+                textView.textColor = UIColor(named: "TextColor")
                 textView.text = ""
             }
         }
@@ -996,7 +1074,7 @@ extension CreateTaskViewController: UITextViewDelegate
         {
             if(textView.text == "")
             {
-                textView.textColor = UIColor(named: "LightDarkTextColor")
+                textView.textColor = UIColor(named: "text-view-placeholder")
                 textView.text = "Description"
             } else {
                 detailTxtView.resignFirstResponder()

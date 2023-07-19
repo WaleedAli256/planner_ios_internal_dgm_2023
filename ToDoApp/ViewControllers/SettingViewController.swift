@@ -10,6 +10,7 @@ import StoreKit
 import Firebase
 import GoogleSignIn
 import FirebaseFirestore
+import MBProgressHUD
 
 class SettingViewController: BaseViewController {
 
@@ -51,12 +52,12 @@ class SettingViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setData()
-//        self.tblView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
+        self.tblView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
-//        self.tblView.removeObserver(self, forKeyPath: "contentSize")
+        self.tblView.removeObserver(self, forKeyPath: "contentSize")
         
     }
         
@@ -74,7 +75,11 @@ class SettingViewController: BaseViewController {
             lblemail.text = Utilities().getCurrentUser().email ?? ""
 
             tblImages.append("icon-signout")
+//            tblImages.append("icon-signout")
             self.labelText.append("Sign Out")
+            tblImages.append("icon-delete")
+            self.labelText.append("Sign Out and Delete account")
+//            self.labelText.append("Sign out and Delete User")
             // Create a URL object for the profile picture
             let imgUrl = Utilities().getCurrentUser().image_url ?? ""
             guard let url = URL(string: imgUrl) else { return }
@@ -104,19 +109,19 @@ class SettingViewController: BaseViewController {
         }
         self.tblView.reloadData()
     }
-//    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?){
-//
-//        if(keyPath == "contentSize"){
-//            if(self.tblView.contentSize.height < 0)
-//            {
-//                self.tblHeight.constant = 100
-//            }
-//            else
-//            {
-//                self.tblHeight.constant = self.tblView.contentSize.height + 20
-//            }
-//        }
-//    }
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?){
+
+        if(keyPath == "contentSize"){
+            if(self.tblView.contentSize.height < 0)
+            {
+                self.tblHeight.constant = 100
+            }
+            else
+            {
+                self.tblHeight.constant = self.tblView.contentSize.height + 20
+            }
+        }
+    }
 
     func shareMyApp() {
         
@@ -270,10 +275,17 @@ class SettingViewController: BaseViewController {
     
     func userLogout() {
         
-        let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to Sign out", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Alert", message: "Are you sure you want to Sign Out", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.destructive) {
             UIAlertAction in
-            
+//            do {
+//                self.checkInternetAvailability()
+//                try Auth.auth().signOut()
+//                // User is now signed out
+//            } catch let signOutError as NSError {
+//                self.showAlert(title: "Sign Out Error", message: "\(signOutError.localizedDescription)")
+//                print("Error signing out: %@", signOutError)
+//            }
             Utilities.setStringForKey(Constants.UserDefaults.currentUserExit, key: "NoUserExist")
             Utilities.setIsFirstTime(isFirstTime: false)
             Utilities.setStringForKey("true", key: "logout")
@@ -319,6 +331,171 @@ class SettingViewController: BaseViewController {
 //        let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
 //        self.navigationController?.pushViewController(mainTabBarController, animated: true)
     }
+    
+    //account delettion
+    
+    
+    func deleteUserAcount() {
+        self.checkInternetAvailability()
+        let alertController = UIAlertController(title: "User Deletion and Sign Out Alert", message: "Are you sure you want to Sign Out and Delete your account?", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.destructive) {
+            UIAlertAction in
+            
+            Utilities.setStringForKey(Constants.UserDefaults.currentUserExit, key: "NoUserExist")
+            Utilities.setIsFirstTime(isFirstTime: false)
+            Utilities.setStringForKey("true", key: "logout")
+            self.deleteUserData()
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+              UIAlertAction in
+             
+          }
+        alertController.addAction(okAction)
+        alertController.addAction(cancelAction)
+
+      self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func deleteAllTaskAndCategories(completion: @escaping(_ status: Bool) -> Void) {
+        var taskIds = [String]()
+        let db = Firestore.firestore()
+        //remove all tasks against a user
+        db.collection("tasks").whereField("userId", isEqualTo: Utilities().getCurrentUser().id ?? "").getDocuments {(querySnapshot , err) in
+            if let err = err {
+                completion(false)
+//                print("Error removing document: \(err)")
+                self.showAlert(title: "Error", message: "Error removing document: \(err)")
+            } else {
+                guard let documents = querySnapshot?.documents else { return }
+                       for document in documents {
+                           let data = document.data()
+                           if let task = data["id"] as? String{
+                               taskIds.append(task)
+                           }
+//                           taskIds.append(document.documentID)
+                           document.reference.delete()
+                }
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: taskIds)
+                print("removed all tasks")
+                
+                //remove all categories against a user
+                db.collection("category").whereField("userId", isEqualTo: Utilities().getCurrentUser().id ?? "").getDocuments {(querySnapshot , err) in
+                    if let err = err {
+        //                print("Error removing document: \(err)")
+                        completion(false)
+                        self.showAlert(title: "Error", message: "Error removing document: \(err)")
+                    } else {
+                        guard let documents = querySnapshot?.documents else { return }
+                               for document in documents {
+                                   document.reference.delete()
+                        }
+                        completion(true)
+                        print("Removed all categories")
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    
+    func deleteUserData() {
+        self.checkInternetAvailability()
+        self.deleteAllTaskAndCategories { status in
+            if status {
+                Utilities.show_ProgressHud(view: self.view)
+                guard let currentUser = Auth.auth().currentUser else {
+                    print("No user is currently logged in.")
+        
+                    Utilities.hide_ProgressHud(view: self.view)
+                    return
+                }
+                
+                // Delete user data from Firebase Authentication
+                currentUser.delete { error in
+                    if let error = error {
+                        Utilities.hide_ProgressHud(view: self.view)
+                        print("Failed to delete user: \(error.localizedDescription)")
+                        cAlert.ShowAlerTost(VC: self, title: "", msg: error.localizedDescription)
+                        return
+                    }
+                    
+                    print("User deleted successfully from Firebase Authentication.")
+                    
+                    // Delete user data from Firestore
+                    let db = Firestore.firestore()
+                    let userDocRef = db.collection("users").document(Utilities().getCurrentUser().id ?? "")
+                    
+                    userDocRef.delete { error in
+                        if let error = error {
+                            print("Failed to delete user data from Firestore: \(error.localizedDescription)")
+                            Utilities.hide_ProgressHud(view: self.view)
+                            guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else {
+                                return
+                            }
+                            sceneDelegate.setLoginVC()
+                            return
+                        }
+                        Utilities.hide_ProgressHud(view: self.view)
+                        Utilities.setStringForKey("", key: "uid")
+                        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else {
+                            return
+                        }
+                        sceneDelegate.setLoginVC()
+                        print("User data deleted successfully from Firestore.")
+                    }
+                }
+            }
+        }
+    }
+    
+
+//    func deleteUserData() {
+//        Utilities.show_ProgressHud(view: self.view)
+//        self.deleteAllTaskAndCategories(completion: { status in
+//            if status {
+//                let db = Firestore.firestore()
+//                let userDocRef = db.collection("users").document(Utilities().getCurrentUser().id ?? "")
+//
+//                userDocRef.delete { error in
+//                    if let error = error {
+//                        Utilities.hide_ProgressHud(view: self.view)
+//                        print("Failed to delete user data from Firestore: \(error.localizedDescription)")
+//                        self.showAlert(title: "Error", message: "\(error.localizedDescription)")
+//
+//                        return
+//                    }
+//                    print("User data deleted successfully from Firestore.")
+//                }
+//
+//                guard let currentUser = Auth.auth().currentUser else {
+//                    print("No user is currently logged in.")
+//        //            activityIndicator.stopAnimating()
+//                    Utilities.hide_ProgressHud(view: self.view)
+//                    return
+//                }
+//
+//                // Delete user data from Firebase Authentication
+//                currentUser.delete { error in
+//                    if let error = error {
+//        //                self.activityIndicator.stopAnimating()
+//                        Utilities.hide_ProgressHud(view: self.view)
+//                        print("Failed to delete user: \(error.localizedDescription)")
+//                        self.showAlert(title: "Error", message: "Failed to delete user: \(error.localizedDescription)")
+//                        return
+//                    }
+//
+//                    print("User deleted successfully from Firebase Authentication.")
+//                    // Delete user data from Firestore
+//
+//                }
+//
+//            }
+//        })
+//
+//
+//    }
             
 }
 
@@ -386,11 +563,24 @@ extension SettingViewController: UITableViewDelegate,UITableViewDataSource {
                 guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else {
                     return
                 }
+                do {
+                    self.checkInternetAvailability()
+                    try Auth.auth().signOut()
+                    // User is now signed out
+                } catch let signOutError as NSError {
+                    self.showAlert(title: "Sign Out Error", message: "\(signOutError.localizedDescription)")
+                    print("Error signing out: %@", signOutError)
+                }
                 sceneDelegate.setLoginVC()
+
+                
             }else{
                 userLogout()
             }
             
+        }  else if indexPath.row == 4 {
+//            self.deleteUserData()
+            self.deleteUserAcount()
         }
         self.tblView.reloadData()
     }

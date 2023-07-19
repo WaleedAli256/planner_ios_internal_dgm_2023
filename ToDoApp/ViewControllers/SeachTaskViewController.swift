@@ -229,7 +229,10 @@ class SeachTaskViewController: BaseViewController {
             } else {
                 guard let documents = querySnapshot?.documents else { return }
                        for document in documents {
-                           taskIds.append(document.documentID)
+                           let data = document.data()
+                           if let task = data["id"] as? String{
+                               taskIds.append(task)
+                           }
                            document.reference.delete()
                 }
                 UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: taskIds)
