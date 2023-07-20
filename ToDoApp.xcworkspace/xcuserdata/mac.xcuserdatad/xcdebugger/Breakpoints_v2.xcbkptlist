@@ -606,8 +606,8 @@
             filePath = "ToDoApp/ViewControllers/CreateTaskViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "825"
-            endingLineNumber = "825"
+            startingLineNumber = "826"
+            endingLineNumber = "826"
             landmarkName = "checkCurrentTime(_:completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -626,22 +626,6 @@
             endingLineNumber = "480"
             landmarkName = "SettingViewController"
             landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "B4B2B981-7342-40D1-9FF4-163B846E4C73"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ToDoApp/ViewControllers/CreateTaskViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "640"
-            endingLineNumber = "640"
-            landmarkName = "createPrereminderforNotification(beforeTime:newDate:taskId:catId:)"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
