@@ -416,13 +416,18 @@ class SettingViewController: BaseViewController {
                 currentUser.delete { error in
                     if let error = error {
                         Utilities.hide_ProgressHud(view: self.view)
-                        print("Failed to delete user: \(error.localizedDescription)")
-                        cAlert.ShowAlerTost(VC: self, title: "", msg: error.localizedDescription)
+//                        print("Failed to delete user: \(error.localizedDescription)")
+//                        cAlert.ShowAlerTost(VC: self, title: "", msg: error.localizedDescription)
+                        Utilities.setStringForKey("", key: "uid")
+                        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else {
+                            return
+                        }
+                        sceneDelegate.setLoginVC()
+                        
                         return
                     }
                     
                     print("User deleted successfully from Firebase Authentication.")
-                    
                     // Delete user data from Firestore
                     let db = Firestore.firestore()
                     let userDocRef = db.collection("users").document(Utilities().getCurrentUser().id ?? "")
