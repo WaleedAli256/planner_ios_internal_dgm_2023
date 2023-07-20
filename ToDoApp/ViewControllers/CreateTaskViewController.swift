@@ -897,7 +897,7 @@ extension CreateTaskViewController: UIPickerViewDelegate,UIPickerViewDataSource 
             }else if row == 4{
                 self.preminderMin = 60
             }else if row == 5{
-                self.preminderMin = 3600
+                self.preminderMin = 1440
             }
             self.selectedPickerViewRow = row
         } else  {

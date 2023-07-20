@@ -21,6 +21,7 @@ class InitialViewController: BaseViewController {
     var isButtonAdded: Bool = false
     var authorizationButton = ASAuthorizationAppleIDButton()
     var allTasks: [Task] = []
+    var categories = [TaskCategory]()
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -352,10 +353,39 @@ class InitialViewController: BaseViewController {
         }
     }
     
+    func getCategories (userId:String, completion: @escaping(_ Status: Bool) -> Void) {
+        let db = Firestore.firestore()
+        db.collection("category").whereField("userId", isEqualTo: userId)
+            .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    completion(false)
+                    print("Error getting documents: \(err)")
+                } else {
+                    self.categories.removeAll()
+                    for document in querySnapshot!.documents {
+                        let dicCat = document.data()
+                        let objCat = TaskCategory.init(fromDictionary: dicCat)
+                        self.categories.append(objCat)
+                    }
+//                    let filteredFavCat = self.categories.filter({$0.isFavourite == true })
+//                    self.favCategories = filteredFavCat
+                    completion(true)
+                }
+            }
+        
+    
+        
+//        for temp in self.categories{
+//            let filteredArray = self.allTasks.filter({$0.categoryName == temp.name })
+//            let newObj = customCategories(cateName: temp.name ?? "", array: filteredArray)
+//            self.cateAgainstName.append(newObj)
+//        }
+//        self.colView.reloadData()
+    }
+    
 }
 
 func createDefaultsCategories(userId:String) {
-    
     var categories = [TaskCategory]()
     let first = TaskCategory(image: 1, userId: userId, description: "Keep yourself hydrated all time!", name: "Water Intake", taskCount: "0", id: "", colorCode: "#5486E9", isFavourite: false)
     let sec = TaskCategory(image: 2, userId: userId, description: "Wake up on the time So you never late!", name: "Sleeping Schedule", taskCount: "0", id: "", colorCode: "#F1A800",isFavourite: false)
@@ -373,6 +403,7 @@ func createDefaultsCategories(userId:String) {
     for cat in categories {
         let db = Firestore.firestore()
         let ref = db.collection("category").document()
+        
         ref.setData([
             "image": cat.image ?? 0,
             "userId": userId,
@@ -445,6 +476,14 @@ extension InitialViewController: ASAuthorizationControllerDelegate, ASAuthorizat
                                     if let err = err {
                                         print("Error adding document: \(err)")
                                     } else {
+                                        self.getCategories(userId: user.uid) { Status in
+                                            if Status {
+                                                if self.categories.count == 0 {
+                                                    createDefaultsCategories(userId: user.uid)
+                                                }
+                                            }
+                                        }
+                                        
                                         self.userLoginParams(user.uid , displayName, user.email!, "iOS", "2", profilePic)
                                     }
                                 }
