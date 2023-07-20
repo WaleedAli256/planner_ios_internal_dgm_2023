@@ -1070,7 +1070,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="34" id="HHw-IP-UiS"/>
                                                 </constraints>
-                                                <color key="textColor" name="low-text-color"/>
+                                                <color key="textColor" name="TextColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                             </textField>
